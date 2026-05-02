@@ -3,6 +3,9 @@
 import { DataTypes } from "sequelize";
 import { createHash } from "crypto";
 
+// ==========================================
+// CREAZIONE MODELLO UTENTE
+// ==========================================
 export function CreaUtente(database) {
     return database.define('Utente', {
         id: {
@@ -49,7 +52,7 @@ export function CreaUtente(database) {
                 }
             }
         },
-        passwordHash: {
+        password: {
             type: DataTypes.STRING(128),
             allowNull: false
         }
@@ -58,16 +61,16 @@ export function CreaUtente(database) {
         timestamps: true,
         hooks: {
             beforeCreate: (utente) => {
-                if (utente.passwordHash) {
-                    utente.passwordHash = createHash('sha256')
-                        .update(utente.passwordHash)
+                if (utente.password) {
+                    utente.password = createHash('sha256')
+                        .update(utente.password)
                         .digest('hex');
                 }
             },
             beforeUpdate: (utente) => {
-                if (utente.changed('passwordHash') && utente.passwordHash) {
-                    utente.passwordHash = createHash('sha256')
-                        .update(utente.passwordHash)
+                if (utente.changed('password') && utente.password) {
+                    utente.password = createHash('sha256')
+                        .update(utente.password)
                         .digest('hex');
                 }
             }

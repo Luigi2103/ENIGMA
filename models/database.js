@@ -1,50 +1,37 @@
-"use strict"
+"use strict";
 
 import { Sequelize } from "sequelize";
-import 'dotenv/config.js'
-import { CreaUtente } from "./utente.js"
-
-
-// ==========================================
-// INIT
-// ==========================================
+import 'dotenv/config';
+import { CreaUtente } from "./utente.js";
 
 
 
 
 // ==========================================
-// CREATE DATABASE CONNECTION
+// CREAZIONE CONNESSIONE DB
 // ==========================================
 export const database = new Sequelize(process.env.DB_CONNECTION_URI, {
-  dialect: process.env.DIALECT,
-  dialectOptions: {
-    ssl: { require: true, rejectUnauthorized: false }
-  }
+    dialect: process.env.DIALECT,
+    dialectOptions: {
+        ssl: { require: true, rejectUnauthorized: false }
+    }
 });
 
 
+// ==========================================
+// DICHIARAZIONE MODELLI
+// ==========================================
+export const Utente = CreaUtente(database);
 
 // ==========================================
-// CREATE ASSOCIATIONS
+// CREAZIONE ASSOCIAZIONI
 // ==========================================
-
-
-
-
-// ==========================================
-// CREATE TABLE
-// ==========================================
-
-CreaUtente(database);
 
 
 
 // ==========================================
-// SYNCHRONIZE DB
+// SYNC DATABASE
 // ==========================================
-
-database.sync({ alter: true }).then( () => {
-  console.log("Database sincronizzato");
-}).catch( err => {
-  console.err("Errore sincronizzazione: " + err.message);
-});
+database.sync({ alter: true })
+    .then(() => console.log("Database sincronizzato"))
+    .catch(err => console.error("Errore sincronizzazione: " + err.message));
