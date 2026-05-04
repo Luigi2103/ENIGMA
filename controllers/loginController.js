@@ -1,47 +1,51 @@
 "use strict";
 
-import Utente from "../models/utente";
+import { Utente } from "../models/database.js";
 import Jwt from "jsonwebtoken";
 import { createHash } from "crypto";
-import { where } from "sequelize";
 
 export class LoginController {
-    
+
     static async verificaUsernameUnico(validateUsername) {
-        const trovato = await Utente.findOne ( {
-            where : {
-                username : validateUsername
+        const trovato = await Utente.findOne({
+            where: {
+                username: validateUsername
             }
         })
-        return ! (trovato !== null)
+        return !(trovato !== null)
     }
 
     static async verificaMailUnica(validateMail) {
-        const trovato = await Utente.findOne ( {
-            where : {
-                email : validateMail
+        const trovato = await Utente.findOne({
+            where: {
+                email: validateMail
             }
         })
-        return ! (trovato !== null)
+        return !(trovato !== null)
     }
 
-    static async verificaLogin(req,res) {
-        const utente = new Utente( { username : req.body.username , password : createHash('sha256').update(req.body.password).digest('hex')  } )
-        const trovato = await Utente.findOne( {
-            where : {
-                username : utente.username,
-                password : utente.password
+    static async verificaLogin(req, res) {
+        const trovato = await Utente.findOne({
+            where: {
+                username: req.body.username,
+                password: createHash('sha256').update(req.body.password).digest('hex')
             }
         })
         return trovato !== null;
     }
 
-    static async InserisciUtente(req,res) {
+    static async InserisciUtente(req, res) {
         let isUniqueUsername = await this.verificaUsernameUnico(req.body.username);
         let isUniqueEmail = await this.verificaMailUnica(req.body.email);
 
         if (!isUniqueUsername || !isUniqueEmail) {
-            return null;
+            if(!isUniqueUsername && !isUniqueEmail){
+                return Promise.reject(new Error("Username e mail già in uso"));
+            }else if(!isUniqueUsername) {
+                return Promise.reject(new Error("Username già in uso"))
+            }else {
+                return Promise.reject(new Error("Mail già in uso"))
+            }
         }
 
         const utenteDaRegistrare = new Utente({
@@ -50,11 +54,11 @@ export class LoginController {
             cognome: req.body.cognome,
             email: req.body.email,
             fotoprofilo: req.body.fotoprofilo ?? null,
-            password: createHash('sha256').update(req.body.password).digest('hex')
+            password: req.body.password
         });
 
 
-            return await utenteDaRegistrare.save();
+        return await utenteDaRegistrare.save();
     }
 
     static creaToken(username) {

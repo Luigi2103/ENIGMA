@@ -4,6 +4,7 @@ import express from 'express';
 import cors from 'cors';
 import morgan from "morgan";
 import { database } from './models/database.js';
+import { routerLogin } from './routes/loginRoute.js'
 
 // ==========================================
 // INIT
@@ -26,10 +27,8 @@ app.use(express.json());
 // ROTTE DICHIARATE
 // ==========================================
 
-app.get('/', (req, res) => {
-  res.send('Benvenuto nell\'API di EN?GMA! 🧩');
-});
 
+app.use(routerLogin);
 
 
 // ==========================================
