@@ -4,7 +4,8 @@ import express from 'express';
 import cors from 'cors';
 import morgan from "morgan";
 import { database } from './models/database.js';
-import { routerLogin } from './routes/loginRoute.js'
+import { loginRouter } from './routes/loginRoute.js'
+import { ControlloAutenticazione } from "./middleware/controlloAutorizzazione.js"
 
 // ==========================================
 // INIT
@@ -28,7 +29,8 @@ app.use(express.json());
 // ==========================================
 
 
-app.use(routerLogin);
+app.use(loginRouter);
+app.use(ControlloAutenticazione)
 
 
 // ==========================================
@@ -49,4 +51,4 @@ app.use((err, req, res, next) => {
 // ==========================================
 // START APPLICAZIONE
 // ==========================================
-app.listen(port);
+app.listen(port, () => console.log(`Server in ascolto su http://localhost:${port}`));

@@ -14,17 +14,21 @@ export function CreaUtente(database) {
             autoIncrement: true,
             allowNull: false
         },
-        username: {
-            type: DataTypes.STRING(50),
-            allowNull: false,
-            unique: true
-        },
         nome: {
             type: DataTypes.STRING(100),
             allowNull: false
         },
         cognome: {
             type: DataTypes.STRING(100),
+            allowNull: false
+        },
+        username: {
+            type: DataTypes.STRING(50),
+            allowNull: false,
+            unique: true
+        },
+        password: {
+            type: DataTypes.STRING(128),
             allowNull: false
         },
         email: {
@@ -51,10 +55,6 @@ export function CreaUtente(database) {
                     this.setDataValue('fotoProfilo', value);
                 }
             }
-        },
-        password: {
-            type: DataTypes.STRING(128),
-            allowNull: false
         }
     }, {
         tableName: 'utenti',

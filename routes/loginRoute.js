@@ -1,14 +1,17 @@
 "use strict";
 import express from "express";
-import { loginController } from "./controllers/loginController";
+import { LoginController } from "../controllers/loginController.js";
 
 const loginRouter = express.Router();
 
-loginController.post("/login", async (req, res, next) => {
+loginRouter.post("/login", async (req, res, next) => {
     try {
-        const risultatoLogin = await loginController.verificaLogin(req, res);
+        const risultatoLogin = await LoginController.verificaLogin(req, res);
         if (risultatoLogin) {
-            res.json(loginController.creaToken(req.body.username));
+            res.json({
+                token: LoginController.creaToken(req.body.username),
+                username: req.body.username
+            });
         } else {
             res.status(401).json({ error: "Credenziali non valide" });
         }
@@ -17,11 +20,19 @@ loginController.post("/login", async (req, res, next) => {
     }
 });
 
-loginController.post("/registrati" , async (req,res,next) => {
-    loginController.InserisciUtente(req,res).then( (user) => {
-        res.json(user);
+loginRouter.post("/registrati", async (req, res, next) => {
+    LoginController.InserisciUtente(req, res).then((user) => {
+        res.status(201).json({
+            id: user.id,
+            username: user.username,
+            nome: user.nome,
+            cognome: user.cognome,
+            email: user.email,
+            fotoProfilo: user.fotoProfilo ?? null
+        });
     }).catch((error) => {
-        next({status: 409, message: error.message});
-    })
+        next({ status: 409, message: error.message });
+    });
+});
 
-})
+export { loginRouter };
