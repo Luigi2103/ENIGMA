@@ -3,6 +3,7 @@
 import { Sequelize } from "sequelize";
 import 'dotenv/config';
 import { CreaUtente } from "./utente.js";
+import { CreaPartita } from "./partita.js";
 
 
 
@@ -22,6 +23,7 @@ export const database = new Sequelize(process.env.DB_CONNECTION_URI, {
 // DICHIARAZIONE MODELLI
 // ==========================================
 export const Utente = CreaUtente(database);
+export const Partita = CreaPartita(database);  
 
 // ==========================================
 // CREAZIONE ASSOCIAZIONI
