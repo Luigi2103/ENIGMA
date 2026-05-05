@@ -4,7 +4,7 @@ import { LoginController } from "../controllers/loginController.js";
 
 const loginRouter = express.Router();
 
-loginRouter.post("/login", async (req, res, next) => {
+loginRouter.post("/auth", async (req, res, next) => {
     try {
         const risultatoLogin = await LoginController.verificaLogin(req, res);
         if (risultatoLogin) {
@@ -20,7 +20,7 @@ loginRouter.post("/login", async (req, res, next) => {
     }
 });
 
-loginRouter.post("/registrati", async (req, res, next) => {
+loginRouter.post("/signup", async (req, res, next) => {
     LoginController.InserisciUtente(req, res).then((user) => {
         res.status(201).json({
             id: user.id,

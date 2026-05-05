@@ -23,13 +23,14 @@ export const database = new Sequelize(process.env.DB_CONNECTION_URI, {
 // DICHIARAZIONE MODELLI
 // ==========================================
 export const Utente = CreaUtente(database);
-export const Partita = CreaPartita(database);  
+export const Partita = CreaPartita(database);
 
 // ==========================================
 // CREAZIONE ASSOCIAZIONI
 // ==========================================
 
-
+Utente.hasMany(Partita, { foreignKey: "utenteId" });
+Partita.belongsTo(Utente, { foreignKey: "utenteId" });
 
 // ==========================================
 // SYNC DATABASE

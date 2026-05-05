@@ -1,18 +1,27 @@
 "use strict";
-import Partita from "../models/partita.js";
+import { Partita, Utente } from "../models/database.js";
+import { GeneraEnigma } from "../utils/gemini.js";
 
 export class GestorePartita {
 
-    export static CreaPartita(req,res) {
 
-        const partitaDaRegistarre = new Partita({
-            parola = req.body.parola,
-            argomento = req.body.argomento,
-            suggerimento = req.body.suggerimento,
-            utenteId = req.body.utenteId
-        })
+    static async GeneraECreaPartita(req) {
+        const tema = req.body.argomento ?? "qualsiasi";
 
-        return partitaDaRegistarre.save();
-        
+        const utente = await Utente.findOne({ where: { username: req.username } });
+        if (!utente) throw new Error("Utente non trovato");
+
+        const enigma = await GeneraEnigma(tema);
+
+        const partitaDaRegistrare = new Partita({
+            parola: enigma.parola,
+            argomento: tema,
+            suggerimento: enigma.suggerimento,
+            utenteId: utente.id
+        });
+
+        const partita = await partitaDaRegistrare.save();
+
+        return { partita, parole_immagini: enigma.parole_immagini };
     }
 }

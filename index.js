@@ -5,6 +5,7 @@ import cors from 'cors';
 import morgan from "morgan";
 import { database } from './models/database.js';
 import { loginRouter } from './routes/loginRoute.js'
+import { gameRouter } from './routes/gameRoute.js'
 import { ControlloAutenticazione } from "./middleware/controlloAutorizzazione.js"
 
 // ==========================================
@@ -31,6 +32,7 @@ app.use(express.json());
 
 app.use(loginRouter);
 app.use(ControlloAutenticazione)
+app.use(gameRouter);
 
 
 // ==========================================

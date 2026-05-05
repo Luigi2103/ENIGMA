@@ -12,7 +12,7 @@ export class LoginController {
                 username: validateUsername
             }
         })
-        return !(trovato !== null)
+        return trovato === null;
     }
 
     static async verificaMailUnica(validateMail) {
@@ -21,7 +21,7 @@ export class LoginController {
                 email: validateMail
             }
         })
-        return !(trovato !== null)
+        return trovato === null;
     }
 
     static async verificaLogin(req, res) {
@@ -53,7 +53,7 @@ export class LoginController {
             nome: req.body.nome,
             cognome: req.body.cognome,
             email: req.body.email,
-            fotoprofilo: req.body.fotoprofilo ?? null,
+            fotoProfilo: req.body.fotoProfilo ?? null,
             password: req.body.password
         });
 
