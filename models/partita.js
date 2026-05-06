@@ -27,6 +27,11 @@ export function CreaPartita(database) {
             type: DataTypes.STRING,
             allowNull: false
         },
+        foto: {
+            type: DataTypes.JSON,
+            allowNull: false,
+            defaultValue: []
+        },
         utenteId: {
             type: DataTypes.INTEGER,
             allowNull: false,

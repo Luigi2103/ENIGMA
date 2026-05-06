@@ -10,5 +10,6 @@ export function CreatePrompt(tema = "qualsiasi") {
             "parola": "parola italiana da indovinare",
             "parole_immagini": ["english_word_1", "english_word_2", "english_word_3", "english_word_4"],
             "suggerimento": "suggerimento in italiano"
-            }`;
+            }
+            cerca di essere il più preciso possibile per le parole_immagini in modo da non avere immagini non coerenti con la parola`;
 }
