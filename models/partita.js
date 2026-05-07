@@ -32,6 +32,11 @@ export function CreaPartita(database) {
             allowNull: false,
             defaultValue: []
         },
+        attiva : {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: true  
+        },
         utenteId: {
             type: DataTypes.INTEGER,
             allowNull: false,

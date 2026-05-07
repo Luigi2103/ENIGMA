@@ -14,11 +14,11 @@ export function CreaTentativo(database) {
             autoIncrement: true,
             allowNull: false
         },
-        risposta: {
+        risposta: {                          //risposta data dall'utente
             type: DataTypes.STRING,
             allowNull: false
         },
-        esito: {
+        vincente: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false
