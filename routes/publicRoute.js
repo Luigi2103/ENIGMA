@@ -19,3 +19,21 @@ publicrouter.get("/games" , async (req,res,next) => {
         next({ status: 500, message: error.message });
     }
 })
+
+publicrouter.get("/games/:id", async (req, res, next) => {
+    try {
+        const partita = await Partita.findByPk(req.params.id, {
+            attributes: ['id', 'argomento', 'suggerimento', 'foto', 'utenteId', 'createdAt'],
+            include: [{
+                model: Utente,
+                attributes: ['username']
+            }]
+        });
+        if (!partita) {
+            return next({ status: 404, message: "Enigma non trovato" });
+        }
+        res.json(partita);
+    } catch (error) {
+        next({ status: 500, message: error.message });
+    }
+});
