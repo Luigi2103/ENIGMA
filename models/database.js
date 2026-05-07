@@ -3,7 +3,8 @@
 import { Sequelize } from "sequelize";
 import 'dotenv/config';
 import { CreaUtente } from "./utente.js";
-import { CreaPartita } from "./partita.js";
+import { CreaPartita } from "./partita.js"
+import { CreaTentativo } from "./tentativo.js";;
 
 
 
@@ -24,6 +25,7 @@ export const database = new Sequelize(process.env.DB_CONNECTION_URI, {
 // ==========================================
 export const Utente = CreaUtente(database);
 export const Partita = CreaPartita(database);
+export const Tentativo = CreaTentativo(database);
 
 // ==========================================
 // CREAZIONE ASSOCIAZIONI
@@ -31,6 +33,10 @@ export const Partita = CreaPartita(database);
 
 Utente.hasMany(Partita, { foreignKey: "utenteId" });
 Partita.belongsTo(Utente, { foreignKey: "utenteId" });
+Utente.hasMany(Tentativo, { foreignKey: "utenteId" });
+Tentativo.belongsTo(Utente, { foreignKey: "utenteId" });
+Partita.hasMany(Tentativo, { foreignKey: "partitaId" });
+Tentativo.belongsTo(Partita, { foreignKey: "partitaId" });
 
 // ==========================================
 // SYNC DATABASE

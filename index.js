@@ -6,7 +6,9 @@ import morgan from "morgan";
 import { database } from './models/database.js';
 import { loginRouter } from './routes/loginRoute.js'
 import { gameRouter } from './routes/gameRoute.js'
-import { ControlloAutenticazione } from "./middleware/controlloAutorizzazione.js"
+import { ControlloAutenticazione } from './middleware/controlloAutorizzazione.js'
+import { publicrouter } from './routes/publicRoute.js';
+
 
 // ==========================================
 // INIT
@@ -31,7 +33,8 @@ app.use(express.json());
 
 
 app.use(loginRouter);
-app.use(ControlloAutenticazione)
+app.use(publicrouter);
+app.use(ControlloAutenticazione);
 app.use(gameRouter);
 
 

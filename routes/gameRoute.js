@@ -1,4 +1,5 @@
-"use strict"
+"use strict";
+
 import express from "express";
 import { GestorePartita } from "../controllers/gestorePartitaController.js";
 
@@ -17,5 +18,6 @@ gameRouter.post("/games", async (req, res, next) => {
         next({ status: 500, message: error.message });
     });
 });
+
 
 export { gameRouter };
