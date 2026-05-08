@@ -1,7 +1,7 @@
 "use strict";
 
 import express from "express";
-import { Partita, Utente } from "../models/database.js";
+import { Partita, Utente, Tentativo, database } from "../models/database.js";
 
 export const publicrouter = express.Router(); 
 
@@ -33,6 +33,27 @@ publicrouter.get("/games/:id", async (req, res, next) => {
             return next({ status: 404, message: "Enigma non trovato" });
         }
         res.json(partita);
+    } catch (error) {
+        next({ status: 500, message: error.message });
+    }
+});
+
+publicrouter.get("/leaderboard", async (req, res, next) => {
+    try {
+        const classifica = await Tentativo.findAll({
+            where: { vincente: true },
+            attributes: [
+                'utenteId',
+                [database.fn('COUNT', database.col('Tentativo.id')), 'enigmi_risolti']
+            ],
+            include: [{
+                model: Utente,
+                attributes: ['username']
+            }],
+            group: ['utenteId', 'Utente.id', 'Utente.username'],
+            order: [[database.fn('COUNT', database.col('Tentativo.id')), 'DESC']]
+        });
+        res.json(classifica);
     } catch (error) {
         next({ status: 500, message: error.message });
     }

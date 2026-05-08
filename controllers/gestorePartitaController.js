@@ -58,6 +58,24 @@ export class GestorePartita {
         return await tentativoDaRegistrare.save();
     }
 
+    static async DisabilitaPartita(req) {
+
+        const [partita, utente] = await Promise.all([
+            GestorePartita._verificaPartita(req.params.id),
+            GestorePartita._verificaUtente(req.username)
+        ]);
+
+        if(partita.idPartita !== utente.id) {
+            const err = new Error("Non sei il creatore di questa partita");
+            err.status = 403;
+            throw err;
+        };
+
+        partita.attiva = false;
+
+        return await partita.save();
+    }
+
 
 
     // --- FUNZIONI AUSILIARIE ---
