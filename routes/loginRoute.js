@@ -4,6 +4,48 @@ import { LoginController } from "../controllers/loginController.js";
 
 const loginRouter = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Autenticazione e registrazione utenti
+ */
+
+/**
+ * @swagger
+ * /auth:
+ *   post:
+ *     summary: Effettua il login
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login effettuato con successo
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                 username:
+ *                   type: string
+ *       401:
+ *         description: Credenziali non valide
+ */
 loginRouter.post("/auth", async (req, res, next) => {
     try {
         const risultatoLogin = await LoginController.verificaLogin(req, res);
@@ -20,6 +62,59 @@ loginRouter.post("/auth", async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /signup:
+ *   post:
+ *     summary: Registra un nuovo utente
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *               - email
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               nome:
+ *                 type: string
+ *               cognome:
+ *                 type: string
+ *               fotoProfilo:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Utente registrato con successo
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 username:
+ *                   type: string
+ *                 nome:
+ *                   type: string
+ *                 cognome:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 fotoProfilo:
+ *                   type: string
+ *                   nullable: true
+ *       409:
+ *         description: Errore durante la registrazione (es. utente già esistente)
+ */
 loginRouter.post("/signup", async (req, res, next) => {
     LoginController.InserisciUtente(req, res).then((user) => {
         res.status(201).json({
