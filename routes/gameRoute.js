@@ -39,7 +39,7 @@ gameRouter.post("/games/:id/attempts", async (req, res, next) => {
 
 gameRouter.patch("/games/:id", async (req,res,next) => {
     GestorePartita.DisabilitaPartita(req).then((partita) => {
-        res.status(204)
+        res.status(204).send();
     }).catch((error) => {
         next({ status: error.status, message: error.message });
     })

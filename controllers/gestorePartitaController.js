@@ -65,7 +65,7 @@ export class GestorePartita {
             GestorePartita._verificaUtente(req.username)
         ]);
 
-        if(partita.idPartita !== utente.id) {
+        if(partita.idPartita  !== utente.id) {
             const err = new Error("Non sei il creatore di questa partita");
             err.status = 403;
             throw err;
