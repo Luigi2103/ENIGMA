@@ -42,6 +42,23 @@ const swaggerOptions = {
           scheme: 'bearer',
           bearerFormat: 'JWT',
         }
+      },
+      schemas: {
+        ErrorResponse: {
+          type: 'object',
+          properties: {
+            code: {
+              type: 'integer',
+              description: 'Codice HTTP dell\'errore',
+              example: 400
+            },
+            description: {
+              type: 'string',
+              description: 'Messaggio descrittivo dell\'errore',
+              example: 'Partita non trovata'
+            }
+          }
+        }
       }
     }
   },

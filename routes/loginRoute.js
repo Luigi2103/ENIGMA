@@ -45,6 +45,10 @@ const loginRouter = express.Router();
  *                   type: string
  *       401:
  *         description: Credenziali non valide
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
 loginRouter.post("/auth", async (req, res, next) => {
     try {
@@ -113,7 +117,11 @@ loginRouter.post("/auth", async (req, res, next) => {
  *                   type: string
  *                   nullable: true
  *       409:
- *         description: Errore durante la registrazione (es. utente già esistente)
+ *         description: Conflitto (username o email già in uso)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
 loginRouter.post("/signup", async (req, res, next) => {
     LoginController.InserisciUtente(req, res).then((user) => {

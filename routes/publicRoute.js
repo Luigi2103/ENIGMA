@@ -50,6 +50,10 @@ export const publicrouter = express.Router();
  *                         type: string
  *       500:
  *         description: Errore del server
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
 publicrouter.get("/games" , async (req,res,next) => {
     try {
@@ -109,8 +113,16 @@ publicrouter.get("/games" , async (req,res,next) => {
  *                       type: string
  *       404:
  *         description: Enigma non trovato
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  *       500:
  *         description: Errore del server
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
 publicrouter.get("/games/:id", async (req, res, next) => {
     try {
@@ -149,7 +161,8 @@ publicrouter.get("/games/:id", async (req, res, next) => {
  *                   utenteId:
  *                     type: integer
  *                   enigmi_risolti:
- *                     type: string
+ *                     type: integer
+ *                     description: Numero di enigmi risolti (restituito come stringa da PostgreSQL)
  *                   Utente:
  *                     type: object
  *                     properties:
@@ -157,6 +170,10 @@ publicrouter.get("/games/:id", async (req, res, next) => {
  *                         type: string
  *       500:
  *         description: Errore del server
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
 publicrouter.get("/leaderboard", async (req, res, next) => {
     try {

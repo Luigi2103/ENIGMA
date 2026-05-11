@@ -65,7 +65,7 @@ export class GestorePartita {
             GestorePartita._verificaUtente(req.username)
         ]);
 
-        if(partita.idPartita  !== utente.id) {
+        if(partita.utenteId !== utente.id) {
             const err = new Error("Non sei il creatore di questa partita");
             err.status = 403;
             throw err;
@@ -82,8 +82,16 @@ export class GestorePartita {
 
     static async _verificaPartita(idPartita) {
         const partita = await Partita.findOne({ where: { id: idPartita } });
-        if (!partita) throw new Error("Partita non trovata");
-        if (!partita.attiva) throw new Error("Partita non attiva");
+        if (!partita) {
+            const err = new Error("Partita non trovata");
+            err.status = 404;
+            throw err;
+        }
+        if (!partita.attiva) {
+            const err = new Error("Partita non attiva");
+            err.status = 400;
+            throw err;
+        }
         return partita;
     }
 

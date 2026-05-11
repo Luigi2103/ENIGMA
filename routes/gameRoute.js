@@ -32,7 +32,7 @@ const MAX_TENTATIVI = 10;
  *             properties:
  *               argomento:
  *                 type: string
- *                 description: Tema opzionale per la generazione dell'enigma
+ *                 description: Tema opzionale per la generazione dell'enigma. Se non fornito, viene usato "qualsiasi".
  *                 example: "Spazio"
  *     responses:
  *       201:
@@ -46,6 +46,7 @@ const MAX_TENTATIVI = 10;
  *                   type: integer
  *                 argomento:
  *                   type: string
+ *                   description: Tema usato (default "qualsiasi" se non specificato)
  *                 suggerimento:
  *                   type: string
  *                 utenteId:
@@ -55,9 +56,17 @@ const MAX_TENTATIVI = 10;
  *                   items:
  *                     type: string
  *       401:
- *         description: Non autorizzato
+ *         description: Token mancante o non valido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  *       500:
  *         description: Errore interno del server
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
 gameRouter.post("/games", async (req, res, next) => {
     GestorePartita.GeneraECreaPartita(req).then((partita) => {
@@ -99,6 +108,7 @@ gameRouter.post("/games", async (req, res, next) => {
  *             properties:
  *               risposta:
  *                 type: string
+ *                 example: "luna"
  *     responses:
  *       201:
  *         description: Tentativo registrato con successo
@@ -118,11 +128,23 @@ gameRouter.post("/games", async (req, res, next) => {
  *                 utenteId:
  *                   type: integer
  *       400:
- *         description: Richiesta non valida o tentativi esauriti
+ *         description: Tentativo non valido (tentativi esauriti, enigma già risolto, partita non attiva)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  *       401:
- *         description: Non autorizzato
+ *         description: Token mancante o non valido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  *       404:
  *         description: Partita non trovata
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
 gameRouter.post("/games/:id/attempts", async (req, res, next) => {
     GestorePartita.RegistraTentativo(req).then((tentativo) => {
@@ -134,7 +156,7 @@ gameRouter.post("/games/:id/attempts", async (req, res, next) => {
             utenteId: tentativo.utenteId
         });
     }).catch((error) => {
-        next({ status: 400, message: error.message });
+        next({ status: error.status || 400, message: error.message });
     });
 });
 
@@ -157,12 +179,30 @@ gameRouter.post("/games/:id/attempts", async (req, res, next) => {
  *     responses:
  *       204:
  *         description: Partita disabilitata con successo
+ *       400:
+ *         description: Partita già non attiva
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  *       401:
- *         description: Non autorizzato
+ *         description: Token mancante o non valido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  *       403:
- *         description: Accesso negato (non sei il proprietario della partita)
+ *         description: Accesso negato (non sei il creatore della partita)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  *       404:
  *         description: Partita non trovata
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
 gameRouter.patch("/games/:id", async (req,res,next) => {
     GestorePartita.DisabilitaPartita(req).then((partita) => {
