@@ -47,6 +47,12 @@ export class GestorePartita {
 
 
         const corretto = req.body.risposta.toLowerCase() === partita.parola.toLowerCase();
+
+        if (corretto) {
+            partita.set('attiva', false);
+            await partita.save();
+        }
+
         const tentativoDaRegistrare = new Tentativo({
             risposta: req.body.risposta,
             vincente: corretto,
@@ -65,17 +71,16 @@ export class GestorePartita {
             GestorePartita._verificaUtente(req.username)
         ]);
 
-        if(partita.utenteId !== utente.id) {
+        if (partita.utenteId !== utente.id) {
             const err = new Error("Non sei il creatore di questa partita");
             err.status = 403;
             throw err;
         };
 
-        partita.attiva = false;
+        partita.set('attiva', false);
 
         return await partita.save();
     }
-
 
 
     // --- FUNZIONI AUSILIARIE ---

@@ -58,6 +58,7 @@ export const publicrouter = express.Router();
 publicrouter.get("/games" , async (req,res,next) => {
     try {
             const partite = await Partita.findAll({
+            where: { attiva: true },
             attributes: ['id', 'argomento', 'suggerimento', 'foto', 'utenteId', 'createdAt'],
             include: [{
                 model: Utente,
@@ -126,7 +127,8 @@ publicrouter.get("/games" , async (req,res,next) => {
  */
 publicrouter.get("/games/:id", async (req, res, next) => {
     try {
-        const partita = await Partita.findByPk(req.params.id, {
+        const partita = await Partita.findOne({
+            where: { id: req.params.id, attiva: true },
             attributes: ['id', 'argomento', 'suggerimento', 'foto', 'utenteId', 'createdAt'],
             include: [{
                 model: Utente,
