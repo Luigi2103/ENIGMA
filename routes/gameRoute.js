@@ -6,7 +6,6 @@ import { Partita,Utente,Tentativo } from "../models/database.js";
 
 
 const gameRouter = express.Router();
-const MAX_TENTATIVI = 10;
 
 /**
  * @swagger

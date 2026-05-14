@@ -103,8 +103,6 @@ loginRouter.post("/auth", async (req, res, next) => {
  *             schema:
  *               type: object
  *               properties:
- *                 id:
- *                   type: integer
  *                 username:
  *                   type: string
  *                 nome:
@@ -113,9 +111,6 @@ loginRouter.post("/auth", async (req, res, next) => {
  *                   type: string
  *                 email:
  *                   type: string
- *                 fotoProfilo:
- *                   type: string
- *                   nullable: true
  *       409:
  *         description: Conflitto (username o email già in uso)
  *         content:
@@ -126,12 +121,10 @@ loginRouter.post("/auth", async (req, res, next) => {
 loginRouter.post("/signup", async (req, res, next) => {
     LoginController.InserisciUtente(req, res).then((user) => {
         res.status(201).json({
-            id: user.id,
             username: user.username,
             nome: user.nome,
             cognome: user.cognome,
             email: user.email,
-            fotoProfilo: user.fotoProfilo ?? null
         });
     }).catch((error) => {
         next({ status: 409, message: error.message });

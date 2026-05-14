@@ -1,7 +1,8 @@
 "use strict";
 import { Partita, Utente, Tentativo } from "../models/database.js";
 import { GeneraEnigma } from "../utils/gemini.js";
-import { RecuperaImmagini } from "../utils/recuperaImmagini.js"
+import { RecuperaImmagini } from "../utils/recuperaImmagini.js";
+import { PickRandomTema } from "../utils/prompt.js";
 
 const MAX_TENTATIVI = 10;
 
@@ -9,7 +10,7 @@ export class GestorePartita {
 
 
     static async GeneraECreaPartita(req) {
-        const tema = req.body?.argomento || "qualsiasi";
+        const tema = req.body?.argomento ?? PickRandomTema();
 
         const utente = await Utente.findOne({ where: { username: req.username } });
         if (!utente) throw new Error("Utente non trovato");

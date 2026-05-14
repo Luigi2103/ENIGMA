@@ -93,7 +93,7 @@ app.use(gameRouter);
 // ==========================================
 
 app.use((err, req, res, next) => {
-  console.log(err.stack); 
+  console.error(err.stack); 
   
   res.status(err.status || 500).json({
     code: err.status || 500,

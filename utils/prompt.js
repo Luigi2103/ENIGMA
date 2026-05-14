@@ -1,15 +1,74 @@
 "use strict";
 
-export function CreatePrompt(tema = "qualsiasi") {
-    return `Sei un'intelligenza artificiale e il tuo compito è generare un enigma per un gioco. Genera una parola italiana di massimo 10 caratteri inerente al tema "${tema}".
-            Genera anche 4 termini di ricerca che userò per scaricare immagini dall'API di Unsplash per far indovinare la parola al giocatore. 
-            ATTENZIONE: Questi 4 termini per Unsplash devono essere obbligatoriamente in INGLESE, composti da singole parole precise e senza errori.
-            Genera infine un breve suggerimento in italiano per aiutare il giocatore a indovinare la parola.
-            La tua risposta deve essere ESCLUSIVAMENTE in formato JSON testuale crudo. NON usare formattazione markdown (come \`\`\`json). La struttura deve essere esattamente questa:
-            {
-            "parola": "parola italiana da indovinare",
-            "parole_immagini": ["english_word_1", "english_word_2", "english_word_3", "english_word_4"],
-            "suggerimento": "suggerimento in italiano"
-            }
-            cerca di essere il più preciso possibile per le parole_immagini in modo da non avere immagini non coerenti con la parola`;
+const temiGioco = [
+  // Natura & Animali
+  "Animali della savana",
+  "Animali marini",
+  "Insetti",
+  "Fiori e piante",
+  "Fenomeni atmosferici",
+  "Montagna",
+
+  // Sport & Attività
+  "Sport olimpici",
+  "Sport estremi",
+  "Arti marziali",
+  "Danza",
+
+  // Cibo & Cultura italiana
+  "Cucina italiana",
+  "Dolci e dessert",
+  "Frutta esotica",
+  "Bevande",
+
+  // Scienza & Tecnologia
+  "Spazio e astronomia",
+  "Mezzi di trasporto",
+  "Strumenti musicali",
+  "Professioni",
+
+  // Fantasia & Avventura
+  "Magia e Fantasy",
+  "Supereroi",
+  "Pirati",
+  "Far West",
+  "Epoche storiche",
+  "Mitologia greca",
+
+  // Vita quotidiana
+  "Casa e arredamento",
+  "Abbigliamento",
+  "Giocattoli",
+  "Scuola",
+];
+
+export function PickRandomTema() {
+    return temiGioco[Math.floor(Math.random() * temiGioco.length)];
+}
+
+export function CreatePrompt(tema) {
+    return `Sei un game designer che crea enigmi visivi per un gioco di indovinelli. Il tema di questa partita è: "${tema}".
+
+Il tuo compito è scegliere UNA parola italiana da far indovinare al giocatore tramite 4 immagini.
+
+REGOLE per la PAROLA:
+- Deve essere un sostantivo concreto e visivamente riconoscibile (NO parole astratte come "libertà", "velocità", "amore")
+- Massimo 10 caratteri
+- Deve essere strettamente legata al tema "${tema}"
+- Deve essere comune e conosciuta (no termini tecnici rari)
+
+REGOLE per le PAROLE_IMMAGINI (termini di ricerca per Unsplash):
+- Devono essere 4 parole singole in INGLESE, precise e senza errori
+- Ognuna deve mostrare la parola da una prospettiva DIVERSA (es. ambiente naturale, primo piano, azione, contesto)
+- NON devono essere sinonimi della parola né parole della stessa categoria generica
+- Devono essere abbastanza specifiche da restituire immagini utili su Unsplash
+- Esempio CORRETTO per "Leone": ["savanna", "mane", "roar", "pride"]
+- Esempio SBAGLIATO per "Leone": ["lion", "animal", "cat", "wildlife"]
+
+REGOLA per il SUGGERIMENTO:
+- Una frase breve in italiano che aiuta senza rivelare la parola
+- Deve fare riferimento a caratteristiche distintive visive o comportamentali
+
+Rispondi ESCLUSIVAMENTE con JSON testuale crudo, NESSUN markdown (no \`\`\`json):
+{"parola": "parola italiana", "parole_immagini": ["word1", "word2", "word3", "word4"], "suggerimento": "suggerimento breve"}`;
 }
