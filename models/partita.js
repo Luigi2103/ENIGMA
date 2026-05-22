@@ -32,6 +32,11 @@ export function CreaPartita(database) {
             allowNull: false,
             defaultValue: []
         },
+        parole_immagini: {
+            type: DataTypes.JSON,
+            allowNull: false,
+            defaultValue: []
+        },
         attiva : {
             type: DataTypes.BOOLEAN,
             allowNull: false,

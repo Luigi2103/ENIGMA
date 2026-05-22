@@ -28,7 +28,8 @@ export class GestorePartita {
             argomento: tema,
             suggerimento: enigma.suggerimento,
             utenteId: utente.id,
-            foto: foto
+            foto: foto,
+            parole_immagini: enigma.parole_immagini
         });
 
         return await partitaDaRegistrare.save()
