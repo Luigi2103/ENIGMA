@@ -57,27 +57,32 @@ REGOLE per la PAROLA:
 - Strettamente legata al tema "${tema}"
 - Comune e conosciuta (no termini tecnici rari)
 
-REGOLE CRITICHE per le FRASI_IMMAGINI (query di ricerca per Unsplash):
-- Devono essere ESATTAMENTE 4 frasi in inglese di 2-3 parole ciascuna
-- Ogni frase deve descrivere una SCENA VISIVA SPECIFICA che mostri chiaramente un aspetto distintivo della parola
-- Le frasi devono descrivere: 1) l'aspetto fisico caratteristico, 2) il comportamento tipico, 3) l'ambiente/contesto naturale, 4) un dettaglio ravvicinato iconico
-- NON usare mai la parola stessa, il suo sinonimo inglese diretto, né termini della stessa categoria generica
-- Le immagini risultanti devono permettere di intuire la parola anche senza vederla esplicitamente
-- Usa aggettivi e sostantivi descrittivi che Unsplash restituirebbe come foto chiare e riconoscibili
+STRATEGIA per le PAROLE_IMMAGINI:
+Le 4 immagini devono essere INDIZI VISIVI CHIARI. Ogni immagine mostra qualcosa di CONCRETO e RICONOSCIBILE che è fortemente associato alla parola. Il giocatore deve poter capire il collegamento guardando l'immagine.
 
-ESEMPI CORRETTI:
-- Per "Ippopotamo": ["africa river submerged", "massive jaws open", "thick grey skin", "mud pool wildlife"]
-- Per "Guanto": ["leather hand protection", "boxing wrist wrap", "winter hand glove", "baseball mitt catch"]
-- Per "Leone": ["golden mane close-up", "savanna grass stalking", "pride resting sunset", "roaring teeth wild"]
+REGOLE per le PAROLE_IMMAGINI (query Unsplash in inglese):
+- Devono essere ESATTAMENTE 4 query in inglese di 2-4 parole
+- Ogni query DEVE contenere almeno un SOSTANTIVO concreto (non solo aggettivi)
+- Le 4 query devono mostrare 4 aspetti DIVERSI: caratteristica fisica, comportamento/uso, habitat/contesto, dettaglio iconico
+- NON usare la traduzione inglese diretta della parola come UNICA parola della query
+- Le query devono essere abbastanza specifiche da restituire foto chiare su Unsplash
+- È accettabile mostrare l'oggetto/animale stesso purché la query non sia solo il suo sinonimo diretto
 
-ESEMPI SBAGLIATI (troppo vaghi o sinonimi diretti):
-- Per "Ippopotamo": ["river", "yawn", "calf", "nostrils"] ← parole singole ambigue
-- Per "Leone": ["lion", "animal", "cat", "wildlife"] ← sinonimi diretti
+ESEMPI CORRETTI (query concrete con sostantivi):
+- Per "Ippopotamo": ["hippo open mouth water", "hippo body mud pool", "africa river wildlife", "hippo teeth closeup"]
+- Per "Giraffa": ["giraffe neck leaves eating", "giraffe legs walking savanna", "giraffe pattern skin", "giraffe head sky"]
+- Per "Pianoforte": ["piano keys black white", "grand piano concert hall", "pianist hands playing", "piano pedals closeup"]
+- Per "Vulcano": ["lava flow eruption", "volcano crater aerial", "magma rocks glowing", "ash cloud explosion"]
+
+ESEMPI SBAGLIATI:
+- Solo aggettivi: ["massive grey smooth"] <- Unsplash non restituisce nulla di utile
+- Sinonimo unico: ["hippopotamus"] <- troppo diretto, non lascia spazio al ragionamento
+- Troppo vago: ["africa nature water"] <- foto generiche, nessun aiuto
 
 REGOLA per il SUGGERIMENTO:
 - Una frase breve in italiano che aiuta senza rivelare la parola
 - Deve fare riferimento a caratteristiche visive o comportamentali distintive
 
 Rispondi ESCLUSIVAMENTE con JSON testuale crudo, NESSUN markdown (no \`\`\`json):
-{"parola": "parola italiana", "parole_immagini": ["frase 2-3 parole", "frase 2-3 parole", "frase 2-3 parole", "frase 2-3 parole"], "suggerimento": "suggerimento breve"}`;
+{"parola": "parola italiana", "parole_immagini": ["query 2-4 parole", "query 2-4 parole", "query 2-4 parole", "query 2-4 parole"], "suggerimento": "suggerimento breve"}`;
 }
