@@ -1,0 +1,281 @@
+// --- Bootstrap (deve stare prima di qualsiasi altra regola) ---
+@use 'bootstrap/scss/bootstrap';
+
+// ============================================================
+// ENIGMA – Design System Globale
+// ============================================================
+
+// --- Google Fonts ---
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap');
+
+// --- Bootstrap Icons (usa @import perché è un file CSS plain) ---
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+// ============================================================
+// CSS CUSTOM PROPERTIES (Design Tokens)
+// ============================================================
+:root {
+  // Palette
+  --enigma-dark:       #0a0a14;
+  --enigma-dark-2:     #10101e;
+  --enigma-dark-3:     #161628;
+  --enigma-surface:    #1c1c32;
+  --enigma-border:     rgba(138, 117, 255, 0.18);
+
+  --enigma-purple:     #7c3aed;
+  --enigma-purple-light: #a78bfa;
+  --enigma-gold:       #f59e0b;
+  --enigma-gold-light: #fcd34d;
+  --enigma-text:       #e2e8f0;
+  --enigma-text-muted: #94a3b8;
+
+  // Gradients
+  --gradient-hero: radial-gradient(ellipse at 50% 0%, rgba(124, 58, 237, 0.35) 0%, transparent 65%),
+                   linear-gradient(180deg, #0a0a14 0%, #10101e 100%);
+  --gradient-card: linear-gradient(135deg, rgba(28, 28, 50, 0.9) 0%, rgba(22, 22, 40, 0.95) 100%);
+  --gradient-gold:  linear-gradient(135deg, #f59e0b, #fcd34d);
+
+  // Typography
+  --font-display: 'Cinzel', 'Georgia', serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+
+  // Shadows
+  --shadow-glow-purple: 0 0 30px rgba(124, 58, 237, 0.25);
+  --shadow-glow-gold:   0 0 20px rgba(245, 158, 11, 0.3);
+  --shadow-card:        0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+// ============================================================
+// RESET & BASE
+// ============================================================
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--enigma-dark);
+  color: var(--enigma-text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// ============================================================
+// TYPOGRAPHY UTILITIES
+// ============================================================
+.font-display {
+  font-family: var(--font-display);
+}
+
+h1, h2, h3, .display-1, .display-2, .display-3 {
+  font-family: var(--font-display);
+  color: var(--enigma-text);
+}
+
+// ============================================================
+// CUSTOM COMPONENT CLASSES
+// ============================================================
+
+// --- Buttons ---
+.btn-enigma-primary {
+  background: var(--enigma-purple);
+  color: #fff;
+  border: 1px solid rgba(124, 58, 237, 0.5);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 0.65rem 1.75rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+    background: #9558f5;
+    box-shadow: var(--shadow-glow-purple);
+    color: #fff;
+    transform: translateY(-2px);
+
+    &::before { opacity: 1; }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-enigma-outline {
+  background: transparent;
+  color: var(--enigma-purple-light);
+  border: 1px solid var(--enigma-purple-light);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 0.65rem 1.75rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(124, 58, 237, 0.12);
+    color: #fff;
+    border-color: var(--enigma-purple);
+    transform: translateY(-2px);
+  }
+}
+
+.btn-enigma-gold {
+  background: var(--gradient-gold);
+  color: #1a0a00;
+  border: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.65rem 1.75rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: var(--shadow-glow-gold);
+    color: #1a0a00;
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+  }
+}
+
+// --- Cards ---
+.enigma-card {
+  background: var(--gradient-card);
+  border: 1px solid var(--enigma-border);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-card), var(--shadow-glow-purple);
+    border-color: rgba(124, 58, 237, 0.45);
+  }
+}
+
+// --- Section Titles ---
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.5rem);
+  color: var(--enigma-text);
+  position: relative;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 60%;
+    height: 2px;
+    background: var(--gradient-gold);
+    border-radius: 2px;
+    margin-top: 0.4rem;
+  }
+}
+
+// --- Badge ---
+.badge-enigma {
+  background: rgba(124, 58, 237, 0.2);
+  color: var(--enigma-purple-light);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25em 0.65em;
+}
+
+// --- Dividers ---
+.enigma-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--enigma-border), transparent);
+  margin: 2rem 0;
+}
+
+// ============================================================
+// SCROLL ANIMATIONS (usati con IntersectionObserver)
+// ============================================================
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  transition: opacity 0.7s ease;
+
+  &.visible {
+    opacity: 1;
+  }
+}
+
+// Delay utilities
+@for $i from 1 through 8 {
+  .delay-#{$i} {
+    transition-delay: #{$i * 0.1}s;
+  }
+}
+
+// ============================================================
+// SCROLLBAR STYLING
+// ============================================================
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--enigma-dark-2);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--enigma-purple);
+  border-radius: 4px;
+
+  &:hover {
+    background: var(--enigma-purple-light);
+  }
+}
+
+// ============================================================
+// BOOTSTRAP OVERRIDES
+// ============================================================
+.container {
+  max-width: 1280px;
+}
+
+a {
+  color: var(--enigma-purple-light);
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--enigma-gold-light);
+  }
+}

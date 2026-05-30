@@ -1,0 +1,208 @@
+// ============================================================
+// Navbar – ENIGMA
+// ============================================================
+
+.enigma-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(10, 10, 20, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid transparent;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+
+  &.scrolled {
+    background: rgba(10, 10, 20, 0.95);
+    border-bottom-color: var(--enigma-border);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.nav-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+// --- Logo ---
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-decoration: none;
+  flex-shrink: 0;
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--enigma-purple), #9f67ff);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #fff;
+    box-shadow: 0 2px 12px rgba(124, 58, 237, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .logo-text {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    background: linear-gradient(135deg, #c4b5fd, #f59e0b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  &:hover .logo-icon {
+    transform: rotate(-10deg) scale(1.1);
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.6);
+  }
+}
+
+// --- Desktop Links ---
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+
+  li a {
+    display: block;
+    padding: 0.45rem 0.85rem;
+    color: var(--enigma-text-muted);
+    font-size: 0.92rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    border-radius: 6px;
+    transition: color 0.2s ease, background 0.2s ease;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--enigma-text);
+      background: rgba(124, 58, 237, 0.1);
+    }
+
+    &.active {
+      color: var(--enigma-purple-light);
+      background: rgba(124, 58, 237, 0.12);
+    }
+  }
+}
+
+// --- Auth buttons ---
+.nav-auth {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+// --- Hamburger ---
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+
+  span {
+    display: block;
+    height: 2px;
+    background: var(--enigma-text-muted);
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s ease;
+    transform-origin: center;
+
+    &.open:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--enigma-purple-light); }
+    &.open:nth-child(2) { opacity: 0; }
+    &.open:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--enigma-purple-light); }
+  }
+}
+
+// --- Mobile Menu ---
+.nav-mobile-menu {
+  display: none;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.35s ease;
+  border-top: 1px solid transparent;
+
+  &.open {
+    max-height: 420px;
+    border-top-color: var(--enigma-border);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0.75rem 1.5rem 1.25rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  li a {
+    display: block;
+    padding: 0.65rem 0.85rem;
+    color: var(--enigma-text-muted);
+    font-size: 0.95rem;
+    border-radius: 6px;
+    transition: color 0.2s ease, background 0.2s ease;
+    text-decoration: none;
+
+    &:hover, &.active {
+      color: var(--enigma-text);
+      background: rgba(124, 58, 237, 0.1);
+    }
+  }
+
+  li.divider {
+    height: 1px;
+    background: var(--enigma-border);
+    margin: 0.5rem 0;
+  }
+
+  .mobile-cta {
+    color: var(--enigma-purple-light) !important;
+    font-weight: 600;
+    border: 1px solid rgba(167, 139, 250, 0.3);
+    text-align: center;
+  }
+}
+
+// ============================================================
+// RESPONSIVE
+// ============================================================
+@media (max-width: 768px) {
+  .nav-links, .nav-auth {
+    display: none;
+  }
+
+  .nav-hamburger {
+    display: flex;
+  }
+
+  .nav-mobile-menu {
+    display: block;
+  }
+}

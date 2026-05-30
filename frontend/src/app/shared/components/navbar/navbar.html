@@ -1,0 +1,57 @@
+<nav class="enigma-nav" [class.scrolled]="isScrolled()">
+  <div class="nav-container">
+
+    <!-- Logo -->
+    <a class="nav-logo" routerLink="/" (click)="closeMenu()">
+      <span class="logo-icon">
+        <i class="bi bi-puzzle"></i>
+      </span>
+      <span class="logo-text">ENIGMA</span>
+    </a>
+
+    <!-- Desktop Links -->
+    <ul class="nav-links">
+      <li>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">
+          Home
+        </a>
+      </li>
+      <li>
+        <a routerLink="/games" routerLinkActive="active" (click)="closeMenu()">
+          Enigmi
+        </a>
+      </li>
+      <li>
+        <a routerLink="/leaderboard" routerLinkActive="active" (click)="closeMenu()">
+          Classifica
+        </a>
+      </li>
+    </ul>
+
+    <!-- Desktop Auth Buttons -->
+    <div class="nav-auth">
+      <a routerLink="/login" class="btn-enigma-outline btn-sm" (click)="closeMenu()">Accedi</a>
+      <a routerLink="/signup" class="btn-enigma-primary btn-sm" (click)="closeMenu()">Registrati</a>
+    </div>
+
+    <!-- Mobile Hamburger -->
+    <button class="nav-hamburger" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen()" aria-label="Menu">
+      <span [class.open]="isMenuOpen()"></span>
+      <span [class.open]="isMenuOpen()"></span>
+      <span [class.open]="isMenuOpen()"></span>
+    </button>
+
+  </div>
+
+  <!-- Mobile Dropdown Menu -->
+  <div class="nav-mobile-menu" [class.open]="isMenuOpen()">
+    <ul>
+      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Home</a></li>
+      <li><a routerLink="/games" routerLinkActive="active" (click)="closeMenu()">Enigmi</a></li>
+      <li><a routerLink="/leaderboard" routerLinkActive="active" (click)="closeMenu()">Classifica</a></li>
+      <li class="divider"></li>
+      <li><a routerLink="/login" (click)="closeMenu()">Accedi</a></li>
+      <li><a routerLink="/signup" class="mobile-cta" (click)="closeMenu()">Registrati</a></li>
+    </ul>
+  </div>
+</nav>
