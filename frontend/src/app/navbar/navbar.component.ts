@@ -5,10 +5,10 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-navbar',
   imports: [CommonModule, RouterLink, RouterLinkActive],
-  templateUrl: './navbar.html',
-  styleUrl: './navbar.scss'
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.scss'
 })
-export class Navbar {
+export class NavbarComponent {
   isScrolled = signal(false);
   isMenuOpen = signal(false);
 

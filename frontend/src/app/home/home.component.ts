@@ -1,15 +1,15 @@
 import { Component, OnInit, AfterViewInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { PublicService, Partita, LeaderboardEntry } from '../../core/services/public';
+import { PublicService, Partita, LeaderboardEntry } from '../_services/rest-backend/rest-backend.service';
 
 @Component({
   selector: 'app-home',
   imports: [CommonModule, RouterLink],
-  templateUrl: './home.html',
-  styleUrl: './home.scss'
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.scss'
 })
-export class Home implements OnInit, AfterViewInit {
+export class HomeComponent implements OnInit, AfterViewInit {
 
   private publicService = inject(PublicService);
 
