@@ -30,8 +30,18 @@
 
     <!-- Desktop Auth Buttons -->
     <div class="nav-auth">
-      <a routerLink="/login" class="btn-enigma-outline btn-sm" (click)="closeMenu()">Accedi</a>
-      <a routerLink="/signup" class="btn-enigma-primary btn-sm" (click)="closeMenu()">Registrati</a>
+      @if (authService.isLoggedIn()) {
+        <span class="nav-username">
+          <i class="bi bi-person-circle"></i>
+          {{ authService.username() }}
+        </span>
+        <button id="btn-navbar-logout" class="btn-enigma-outline btn-sm" (click)="logout()">
+          <i class="bi bi-box-arrow-right"></i> Esci
+        </button>
+      } @else {
+        <a routerLink="/login" class="btn-enigma-outline btn-sm" (click)="closeMenu()">Accedi</a>
+        <a routerLink="/signup" class="btn-enigma-primary btn-sm" (click)="closeMenu()">Registrati</a>
+      }
     </div>
 
     <!-- Mobile Hamburger -->
@@ -50,8 +60,13 @@
       <li><a routerLink="/games" routerLinkActive="active" (click)="closeMenu()">Enigmi</a></li>
       <li><a routerLink="/leaderboard" routerLinkActive="active" (click)="closeMenu()">Classifica</a></li>
       <li class="divider"></li>
-      <li><a routerLink="/login" (click)="closeMenu()">Accedi</a></li>
-      <li><a routerLink="/signup" class="mobile-cta" (click)="closeMenu()">Registrati</a></li>
+      @if (authService.isLoggedIn()) {
+        <li class="mobile-username"><i class="bi bi-person-circle"></i> {{ authService.username() }}</li>
+        <li><button class="mobile-logout-btn" (click)="logout()"><i class="bi bi-box-arrow-right"></i> Esci</button></li>
+      } @else {
+        <li><a routerLink="/login" (click)="closeMenu()">Accedi</a></li>
+        <li><a routerLink="/signup" class="mobile-cta" (click)="closeMenu()">Registrati</a></li>
+      }
     </ul>
   </div>
 </nav>

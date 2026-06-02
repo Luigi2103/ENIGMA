@@ -111,6 +111,48 @@
   flex-shrink: 0;
 }
 
+.nav-username {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--enigma-purple-light);
+  letter-spacing: 0.02em;
+
+  i { font-size: 1.1rem; }
+}
+
+.mobile-username {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.85rem;
+  color: var(--enigma-purple-light);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.mobile-logout-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.65rem 0.85rem;
+  background: none;
+  border: none;
+  color: #fca5a5;
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: rgba(239, 68, 68, 0.08);
+  }
+}
+
+
 // --- Hamburger ---
 .nav-hamburger {
   display: none;

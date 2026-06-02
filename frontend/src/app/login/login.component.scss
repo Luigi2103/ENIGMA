@@ -1,0 +1,354 @@
+// ============================================================
+// LOGIN PAGE – ENIGMA
+// ============================================================
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  position: relative;
+  overflow: hidden;
+  background: var(--enigma-dark);
+}
+
+// ---- Glowing background orbs ----
+.bg-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+
+  &--1 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.28) 0%, transparent 70%);
+    top: -120px;
+    left: -100px;
+    animation: floatOrb 8s ease-in-out infinite alternate;
+  }
+
+  &--2 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 70%);
+    bottom: -100px;
+    right: -80px;
+    animation: floatOrb 10s ease-in-out infinite alternate-reverse;
+  }
+}
+
+@keyframes floatOrb {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(30px, 20px) scale(1.08); }
+}
+
+// ---- Card ----
+.login-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+  background: linear-gradient(135deg, rgba(28, 28, 50, 0.95) 0%, rgba(16, 16, 30, 0.98) 100%);
+  border: 1px solid var(--enigma-border);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  backdrop-filter: blur(20px);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(124, 58, 237, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+// ---- Brand ----
+.login-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+
+  .brand-icon {
+    font-size: 2rem;
+    color: var(--enigma-purple-light);
+    filter: drop-shadow(0 0 8px rgba(167, 139, 250, 0.6));
+  }
+
+  .brand-name {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    background: linear-gradient(135deg, var(--enigma-purple-light), var(--enigma-gold-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+// ---- Tab switcher ----
+.tab-switcher {
+  display: flex;
+  position: relative;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--enigma-border);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 1.75rem;
+  gap: 0;
+  overflow: hidden;
+}
+
+.tab-indicator {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.6), rgba(167, 139, 250, 0.3));
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  border-radius: 7px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 15px rgba(124, 58, 237, 0.25);
+
+  &.right {
+    transform: translateX(calc(100% + 0px));
+  }
+}
+
+.tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--enigma-text-muted);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.6rem 1rem;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: color 0.25s ease;
+  position: relative;
+  z-index: 1;
+
+  &.active {
+    color: var(--enigma-text);
+  }
+
+  &:hover:not(.active) {
+    color: var(--enigma-text);
+  }
+}
+
+// ---- Alert boxes ----
+.alert-box {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+  animation: fadeSlideIn 0.3s ease;
+
+  i { font-size: 1rem; flex-shrink: 0; }
+
+  &--error {
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    color: #fca5a5;
+  }
+
+  &--success {
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    color: #86efac;
+  }
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ---- Auth form ----
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--enigma-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+
+    .optional { font-weight: 400; opacity: 0.65; text-transform: none; letter-spacing: 0; }
+    .required { color: var(--enigma-gold); }
+  }
+}
+
+.input-wrapper {
+  position: relative;
+
+  .input-icon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--enigma-text-muted);
+    font-size: 0.95rem;
+    pointer-events: none;
+    transition: color 0.2s;
+  }
+}
+
+.form-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(138, 117, 255, 0.22);
+  border-radius: 8px;
+  color: var(--enigma-text);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  padding: 0.7rem 0.9rem 0.7rem 2.4rem;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  outline: none;
+
+  &::placeholder {
+    color: rgba(148, 163, 184, 0.45);
+  }
+
+  &:focus {
+    border-color: var(--enigma-purple-light);
+    background: rgba(124, 58, 237, 0.06);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  }
+
+  // quando c'è il bottone toggle a destra, lascia spazio
+  &--with-toggle {
+    padding-right: 2.8rem;
+  }
+}
+
+// Fix: icon color on focus (sibling issue)
+.input-wrapper:focus-within .input-icon {
+  color: var(--enigma-purple-light);
+}
+
+// ---- Password toggle button ----
+.pwd-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--enigma-text-muted);
+  cursor: pointer;
+  padding: 0.2rem;
+  line-height: 1;
+  font-size: 1rem;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: var(--enigma-purple-light);
+  }
+}
+
+
+// ---- Submit button ----
+.submit-btn {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  padding: 0.8rem 1.5rem;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+}
+
+// ---- Spinner ----
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+
+  &--dark {
+    border-color: rgba(0, 0, 0, 0.2);
+    border-top-color: #1a0a00;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ---- Switch hint ----
+.switch-hint {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--enigma-text-muted);
+  margin-top: 1.25rem;
+  margin-bottom: 0;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--enigma-purple-light);
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--enigma-gold-light);
+    text-decoration: underline;
+  }
+}
+
+// ---- Responsive ----
+@media (max-width: 480px) {
+  .login-card {
+    padding: 2rem 1.25rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
