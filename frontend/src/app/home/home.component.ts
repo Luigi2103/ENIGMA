@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private loadGames(): void {
     this.publicService.getGames().subscribe({
       next: (data) => {
-        this.games.set(data.slice(0, 6)); // mostriamo max 6 card in homepage
+        this.games.set(data.slice(0, 6));
         this.gamesLoading.set(false);
       },
       error: () => {
@@ -49,13 +49,22 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private loadLeaderboard(): void {
     this.publicService.getLeaderboard().subscribe({
       next: (data) => {
-        this.leaderboard.set(data.slice(0, 5)); // top 5 in homepage
+        this.leaderboard.set(data.slice(0, 5));
         this.leaderboardLoading.set(false);
+        setTimeout(() => this.makeLeaderboardVisible(), 100);
       },
       error: () => {
         this.leaderboardError.set(true);
         this.leaderboardLoading.set(false);
       }
+    });
+  }
+
+  private makeLeaderboardVisible(): void {
+    const section = document.getElementById('classifica');
+    if (!section) return;
+    section.querySelectorAll('.fade-in-up, .fade-in').forEach(el => {
+      el.classList.add('visible');
     });
   }
 
@@ -105,5 +114,19 @@ export class HomeComponent implements OnInit, AfterViewInit {
   getRankClass(index: number): string {
     const classes = ['rank-gold', 'rank-silver', 'rank-bronze'];
     return classes[index] ?? 'rank-default';
+  }
+
+  getRankLabel(index: number): string {
+    const labels = ['Campione', 'Vicecampione', 'Terzo posto'];
+    return labels[index] ?? `#${index + 1}`;
+  }
+
+  getAvatarColor(index: number): string {
+    const colors = [
+      'linear-gradient(135deg, #f59e0b, #d97706)',
+      'linear-gradient(135deg, #94a3b8, #64748b)',
+      'linear-gradient(135deg, #b45309, #92400e)',
+    ];
+    return colors[index] ?? 'linear-gradient(135deg, #7c3aed, #9f67ff)';
   }
 }

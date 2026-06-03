@@ -1,8 +1,8 @@
 // ============================================================
-// LOGIN PAGE – ENIGMA
+// SIGNUP PAGE – ENIGMA
 // ============================================================
 
-.login-page {
+.signup-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -24,19 +24,19 @@
   &--1 {
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(124, 58, 237, 0.28) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.2) 0%, transparent 70%);
     top: -120px;
-    left: -100px;
-    animation: floatOrb 8s ease-in-out infinite alternate;
+    right: -100px;
+    animation: floatOrb 9s ease-in-out infinite alternate;
   }
 
   &--2 {
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%);
     bottom: -100px;
-    right: -80px;
-    animation: floatOrb 10s ease-in-out infinite alternate-reverse;
+    left: -80px;
+    animation: floatOrb 11s ease-in-out infinite alternate-reverse;
   }
 }
 
@@ -46,11 +46,11 @@
 }
 
 // ---- Card ----
-.login-card {
+.signup-card {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 440px;
+  max-width: 480px;
   background: linear-gradient(135deg, rgba(28, 28, 50, 0.95) 0%, rgba(16, 16, 30, 0.98) 100%);
   border: 1px solid var(--enigma-border);
   border-radius: 20px;
@@ -58,12 +58,12 @@
   backdrop-filter: blur(20px);
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 40px rgba(124, 58, 237, 0.1),
+    0 0 40px rgba(245, 158, 11, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 // ---- Brand ----
-.login-brand {
+.signup-brand {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,7 +89,7 @@
 }
 
 // ---- Title ----
-.login-title {
+.signup-title {
   font-family: var(--font-display);
   font-size: 1.3rem;
   font-weight: 700;
@@ -98,7 +98,7 @@
   margin: 0 0 0.4rem;
 }
 
-.login-subtitle {
+.signup-subtitle {
   font-size: 0.875rem;
   color: var(--enigma-text-muted);
   text-align: center;
@@ -143,6 +143,12 @@
   gap: 1.1rem;
 }
 
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -154,6 +160,9 @@
     color: var(--enigma-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.06em;
+
+    .optional { font-weight: 400; opacity: 0.65; text-transform: none; letter-spacing: 0; }
+    .required { color: var(--enigma-gold); }
   }
 }
 
@@ -189,9 +198,9 @@
   }
 
   &:focus {
-    border-color: var(--enigma-purple-light);
-    background: rgba(124, 58, 237, 0.06);
-    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+    border-color: var(--enigma-gold);
+    background: rgba(245, 158, 11, 0.05);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12);
   }
 
   &--with-toggle {
@@ -200,7 +209,7 @@
 }
 
 .input-wrapper:focus-within .input-icon {
-  color: var(--enigma-purple-light);
+  color: var(--enigma-gold);
 }
 
 // ---- Password toggle button ----
@@ -221,7 +230,7 @@
   align-items: center;
 
   &:hover {
-    color: var(--enigma-purple-light);
+    color: var(--enigma-gold-light);
   }
 }
 
@@ -255,6 +264,11 @@
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
   display: inline-block;
+
+  &--dark {
+    border-color: rgba(0, 0, 0, 0.2);
+    border-top-color: #1a0a00;
+  }
 }
 
 @keyframes spin {
@@ -290,7 +304,11 @@
 
 // ---- Responsive ----
 @media (max-width: 480px) {
-  .login-card {
+  .signup-card {
     padding: 2rem 1.25rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
   }
 }

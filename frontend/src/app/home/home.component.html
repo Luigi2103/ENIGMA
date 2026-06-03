@@ -203,14 +203,18 @@
     <div class="leaderboard-inner">
 
       <div class="leaderboard-header fade-in-up">
-        <h2 class="section-title">Hall of Fame</h2>
-        <p class="section-subtitle">I migliori risolutori di enigmi</p>
+        <div class="badge-hof" aria-hidden="true">
+          <i class="bi bi-trophy-fill"></i>
+          Hall of Fame
+        </div>
+        <h2 class="section-title">I Migliori Risolutori</h2>
+        <p class="section-subtitle">I campioni degli enigmi ENIGMA</p>
       </div>
 
       <!-- Loading -->
       @if (leaderboardLoading()) {
         <div class="lb-skeleton-list">
-          @for (n of [1,2,3,4,5]; track n) {
+          @for (n of [1,2,3]; track n) {
             <div class="lb-skeleton-row"></div>
           }
         </div>
@@ -224,33 +228,76 @@
         </div>
       }
 
-      <!-- Leaderboard list -->
+      <!-- Podio top 3 -->
       @if (!leaderboardLoading() && !leaderboardError()) {
-        <ol class="leaderboard-list" aria-label="Classifica dei migliori giocatori">
-          @for (entry of leaderboard(); track entry.utenteId; let i = $index) {
-            <li class="leaderboard-row fade-in-up" [class]="'delay-' + (i + 1)">
-              <div class="lb-rank">
-                <i class="bi" [class]="getRankIcon(i)" [class]="getRankClass(i)"></i>
-                <span class="lb-position">{{ i + 1 }}</span>
-              </div>
-              <div class="lb-avatar" aria-hidden="true">
-                {{ entry.Utente.username.charAt(0).toUpperCase() }}
-              </div>
-              <span class="lb-username">{{ entry.Utente.username }}</span>
-              <div class="lb-score">
-                <i class="bi bi-check-circle-fill text-success me-1"></i>
-                <strong>{{ entry.enigmi_risolti }}</strong>
-                <span class="lb-score__label"> risolti</span>
-              </div>
-            </li>
-          }
-        </ol>
+        @if (leaderboard().length === 0) {
+          <div class="state-message">
+            <i class="bi bi-people" aria-hidden="true"></i>
+            <p>Nessun giocatore in classifica ancora. Sii il primo!</p>
+          </div>
+        } @else {
+          <div class="podium" aria-label="Podio top 3">
 
-        <div class="text-center mt-4 fade-in-up delay-5">
-          <a routerLink="/leaderboard" class="btn-enigma-outline" id="btn-full-leaderboard">
-            Classifica Completa <i class="bi bi-arrow-right ms-1"></i>
-          </a>
-        </div>
+            <!-- 2° posto -->
+            <div class="podium-card podium-card--silver fade-in-up delay-2" aria-label="Secondo posto">
+              <div class="podium-card__rank-badge">
+                <i class="bi bi-award-fill"></i>
+              </div>
+              <div class="podium-card__avatar" [style.background]="getAvatarColor(1)">
+                {{ leaderboard()[1]?.Utente?.username?.charAt(0)?.toUpperCase() ?? '?' }}
+              </div>
+              <span class="podium-card__username">{{ leaderboard()[1]?.Utente?.username ?? '-' }}</span>
+              <span class="podium-card__label">Vicecampione</span>
+              <div class="podium-card__score">
+                <strong>{{ leaderboard()[1]?.enigmi_risolti ?? 0 }}</strong>
+                <span>risolti</span>
+              </div>
+              <div class="podium-card__bar podium-card__bar--2"></div>
+            </div>
+
+            <!-- 1° posto -->
+            <div class="podium-card podium-card--gold podium-card--top fade-in-up delay-1" aria-label="Primo posto">
+              <div class="podium-card__crown" aria-hidden="true">👑</div>
+              <div class="podium-card__rank-badge">
+                <i class="bi bi-trophy-fill"></i>
+              </div>
+              <div class="podium-card__avatar" [style.background]="getAvatarColor(0)">
+                {{ leaderboard()[0]?.Utente?.username?.charAt(0)?.toUpperCase() ?? '?' }}
+              </div>
+              <span class="podium-card__username">{{ leaderboard()[0]?.Utente?.username ?? '-' }}</span>
+              <span class="podium-card__label">Campione</span>
+              <div class="podium-card__score">
+                <strong>{{ leaderboard()[0]?.enigmi_risolti ?? 0 }}</strong>
+                <span>risolti</span>
+              </div>
+              <div class="podium-card__bar podium-card__bar--1"></div>
+            </div>
+
+            <!-- 3° posto -->
+            <div class="podium-card podium-card--bronze fade-in-up delay-3" aria-label="Terzo posto">
+              <div class="podium-card__rank-badge">
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <div class="podium-card__avatar" [style.background]="getAvatarColor(2)">
+                {{ leaderboard()[2]?.Utente?.username?.charAt(0)?.toUpperCase() ?? '?' }}
+              </div>
+              <span class="podium-card__username">{{ leaderboard()[2]?.Utente?.username ?? '-' }}</span>
+              <span class="podium-card__label">Terzo posto</span>
+              <div class="podium-card__score">
+                <strong>{{ leaderboard()[2]?.enigmi_risolti ?? 0 }}</strong>
+                <span>risolti</span>
+              </div>
+              <div class="podium-card__bar podium-card__bar--3"></div>
+            </div>
+
+          </div>
+
+          <div class="text-center mt-4 fade-in-up delay-4">
+            <a routerLink="/leaderboard" class="btn-enigma-outline" id="btn-full-leaderboard">
+              Classifica Completa <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+          </div>
+        }
       }
 
     </div>

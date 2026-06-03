@@ -16,39 +16,41 @@
 // ============================================================
 :root {
   // Palette
-  --enigma-dark:       #0a0a14;
-  --enigma-dark-2:     #10101e;
-  --enigma-dark-3:     #161628;
-  --enigma-surface:    #1c1c32;
-  --enigma-border:     rgba(138, 117, 255, 0.18);
+  --enigma-dark: #0a0a14;
+  --enigma-dark-2: #10101e;
+  --enigma-dark-3: #161628;
+  --enigma-surface: #1c1c32;
+  --enigma-border: rgba(138, 117, 255, 0.18);
 
-  --enigma-purple:     #7c3aed;
+  --enigma-purple: #7c3aed;
   --enigma-purple-light: #a78bfa;
-  --enigma-gold:       #f59e0b;
+  --enigma-gold: #f59e0b;
   --enigma-gold-light: #fcd34d;
-  --enigma-text:       #e2e8f0;
+  --enigma-text: #e2e8f0;
   --enigma-text-muted: #94a3b8;
 
   // Gradients
   --gradient-hero: radial-gradient(ellipse at 50% 0%, rgba(124, 58, 237, 0.35) 0%, transparent 65%),
-                   linear-gradient(180deg, #0a0a14 0%, #10101e 100%);
+    linear-gradient(180deg, #0a0a14 0%, #10101e 100%);
   --gradient-card: linear-gradient(135deg, rgba(28, 28, 50, 0.9) 0%, rgba(22, 22, 40, 0.95) 100%);
-  --gradient-gold:  linear-gradient(135deg, #f59e0b, #fcd34d);
+  --gradient-gold: linear-gradient(135deg, #f59e0b, #fcd34d);
 
   // Typography
   --font-display: 'Cinzel', 'Georgia', serif;
-  --font-body:    'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
 
   // Shadows
   --shadow-glow-purple: 0 0 30px rgba(124, 58, 237, 0.25);
-  --shadow-glow-gold:   0 0 20px rgba(245, 158, 11, 0.3);
-  --shadow-card:        0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-glow-gold: 0 0 20px rgba(245, 158, 11, 0.3);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 // ============================================================
 // RESET & BASE
 // ============================================================
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -74,7 +76,12 @@ body {
   font-family: var(--font-display);
 }
 
-h1, h2, h3, .display-1, .display-2, .display-3 {
+h1,
+h2,
+h3,
+.display-1,
+.display-2,
+.display-3 {
   font-family: var(--font-display);
   color: var(--enigma-text);
 }
@@ -101,7 +108,7 @@ h1, h2, h3, .display-1, .display-2, .display-3 {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -112,7 +119,9 @@ h1, h2, h3, .display-1, .display-2, .display-3 {
     color: #fff;
     transform: translateY(-2px);
 
-    &::before { opacity: 1; }
+    &::before {
+      opacity: 1;
+    }
   }
 
   &:active {
@@ -207,7 +216,188 @@ h1, h2, h3, .display-1, .display-2, .display-3 {
   padding: 0.25em 0.65em;
 }
 
-// --- Dividers ---
+// Badge dorato "Hall of Fame" – usato in home e leaderboard
+.badge-hof {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  color: #f59e0b;
+  border-radius: 999px;
+  padding: 0.4rem 1.1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  margin-bottom: 1rem;
+
+  i {
+    font-size: 0.95rem;
+  }
+}
+
+// --- Rank colors (usati nel podio e nella classifica) ---
+.rank-gold {
+  color: #f59e0b;
+}
+
+.rank-silver {
+  color: #94a3b8;
+}
+
+.rank-bronze {
+  color: #b45309;
+}
+
+.rank-default {
+  color: rgba(148, 163, 184, 0.35);
+  font-size: 0.6rem;
+}
+
+// --- Podio (usato in home e leaderboard) ---
+.podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.podium-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.75rem 1.5rem 0;
+  border-radius: 16px 16px 0 0;
+  background: var(--gradient-card);
+  border: 1px solid var(--enigma-border);
+  border-bottom: none;
+  width: 220px;
+  text-align: center;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-6px);
+  }
+
+  &--gold {
+    border-color: rgba(245, 158, 11, 0.4);
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.08) 0%, rgba(28, 28, 50, 0.95) 60%);
+    box-shadow: 0 0 40px rgba(245, 158, 11, 0.12);
+  }
+
+  &--silver {
+    border-color: rgba(148, 163, 184, 0.3);
+    background: linear-gradient(180deg, rgba(148, 163, 184, 0.06) 0%, rgba(28, 28, 50, 0.95) 60%);
+  }
+
+  &--bronze {
+    border-color: rgba(180, 83, 9, 0.3);
+    background: linear-gradient(180deg, rgba(180, 83, 9, 0.06) 0%, rgba(28, 28, 50, 0.95) 60%);
+  }
+
+  &--top {
+    padding-top: 2.5rem;
+    z-index: 1;
+  }
+
+  &__crown {
+    position: absolute;
+    top: -1.8rem;
+    font-size: 2rem;
+    animation: crown-float 2.5s ease-in-out infinite alternate;
+  }
+
+  &__rank-badge {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+  }
+
+  &__avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 0.75rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  &__username {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--enigma-text);
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+  }
+
+  &__label {
+    font-size: 0.72rem;
+    color: var(--enigma-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+  }
+
+  &__score {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    margin-bottom: 1.25rem;
+
+    strong {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--enigma-text);
+    }
+
+    span {
+      font-size: 0.78rem;
+      color: var(--enigma-text-muted);
+    }
+  }
+
+  &__bar {
+    width: 100%;
+
+    &--1 {
+      height: 80px;
+      background: linear-gradient(180deg, rgba(245, 158, 11, 0.25), rgba(245, 158, 11, 0.08));
+    }
+
+    &--2 {
+      height: 55px;
+      background: linear-gradient(180deg, rgba(148, 163, 184, 0.15), rgba(148, 163, 184, 0.05));
+    }
+
+    &--3 {
+      height: 40px;
+      background: linear-gradient(180deg, rgba(180, 83, 9, 0.15), rgba(180, 83, 9, 0.05));
+    }
+  }
+}
+
+@keyframes crown-float {
+  from {
+    transform: translateY(0) rotate(-5deg);
+  }
+
+  to {
+    transform: translateY(-6px) rotate(5deg);
+  }
+}
+
 .enigma-divider {
   border: none;
   height: 1px;
@@ -251,9 +441,11 @@ h1, h2, h3, .display-1, .display-2, .display-3 {
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--enigma-dark-2);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--enigma-purple);
   border-radius: 4px;
@@ -277,5 +469,72 @@ a {
 
   &:hover {
     color: var(--enigma-gold-light);
+  }
+}
+
+// ============================================================
+// PODIO – RESPONSIVE (globale, usato in home e leaderboard)
+// ============================================================
+
+@media (max-width: 768px) {
+  .podium {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .podium-card {
+    border-radius: 12px;
+    padding-bottom: 1rem;
+
+    &__bar {
+      display: none;
+    }
+
+    &__crown {
+      font-size: 1.5rem;
+      top: -1.4rem;
+    }
+
+    &--gold {
+      order: 1;
+      flex: 1 0 100%;
+      max-width: 320px;
+      flex-direction: column;
+    }
+
+    &--silver {
+      order: 2;
+      flex: 1 0 calc(50% - 0.3rem);
+      padding-top: 1rem;
+
+      .podium-card__avatar {
+        width: 44px;
+        height: 44px;
+        font-size: 1rem;
+      }
+
+      .podium-card__score strong {
+        font-size: 1.25rem;
+      }
+    }
+
+    &--bronze {
+      order: 3;
+      flex: 1 0 calc(50% - 0.3rem);
+      padding-top: 1rem;
+
+      .podium-card__avatar {
+        width: 44px;
+        height: 44px;
+        font-size: 1rem;
+      }
+
+      .podium-card__score strong {
+        font-size: 1.25rem;
+      }
+    }
   }
 }

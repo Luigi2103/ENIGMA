@@ -1,0 +1,180 @@
+<section class="signup-page">
+
+  <!-- Background particles -->
+  <div class="bg-glow bg-glow--1"></div>
+  <div class="bg-glow bg-glow--2"></div>
+
+  <div class="signup-card fade-in-up visible">
+
+    <!-- Logo / Brand -->
+    <div class="signup-brand">
+      <span class="brand-icon"><i class="bi bi-puzzle-fill"></i></span>
+      <span class="brand-name">ENIGMA</span>
+    </div>
+
+    <h1 class="signup-title">Crea il tuo account</h1>
+    <p class="signup-subtitle">Unisciti alla community e sfida la tua mente</p>
+
+    <!-- ===== FEEDBACK MESSAGES ===== -->
+    @if (errorMessage()) {
+      <div class="alert-box alert-box--error" role="alert">
+        <i class="bi bi-exclamation-circle-fill"></i>
+        {{ errorMessage() }}
+      </div>
+    }
+    @if (successMessage()) {
+      <div class="alert-box alert-box--success" role="alert">
+        <i class="bi bi-check-circle-fill"></i>
+        {{ successMessage() }}
+      </div>
+    }
+
+    <!-- ===== SIGNUP FORM ===== -->
+    <form class="auth-form" (ngSubmit)="onSignup()" novalidate>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="signup-nome">Nome <span class="optional">(opz.)</span></label>
+          <div class="input-wrapper">
+            <i class="bi bi-person input-icon"></i>
+            <input
+              id="signup-nome"
+              type="text"
+              class="form-input"
+              placeholder="Mario"
+              [(ngModel)]="signupData.nome"
+              name="nome"
+              (keydown.enter)="focusNext($event, 'signup-cognome')"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="signup-cognome">Cognome <span class="optional">(opz.)</span></label>
+          <div class="input-wrapper">
+            <i class="bi bi-person input-icon"></i>
+            <input
+              id="signup-cognome"
+              type="text"
+              class="form-input"
+              placeholder="Rossi"
+              [(ngModel)]="signupData.cognome"
+              name="cognome"
+              (keydown.enter)="focusNext($event, 'signup-username')"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="signup-username">Username <span class="required">*</span></label>
+        <div class="input-wrapper">
+          <i class="bi bi-at input-icon"></i>
+          <input
+            id="signup-username"
+            type="text"
+            class="form-input"
+            placeholder="enigmista_42"
+            [(ngModel)]="signupData.username"
+            name="username"
+            autocomplete="username"
+            required
+            (keydown.enter)="focusNext($event, 'signup-email')"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="signup-email">Email <span class="required">*</span></label>
+        <div class="input-wrapper">
+          <i class="bi bi-envelope input-icon"></i>
+          <input
+            id="signup-email"
+            type="email"
+            class="form-input"
+            placeholder="mario@example.com"
+            [(ngModel)]="signupData.email"
+            name="email"
+            autocomplete="email"
+            required
+            (keydown.enter)="focusNext($event, 'signup-password')"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="signup-password">Password <span class="required">*</span></label>
+        <div class="input-wrapper">
+          <i class="bi bi-lock input-icon"></i>
+          <input
+            id="signup-password"
+            [type]="showPassword() ? 'text' : 'password'"
+            class="form-input form-input--with-toggle"
+            placeholder="Minimo 8 caratteri"
+            [(ngModel)]="signupData.password"
+            name="password"
+            autocomplete="new-password"
+            required
+            (keydown.enter)="focusNext($event, 'signup-confirm')"
+          />
+          <button
+            type="button"
+            class="pwd-toggle"
+            (click)="showPassword.update(v => !v)"
+            [attr.aria-label]="showPassword() ? 'Nascondi password' : 'Mostra password'"
+            tabindex="-1"
+          >
+            <i [class]="showPassword() ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="signup-confirm">Conferma Password <span class="required">*</span></label>
+        <div class="input-wrapper">
+          <i class="bi bi-lock-fill input-icon"></i>
+          <input
+            id="signup-confirm"
+            [type]="showConfirmPassword() ? 'text' : 'password'"
+            class="form-input form-input--with-toggle"
+            placeholder="••••••••"
+            [(ngModel)]="signupData.confirmPassword"
+            name="confirmPassword"
+            autocomplete="new-password"
+            required
+            (keydown.enter)="focusNext($event, null)"
+          />
+          <button
+            type="button"
+            class="pwd-toggle"
+            (click)="showConfirmPassword.update(v => !v)"
+            [attr.aria-label]="showConfirmPassword() ? 'Nascondi password' : 'Mostra password'"
+            tabindex="-1"
+          >
+            <i [class]="showConfirmPassword() ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+          </button>
+        </div>
+      </div>
+
+      <button
+        id="btn-signup-submit"
+        type="submit"
+        class="btn-enigma-gold w-100 submit-btn"
+        [disabled]="isLoading()"
+      >
+        @if (isLoading()) {
+          <span class="spinner spinner--dark"></span>
+          Registrazione…
+        } @else {
+          <i class="bi bi-person-plus-fill"></i>
+          Crea account
+        }
+      </button>
+    </form>
+
+    <p class="switch-hint">
+      Hai già un account?
+      <a routerLink="/login" class="link-btn">Accedi</a>
+    </p>
+
+  </div><!-- /signup-card -->
+</section>

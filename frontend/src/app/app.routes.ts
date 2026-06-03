@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
+import { SignupComponent } from './signup/signup.component';
+import { LeaderboardComponent } from './leaderboard/leaderboard.component';
 
 export const routes: Routes = [
   {
@@ -12,6 +14,16 @@ export const routes: Routes = [
     path: 'login',
     component: LoginComponent,
     title: 'ENIGMA – Accedi'
+  },
+  {
+    path: 'signup',
+    component: SignupComponent,
+    title: 'ENIGMA – Registrati'
+  },
+  {
+    path: 'leaderboard',
+    component: LeaderboardComponent,
+    title: 'ENIGMA – Classifica'
   },
   {
     path: '**',
