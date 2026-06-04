@@ -71,6 +71,8 @@ export class GamesComponent implements OnInit, AfterViewInit {
         this.games.set(data);
         this.filteredGames.set(data);
         this.loading.set(false);
+        // DOM aggiornato → osserva i nuovi elementi per le animazioni
+        setTimeout(() => this.initScrollAnimations(), 0);
       },
       error: () => {
         this.error.set(true);

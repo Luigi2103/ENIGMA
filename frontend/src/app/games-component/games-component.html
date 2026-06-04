@@ -209,7 +209,9 @@
         @for (game of filteredGames(); track game.id; let i = $index) {
           <article
             class="game-card enigma-card fade-in-up"
-            [class]="'delay-' + ((i % 3) + 1)"
+            [class.delay-1]="i % 3 === 0"
+            [class.delay-2]="i % 3 === 1"
+            [class.delay-3]="i % 3 === 2"
             [class.game-card--mine]="game.Utente?.username === authService.username()"
             [attr.aria-label]="'Enigma: ' + game.argomento"
           >

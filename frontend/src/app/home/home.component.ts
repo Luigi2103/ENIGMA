@@ -64,6 +64,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       next: (data) => {
         this.games.set(data.slice(0, 6));
         this.gamesLoading.set(false);
+        setTimeout(() => this.initScrollAnimations(), 0);
       },
       error: () => {
         this.gamesError.set(true);
