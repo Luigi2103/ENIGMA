@@ -1,28 +1,54 @@
-import { Component, OnInit, AfterViewInit, inject, signal } from '@angular/core';
+import { Component, OnInit, AfterViewInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { PublicService, Partita, LeaderboardEntry } from '../_services/rest-backend/rest-backend.service';
+import { AuthService } from '../_services/auth/auth.service';
+import { GameService } from '../_services/rest-backend/game.service';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit, AfterViewInit {
 
   private publicService = inject(PublicService);
+  private gameService   = inject(GameService);
+  readonly auth         = inject(AuthService);
+  private router        = inject(Router);
 
   // --- Static ---
   readonly currentYear = new Date().getFullYear();
 
-  // --- State ---
-  games = signal<Partita[]>([]);
-  leaderboard = signal<LeaderboardEntry[]>([]);
-  gamesLoading = signal(true);
+  // --- State condiviso ---
+  games             = signal<Partita[]>([]);
+  leaderboard       = signal<LeaderboardEntry[]>([]);
+  gamesLoading      = signal(true);
   leaderboardLoading = signal(true);
-  gamesError = signal(false);
-  leaderboardError = signal(false);
+  gamesError        = signal(false);
+  leaderboardError  = signal(false);
+
+  // --- Stat personali (solo se loggato) ---
+  myGames    = computed(() =>
+    this.games().filter(g => g.Utente?.username === this.auth.username())
+  );
+  myGamesCount = computed(() => this.myGames().length);
+  mySolved   = computed(() => {
+    const entry = this.leaderboard().find(e => e.Utente?.username === this.auth.username());
+    return entry ? Number(entry.enigmi_risolti) : 0;
+  });
+  myRank     = computed(() => {
+    const idx = this.leaderboard().findIndex(e => e.Utente?.username === this.auth.username());
+    return idx >= 0 ? idx + 1 : null;
+  });
+
+  // --- Modal crea enigma ---
+  showModal   = signal(false);
+  creating    = signal(false);
+  createError = signal<string | null>(null);
+  argomento   = '';
 
   ngOnInit(): void {
     this.loadGames();
@@ -63,62 +89,55 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private makeLeaderboardVisible(): void {
     const section = document.getElementById('classifica');
     if (!section) return;
-    section.querySelectorAll('.fade-in-up, .fade-in').forEach(el => {
-      el.classList.add('visible');
-    });
+    section.querySelectorAll('.fade-in-up, .fade-in').forEach(el => el.classList.add('visible'));
   }
 
   private initScrollAnimations(): void {
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
+      (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
       { threshold: 0.12 }
     );
+    document.querySelectorAll('.fade-in-up, .fade-in').forEach(el => observer.observe(el));
+  }
 
-    document.querySelectorAll('.fade-in-up, .fade-in').forEach((el) => {
-      observer.observe(el);
+  // --- Modal ---
+  openModal(): void {
+    this.argomento = '';
+    this.createError.set(null);
+    this.showModal.set(true);
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeModal(): void {
+    if (this.creating()) return;
+    this.showModal.set(false);
+    document.body.style.overflow = '';
+  }
+
+  submitCreate(): void {
+    if (this.creating()) return;
+    this.creating.set(true);
+    this.createError.set(null);
+    this.gameService.createGame(this.argomento.trim() || undefined).subscribe({
+      next: (partita) => {
+        this.creating.set(false);
+        this.closeModal();
+        this.router.navigate(['/games', partita.id]);
+      },
+      error: (err) => {
+        this.creating.set(false);
+        this.createError.set(err?.error?.message ?? 'Errore durante la creazione. Riprova.');
+      }
     });
   }
 
-  /**
-   * Formatta la data in italiano
-   */
+  // --- Helpers ---
   formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString('it-IT', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric'
-    });
+    return new Date(dateStr).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' });
   }
 
-  /**
-   * Ottiene la prima foto disponibile o placeholder
-   */
   getGameImage(game: Partita): string | null {
     return game.foto && game.foto.length > 0 ? game.foto[0] : null;
-  }
-
-  /**
-   * Rank visivo per la leaderboard
-   */
-  getRankIcon(index: number): string {
-    const icons = ['bi-trophy-fill', 'bi-award-fill', 'bi-star-fill'];
-    return icons[index] ?? 'bi-circle-fill';
-  }
-
-  getRankClass(index: number): string {
-    const classes = ['rank-gold', 'rank-silver', 'rank-bronze'];
-    return classes[index] ?? 'rank-default';
-  }
-
-  getRankLabel(index: number): string {
-    const labels = ['Campione', 'Vicecampione', 'Terzo posto'];
-    return labels[index] ?? `#${index + 1}`;
   }
 
   getAvatarColor(index: number): string {
@@ -128,5 +147,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
       'linear-gradient(135deg, #b45309, #92400e)',
     ];
     return colors[index] ?? 'linear-gradient(135deg, #7c3aed, #9f67ff)';
+  }
+
+  getRankLabel(index: number): string {
+    return ['Campione', 'Vicecampione', 'Terzo posto'][index] ?? `#${index + 1}`;
   }
 }

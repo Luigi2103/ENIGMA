@@ -1,345 +1,501 @@
 <!-- ============================================================
-     ENIGMA – Homepage
+     ENIGMA – Homepage  (guest vs logged-in)
      ============================================================ -->
 
-<!-- ========= HERO SECTION ========= -->
-<section class="hero-section" id="hero" aria-label="Sezione principale">
+<!-- ================================================================
+     ██████  VISTA GUEST (non loggato)
+     ================================================================ -->
+@if (!auth.isLoggedIn()) {
 
-  <!-- Sfondo decorativo -->
-  <div class="hero-bg" aria-hidden="true">
-    <div class="hero-orb hero-orb--1"></div>
-    <div class="hero-orb hero-orb--2"></div>
-    <div class="hero-grid"></div>
-  </div>
-
-  <div class="container hero-content">
-    <div class="hero-badge fade-in delay-1">
-      <i class="bi bi-stars"></i>
-      Indovinelli generati dall'Intelligenza Artificiale
+  <!-- ========= HERO ========= -->
+  <section class="hero-section" id="hero" aria-label="Sezione principale">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="hero-orb hero-orb--1"></div>
+      <div class="hero-orb hero-orb--2"></div>
+      <div class="hero-grid"></div>
     </div>
 
-    <h1 class="hero-title fade-in delay-2">
-      Svela i segreti<br>
-      <span class="hero-title__accent">dell'Enigma</span>
-    </h1>
-
-    <p class="hero-subtitle fade-in delay-3">
-      Ogni sfida è unica. Ogni risposta è un passo verso la vetta.<br class="d-none d-md-block">
-      Metti alla prova la tua mente contro enigmi misteriosi generati in tempo reale.
-    </p>
-
-    <div class="hero-actions fade-in delay-4">
-      <a routerLink="/games" class="btn-enigma-primary btn-lg" id="cta-play">
-        <i class="bi bi-play-circle me-2"></i>
-        Inizia a Giocare
-      </a>
-      <a routerLink="/leaderboard" class="btn-enigma-outline btn-lg" id="cta-leaderboard">
-        <i class="bi bi-trophy me-2"></i>
-        Classifica
-      </a>
-    </div>
-
-    <!-- Stats bar -->
-    <div class="hero-stats fade-in delay-5">
-      <div class="stat-item">
-        <span class="stat-value">∞</span>
-        <span class="stat-label">Enigmi Unici</span>
-      </div>
-      <div class="stat-divider" aria-hidden="true"></div>
-      <div class="stat-item">
-        <span class="stat-value">10</span>
-        <span class="stat-label">Tentativi per Partita</span>
-      </div>
-      <div class="stat-divider" aria-hidden="true"></div>
-      <div class="stat-item">
-        <span class="stat-value">🧠</span>
-        <span class="stat-label">Powered by AI</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Scroll indicator -->
-  <div class="scroll-indicator fade-in delay-6" aria-hidden="true">
-    <span></span>
-  </div>
-</section>
-
-
-<!-- ========= COME FUNZIONA ========= -->
-<section class="how-section" id="come-funziona" aria-label="Come funziona il gioco">
-  <div class="container">
-    <div class="text-center mb-5">
-      <h2 class="section-title fade-in-up">Come Funziona</h2>
-      <p class="section-subtitle fade-in-up delay-1">Tre semplici passi per entrare nel mondo degli enigmi</p>
-    </div>
-
-    <div class="row g-4 justify-content-center">
-
-      <div class="col-12 col-md-4">
-        <div class="how-card enigma-card fade-in-up delay-1">
-          <div class="how-card__icon">
-            <i class="bi bi-person-plus"></i>
-          </div>
-          <div class="how-card__step">01</div>
-          <h3>Registrati</h3>
-          <p>Crea il tuo account in pochi secondi. Il tuo percorso di sfide inizia qui.</p>
-        </div>
+    <div class="container hero-content">
+      <div class="hero-badge fade-in delay-1">
+        <i class="bi bi-stars"></i>
+        Indovinelli generati dall'Intelligenza Artificiale
       </div>
 
-      <div class="col-12 col-md-4">
-        <div class="how-card enigma-card fade-in-up delay-2">
-          <div class="how-card__icon">
-            <i class="bi bi-puzzle"></i>
-          </div>
-          <div class="how-card__step">02</div>
-          <h3>Scegli un Enigma</h3>
-          <p>Sfoglia la lista degli enigmi attivi o genera il tuo con un tema a piacere.</p>
-        </div>
-      </div>
+      <h1 class="hero-title fade-in delay-2">
+        Svela i segreti<br>
+        <span class="hero-title__accent">dell'Enigma</span>
+      </h1>
 
-      <div class="col-12 col-md-4">
-        <div class="how-card enigma-card fade-in-up delay-3">
-          <div class="how-card__icon">
-            <i class="bi bi-trophy"></i>
-          </div>
-          <div class="how-card__step">03</div>
-          <h3>Scala la Classifica</h3>
-          <p>Risolvi enigmi per guadagnare punti e conquistare le vette della leaderboard.</p>
-        </div>
-      </div>
+      <p class="hero-subtitle fade-in delay-3">
+        Ogni sfida è unica. Ogni risposta è un passo verso la vetta.<br class="d-none d-md-block">
+        Metti alla prova la tua mente contro enigmi misteriosi generati in tempo reale.
+      </p>
 
-    </div>
-  </div>
-</section>
-
-
-<!-- ========= ENIGMI IN EVIDENZA ========= -->
-<section class="games-section" id="enigmi" aria-label="Enigmi in evidenza">
-  <div class="container">
-    <div class="section-header">
-      <div>
-        <h2 class="section-title fade-in-up">Enigmi in Evidenza</h2>
-        <p class="section-subtitle fade-in-up delay-1">Le sfide più recenti ti aspettano</p>
-      </div>
-      <a routerLink="/games" class="btn-enigma-outline fade-in-up delay-2" id="btn-all-games">
-        Vedi tutti <i class="bi bi-arrow-right ms-1"></i>
-      </a>
-    </div>
-
-    <!-- Loading state -->
-    @if (gamesLoading()) {
-      <div class="loading-grid">
-        @for (n of [1,2,3,4,5,6]; track n) {
-          <div class="game-card-skeleton"></div>
-        }
-      </div>
-    }
-
-    <!-- Error state -->
-    @if (gamesError()) {
-      <div class="state-message">
-        <i class="bi bi-wifi-off"></i>
-        <p>Impossibile caricare gli enigmi. Assicurati che il backend sia in esecuzione.</p>
-      </div>
-    }
-
-    <!-- Games grid -->
-    @if (!gamesLoading() && !gamesError()) {
-      @if (games().length === 0) {
-        <div class="state-message">
-          <i class="bi bi-inbox"></i>
-          <p>Nessun enigma attivo al momento. Sii il primo a crearne uno!</p>
-          <a routerLink="/games" class="btn-enigma-primary mt-3">Crea Enigma</a>
-        </div>
-      } @else {
-        <div class="games-grid">
-          @for (game of games(); track game.id; let i = $index) {
-            <article class="game-card enigma-card fade-in-up" [class]="'delay-' + (i % 3 + 1)">
-
-              <!-- Immagine o placeholder -->
-              <div class="game-card__img">
-                @if (getGameImage(game); as imgUrl) {
-                  <img [src]="imgUrl" [alt]="'Enigma: ' + game.argomento" loading="lazy">
-                } @else {
-                  <div class="game-card__img-placeholder" aria-hidden="true">
-                    <i class="bi bi-question-lg"></i>
-                  </div>
-                }
-                <span class="badge-enigma game-card__topic">{{ game.argomento }}</span>
-              </div>
-
-              <div class="game-card__body">
-                <p class="game-card__clue">
-                  <i class="bi bi-lightbulb me-1"></i>
-                  {{ game.suggerimento }}
-                </p>
-
-                <div class="game-card__footer">
-                  <div class="game-card__meta">
-                    <i class="bi bi-person-circle"></i>
-                    <span>{{ game.Utente ? game.Utente.username : 'Anonimo' }}</span>
-                    <span class="dot" aria-hidden="true">·</span>
-                    <span>{{ formatDate(game.createdAt) }}</span>
-                  </div>
-                  <a [routerLink]="['/games', game.id]" class="btn-enigma-primary btn-sm" [id]="'btn-game-' + game.id">
-                    Gioca
-                  </a>
-                </div>
-              </div>
-
-            </article>
-          }
-        </div>
-      }
-    }
-
-  </div>
-</section>
-
-
-<!-- ========= LEADERBOARD PREVIEW ========= -->
-<section class="leaderboard-section" id="classifica" aria-label="Classifica">
-  <div class="container">
-    <div class="leaderboard-inner">
-
-      <div class="leaderboard-header fade-in-up">
-        <div class="badge-hof" aria-hidden="true">
-          <i class="bi bi-trophy-fill"></i>
-          Hall of Fame
-        </div>
-        <h2 class="section-title">I Migliori Risolutori</h2>
-        <p class="section-subtitle">I campioni degli enigmi ENIGMA</p>
-      </div>
-
-      <!-- Loading -->
-      @if (leaderboardLoading()) {
-        <div class="lb-skeleton-list">
-          @for (n of [1,2,3]; track n) {
-            <div class="lb-skeleton-row"></div>
-          }
-        </div>
-      }
-
-      <!-- Error -->
-      @if (leaderboardError()) {
-        <div class="state-message">
-          <i class="bi bi-wifi-off"></i>
-          <p>Impossibile caricare la classifica.</p>
-        </div>
-      }
-
-      <!-- Podio top 3 -->
-      @if (!leaderboardLoading() && !leaderboardError()) {
-        @if (leaderboard().length === 0) {
-          <div class="state-message">
-            <i class="bi bi-people" aria-hidden="true"></i>
-            <p>Nessun giocatore in classifica ancora. Sii il primo!</p>
-          </div>
-        } @else {
-          <div class="podium" aria-label="Podio top 3">
-
-            <!-- 2° posto -->
-            <div class="podium-card podium-card--silver fade-in-up delay-2" aria-label="Secondo posto">
-              <div class="podium-card__rank-badge">
-                <i class="bi bi-award-fill"></i>
-              </div>
-              <div class="podium-card__avatar" [style.background]="getAvatarColor(1)">
-                {{ leaderboard()[1]?.Utente?.username?.charAt(0)?.toUpperCase() ?? '?' }}
-              </div>
-              <span class="podium-card__username">{{ leaderboard()[1]?.Utente?.username ?? '-' }}</span>
-              <span class="podium-card__label">Vicecampione</span>
-              <div class="podium-card__score">
-                <strong>{{ leaderboard()[1]?.enigmi_risolti ?? 0 }}</strong>
-                <span>risolti</span>
-              </div>
-              <div class="podium-card__bar podium-card__bar--2"></div>
-            </div>
-
-            <!-- 1° posto -->
-            <div class="podium-card podium-card--gold podium-card--top fade-in-up delay-1" aria-label="Primo posto">
-              <div class="podium-card__crown" aria-hidden="true">👑</div>
-              <div class="podium-card__rank-badge">
-                <i class="bi bi-trophy-fill"></i>
-              </div>
-              <div class="podium-card__avatar" [style.background]="getAvatarColor(0)">
-                {{ leaderboard()[0]?.Utente?.username?.charAt(0)?.toUpperCase() ?? '?' }}
-              </div>
-              <span class="podium-card__username">{{ leaderboard()[0]?.Utente?.username ?? '-' }}</span>
-              <span class="podium-card__label">Campione</span>
-              <div class="podium-card__score">
-                <strong>{{ leaderboard()[0]?.enigmi_risolti ?? 0 }}</strong>
-                <span>risolti</span>
-              </div>
-              <div class="podium-card__bar podium-card__bar--1"></div>
-            </div>
-
-            <!-- 3° posto -->
-            <div class="podium-card podium-card--bronze fade-in-up delay-3" aria-label="Terzo posto">
-              <div class="podium-card__rank-badge">
-                <i class="bi bi-star-fill"></i>
-              </div>
-              <div class="podium-card__avatar" [style.background]="getAvatarColor(2)">
-                {{ leaderboard()[2]?.Utente?.username?.charAt(0)?.toUpperCase() ?? '?' }}
-              </div>
-              <span class="podium-card__username">{{ leaderboard()[2]?.Utente?.username ?? '-' }}</span>
-              <span class="podium-card__label">Terzo posto</span>
-              <div class="podium-card__score">
-                <strong>{{ leaderboard()[2]?.enigmi_risolti ?? 0 }}</strong>
-                <span>risolti</span>
-              </div>
-              <div class="podium-card__bar podium-card__bar--3"></div>
-            </div>
-
-          </div>
-
-          <div class="text-center mt-4 fade-in-up delay-4">
-            <a routerLink="/leaderboard" class="btn-enigma-outline" id="btn-full-leaderboard">
-              Classifica Completa <i class="bi bi-arrow-right ms-1"></i>
-            </a>
-          </div>
-        }
-      }
-
-    </div>
-  </div>
-</section>
-
-
-<!-- ========= CTA FINALE ========= -->
-<section class="cta-section" id="call-to-action" aria-label="Inizia a giocare">
-  <div class="container">
-    <div class="cta-card fade-in-up">
-      <div class="cta-orb" aria-hidden="true"></div>
-      <h2 class="cta-title">Pronto ad affrontare la sfida?</h2>
-      <p class="cta-subtitle">Unisciti alla community di ENIGMA e metti alla prova la tua mente ogni giorno.</p>
-      <div class="cta-actions">
-        <a routerLink="/signup" class="btn-enigma-gold btn-lg" id="cta-register">
+      <div class="hero-actions fade-in delay-4">
+        <a routerLink="/signup" class="btn-enigma-gold btn-lg" id="cta-signup">
           <i class="bi bi-rocket-takeoff me-2"></i>
           Inizia Gratis
         </a>
-        <a routerLink="/games" class="btn-enigma-outline btn-lg" id="cta-browse">
-          Esplora Enigmi
+        <a routerLink="/games" class="btn-enigma-outline btn-lg" id="cta-play-guest">
+          <i class="bi bi-play-circle me-2"></i>
+          Sfoglia Enigmi
         </a>
       </div>
-    </div>
-  </div>
-</section>
 
-
-<!-- ========= FOOTER ========= -->
-<footer class="enigma-footer" role="contentinfo">
-  <div class="container">
-    <div class="footer-inner">
-      <div class="footer-logo">
-        <i class="bi bi-puzzle"></i>
-        <span>ENIGMA</span>
+      <div class="hero-stats fade-in delay-5">
+        <div class="stat-item">
+          <span class="stat-value">∞</span>
+          <span class="stat-label">Enigmi Unici</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-value">10</span>
+          <span class="stat-label">Tentativi per Partita</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-value">🧠</span>
+          <span class="stat-label">Powered by AI</span>
+        </div>
       </div>
-      <p class="footer-copy">© {{ currentYear }} ENIGMA · Progetto universitario TecWeb</p>
-      <nav class="footer-links" aria-label="Link footer">
-        <a routerLink="/">Home</a>
-        <a routerLink="/games">Enigmi</a>
-        <a routerLink="/leaderboard">Classifica</a>
-      </nav>
     </div>
-  </div>
-</footer>
+
+    <div class="scroll-indicator fade-in delay-6" aria-hidden="true"><span></span></div>
+  </section>
+
+  <!-- ========= COME FUNZIONA ========= -->
+  <section class="how-section" id="come-funziona" aria-label="Come funziona il gioco">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title fade-in-up">Come Funziona</h2>
+        <p class="section-subtitle fade-in-up delay-1">Tre semplici passi per entrare nel mondo degli enigmi</p>
+      </div>
+      <div class="row g-4 justify-content-center">
+        <div class="col-12 col-md-4">
+          <div class="how-card enigma-card fade-in-up delay-1">
+            <div class="how-card__icon"><i class="bi bi-person-plus"></i></div>
+            <div class="how-card__step">01</div>
+            <h3>Registrati</h3>
+            <p>Crea il tuo account in pochi secondi. Il tuo percorso di sfide inizia qui.</p>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="how-card enigma-card fade-in-up delay-2">
+            <div class="how-card__icon"><i class="bi bi-puzzle"></i></div>
+            <div class="how-card__step">02</div>
+            <h3>Scegli un Enigma</h3>
+            <p>Sfoglia la lista degli enigmi attivi o genera il tuo con un tema a piacere.</p>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="how-card enigma-card fade-in-up delay-3">
+            <div class="how-card__icon"><i class="bi bi-trophy"></i></div>
+            <div class="how-card__step">03</div>
+            <h3>Scala la Classifica</h3>
+            <p>Risolvi enigmi per guadagnare punti e conquistare le vette della leaderboard.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= ENIGMI IN EVIDENZA (guest) ========= -->
+  <section class="games-section" id="enigmi" aria-label="Enigmi in evidenza">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title fade-in-up">Enigmi in Evidenza</h2>
+          <p class="section-subtitle fade-in-up delay-1">Le sfide più recenti ti aspettano</p>
+        </div>
+        <a routerLink="/games" class="btn-enigma-outline fade-in-up delay-2" id="btn-all-games">
+          Vedi tutti <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+      </div>
+
+      @if (gamesLoading()) {
+        <div class="loading-grid">
+          @for (n of [1,2,3]; track n) { <div class="game-card-skeleton"></div> }
+        </div>
+      }
+      @if (gamesError()) {
+        <div class="state-message"><i class="bi bi-wifi-off"></i><p>Impossibile caricare gli enigmi.</p></div>
+      }
+      @if (!gamesLoading() && !gamesError()) {
+        @if (games().length === 0) {
+          <div class="state-message">
+            <i class="bi bi-inbox"></i>
+            <p>Nessun enigma attivo. <a routerLink="/signup">Registrati</a> per crearne uno!</p>
+          </div>
+        } @else {
+          <div class="games-grid">
+            @for (game of games(); track game.id; let i = $index) {
+              <article class="game-card enigma-card fade-in-up" [class]="'delay-' + (i % 3 + 1)">
+                <div class="game-card__img">
+                  @if (getGameImage(game); as imgUrl) {
+                    <img [src]="imgUrl" [alt]="'Enigma: ' + game.argomento" loading="lazy">
+                  } @else {
+                    <div class="game-card__img-placeholder" aria-hidden="true">
+                      <i class="bi bi-question-lg"></i>
+                    </div>
+                  }
+                  <span class="badge-enigma game-card__topic">{{ game.argomento }}</span>
+                </div>
+                <div class="game-card__body">
+                  <p class="game-card__clue"><i class="bi bi-lightbulb me-1"></i>{{ game.suggerimento }}</p>
+                  <div class="game-card__footer">
+                    <div class="game-card__meta">
+                      <i class="bi bi-person-circle"></i>
+                      <span>{{ game.Utente?.username ?? 'Anonimo' }}</span>
+                      <span class="dot">·</span>
+                      <span>{{ formatDate(game.createdAt) }}</span>
+                    </div>
+                    <a routerLink="/login" class="btn-enigma-outline btn-sm">
+                      <i class="bi bi-lock me-1"></i>Accedi
+                    </a>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        }
+      }
+    </div>
+  </section>
+
+  <!-- ========= CTA FINALE (guest) ========= -->
+  <section class="cta-section" id="call-to-action" aria-label="Inizia a giocare">
+    <div class="container">
+      <div class="cta-card fade-in-up">
+        <div class="cta-orb" aria-hidden="true"></div>
+        <h2 class="cta-title">Pronto ad affrontare la sfida?</h2>
+        <p class="cta-subtitle">Unisciti alla community di ENIGMA e metti alla prova la tua mente ogni giorno.</p>
+        <div class="cta-actions">
+          <a routerLink="/signup" class="btn-enigma-gold btn-lg" id="cta-register">
+            <i class="bi bi-rocket-takeoff me-2"></i>Inizia Gratis
+          </a>
+          <a routerLink="/login" class="btn-enigma-outline btn-lg" id="cta-login">
+            Accedi
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+} <!-- fine @if guest -->
+
+
+<!-- ================================================================
+     ██████  VISTA UTENTE LOGGATO – Dashboard
+     ================================================================ -->
+@if (auth.isLoggedIn()) {
+
+  <!-- ========= DASHBOARD HERO ========= -->
+  <section class="dash-hero" aria-label="Dashboard utente">
+    <div class="dash-hero__bg" aria-hidden="true">
+      <div class="dash-hero__orb dash-hero__orb--1"></div>
+      <div class="dash-hero__orb dash-hero__orb--2"></div>
+      <div class="dash-hero__grid"></div>
+    </div>
+
+    <div class="container dash-hero__content">
+      <!-- Greeting -->
+      <div class="dash-greeting fade-in">
+        <div class="dash-greeting__avatar" aria-hidden="true">
+          {{ auth.username()?.charAt(0)?.toUpperCase() }}
+        </div>
+        <div>
+          <p class="dash-greeting__label">Bentornato/a</p>
+          <h1 class="dash-greeting__name">
+            {{ auth.username() }}<span class="wave" aria-hidden="true"> 👋</span>
+          </h1>
+        </div>
+      </div>
+
+      <!-- Quick stat cards -->
+      <div class="dash-stats fade-in delay-2" role="list" aria-label="Le tue statistiche">
+
+        <div class="dstat-card fade-in delay-1" role="listitem">
+          <div class="dstat-card__icon dstat-card__icon--purple">
+            <i class="bi bi-puzzle-fill"></i>
+          </div>
+          <span class="dstat-card__value">{{ myGamesCount() }}</span>
+          <span class="dstat-card__label">Enigmi Creati</span>
+        </div>
+
+        <div class="dstat-card fade-in delay-2" role="listitem">
+          <div class="dstat-card__icon dstat-card__icon--green">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+          <span class="dstat-card__value">{{ mySolved() }}</span>
+          <span class="dstat-card__label">Enigmi Risolti</span>
+        </div>
+
+        <div class="dstat-card fade-in delay-3" role="listitem">
+          <div class="dstat-card__icon dstat-card__icon--gold">
+            <i class="bi bi-trophy-fill"></i>
+          </div>
+          <span class="dstat-card__value">{{ myRank() ? '#' + myRank() : '–' }}</span>
+          <span class="dstat-card__label">In Classifica</span>
+        </div>
+
+        <!-- CTA Crea enigma -->
+        <button
+          id="btn-home-create"
+          class="dstat-card dstat-card--cta fade-in delay-4"
+          (click)="openModal()"
+          [disabled]="creating()"
+          type="button"
+          aria-label="Crea nuovo enigma"
+          role="listitem"
+        >
+          <div class="dstat-card__icon dstat-card__icon--cta">
+            <i class="bi bi-stars"></i>
+          </div>
+          <span class="dstat-card__value">Crea</span>
+          <span class="dstat-card__label">Nuovo Enigma</span>
+          <i class="bi bi-arrow-right dstat-card__arrow"></i>
+        </button>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========= ENIGMI IN EVIDENZA (dashboard) ========= -->
+  <section class="games-section games-section--dash" id="enigmi" aria-label="Enigmi recenti">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title fade-in-up">Enigmi Recenti</h2>
+          <p class="section-subtitle fade-in-up delay-1">Le sfide più fresche ti aspettano</p>
+        </div>
+        <a routerLink="/games" class="btn-enigma-outline fade-in-up delay-2" id="btn-all-games-dash">
+          Vedi tutti <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+      </div>
+
+      @if (gamesLoading()) {
+        <div class="loading-grid">
+          @for (n of [1,2,3,4,5,6]; track n) { <div class="game-card-skeleton"></div> }
+        </div>
+      }
+      @if (gamesError()) {
+        <div class="state-message"><i class="bi bi-wifi-off"></i><p>Impossibile caricare gli enigmi.</p></div>
+      }
+      @if (!gamesLoading() && !gamesError()) {
+        @if (games().length === 0) {
+          <div class="state-message">
+            <i class="bi bi-inbox"></i>
+            <p>Nessun enigma attivo. Sii il primo a crearne uno!</p>
+            <button class="btn-enigma-primary mt-3" (click)="openModal()">
+              <i class="bi bi-plus-circle me-1"></i>Crea Enigma
+            </button>
+          </div>
+        } @else {
+          <div class="games-grid">
+            @for (game of games(); track game.id; let i = $index) {
+              <article class="game-card enigma-card fade-in-up" [class]="'delay-' + (i % 3 + 1)">
+                <div class="game-card__img">
+                  @if (getGameImage(game); as imgUrl) {
+                    <img [src]="imgUrl" [alt]="'Enigma: ' + game.argomento" loading="lazy">
+                  } @else {
+                    <div class="game-card__img-placeholder" aria-hidden="true">
+                      <i class="bi bi-question-lg"></i>
+                    </div>
+                  }
+                  <span class="badge-enigma game-card__topic">{{ game.argomento }}</span>
+                </div>
+                <div class="game-card__body">
+                  <p class="game-card__clue"><i class="bi bi-lightbulb me-1"></i>{{ game.suggerimento }}</p>
+                  <div class="game-card__footer">
+                    <div class="game-card__meta">
+                      <i class="bi bi-person-circle"></i>
+                      <span>{{ game.Utente?.username ?? 'Anonimo' }}</span>
+                      <span class="dot">·</span>
+                      <span>{{ formatDate(game.createdAt) }}</span>
+                    </div>
+                    <a [routerLink]="['/games', game.id]" class="btn-enigma-primary btn-sm" [id]="'btn-game-' + game.id">
+                      <i class="bi bi-play-fill me-1"></i>Gioca
+                    </a>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        }
+      }
+    </div>
+  </section>
+
+
+  <!-- ========= LEADERBOARD PREVIEW (dashboard) ========= -->
+  <section class="leaderboard-section" id="classifica" aria-label="Classifica">
+    <div class="container">
+      <div class="leaderboard-inner">
+
+        <div class="leaderboard-header fade-in-up">
+          <div class="badge-hof" aria-hidden="true">
+            <i class="bi bi-trophy-fill"></i> Hall of Fame
+          </div>
+          <h2 class="section-title">I Migliori Risolutori</h2>
+          <p class="section-subtitle">I campioni degli enigmi ENIGMA</p>
+
+          <!-- Evidenzia il rank dell'utente corrente se presente -->
+          @if (myRank()) {
+            <div class="my-rank-badge fade-in delay-2">
+              <i class="bi bi-person-fill me-1"></i>
+              Sei in posizione <strong>#{{ myRank() }}</strong> con {{ mySolved() }} enigmi risolti
+            </div>
+          }
+        </div>
+
+        @if (leaderboardLoading()) {
+          <div class="lb-skeleton-list">
+            @for (n of [1,2,3]; track n) { <div class="lb-skeleton-row"></div> }
+          </div>
+        }
+        @if (leaderboardError()) {
+          <div class="state-message"><i class="bi bi-wifi-off"></i><p>Impossibile caricare la classifica.</p></div>
+        }
+
+        @if (!leaderboardLoading() && !leaderboardError()) {
+          @if (leaderboard().length === 0) {
+            <div class="state-message">
+              <i class="bi bi-people" aria-hidden="true"></i>
+              <p>Nessun giocatore in classifica ancora. Sii il primo!</p>
+            </div>
+          } @else {
+            <div class="podium" aria-label="Podio top 3">
+
+              <!-- 2° posto -->
+              <div class="podium-card podium-card--silver fade-in-up delay-2" [class.podium-card--me]="leaderboard()[1]?.Utente?.username === auth.username()" aria-label="Secondo posto">
+                <div class="podium-card__rank-badge"><i class="bi bi-award-fill"></i></div>
+                <div class="podium-card__avatar" [style.background]="getAvatarColor(1)">
+                  {{ leaderboard()[1]?.Utente?.username?.charAt(0)?.toUpperCase() ?? '?' }}
+                </div>
+                <span class="podium-card__username">{{ leaderboard()[1]?.Utente?.username ?? '-' }}</span>
+                <span class="podium-card__label">Vicecampione</span>
+                <div class="podium-card__score">
+                  <strong>{{ leaderboard()[1]?.enigmi_risolti ?? 0 }}</strong>
+                  <span>risolti</span>
+                </div>
+                <div class="podium-card__bar podium-card__bar--2"></div>
+              </div>
+
+              <!-- 1° posto -->
+              <div class="podium-card podium-card--gold podium-card--top fade-in-up delay-1" [class.podium-card--me]="leaderboard()[0]?.Utente?.username === auth.username()" aria-label="Primo posto">
+                <div class="podium-card__crown" aria-hidden="true">👑</div>
+                <div class="podium-card__rank-badge"><i class="bi bi-trophy-fill"></i></div>
+                <div class="podium-card__avatar" [style.background]="getAvatarColor(0)">
+                  {{ leaderboard()[0]?.Utente?.username?.charAt(0)?.toUpperCase() ?? '?' }}
+                </div>
+                <span class="podium-card__username">{{ leaderboard()[0]?.Utente?.username ?? '-' }}</span>
+                <span class="podium-card__label">Campione</span>
+                <div class="podium-card__score">
+                  <strong>{{ leaderboard()[0]?.enigmi_risolti ?? 0 }}</strong>
+                  <span>risolti</span>
+                </div>
+                <div class="podium-card__bar podium-card__bar--1"></div>
+              </div>
+
+              <!-- 3° posto -->
+              <div class="podium-card podium-card--bronze fade-in-up delay-3" [class.podium-card--me]="leaderboard()[2]?.Utente?.username === auth.username()" aria-label="Terzo posto">
+                <div class="podium-card__rank-badge"><i class="bi bi-star-fill"></i></div>
+                <div class="podium-card__avatar" [style.background]="getAvatarColor(2)">
+                  {{ leaderboard()[2]?.Utente?.username?.charAt(0)?.toUpperCase() ?? '?' }}
+                </div>
+                <span class="podium-card__username">{{ leaderboard()[2]?.Utente?.username ?? '-' }}</span>
+                <span class="podium-card__label">Terzo posto</span>
+                <div class="podium-card__score">
+                  <strong>{{ leaderboard()[2]?.enigmi_risolti ?? 0 }}</strong>
+                  <span>risolti</span>
+                </div>
+                <div class="podium-card__bar podium-card__bar--3"></div>
+              </div>
+
+            </div>
+
+            <div class="text-center mt-4 fade-in-up delay-4">
+              <a routerLink="/leaderboard" class="btn-enigma-outline" id="btn-full-leaderboard">
+                Classifica Completa <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          }
+        }
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========= MODAL: CREA ENIGMA ========= -->
+  @if (showModal()) {
+    <div
+      class="modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="home-modal-title"
+      (click)="closeModal()"
+      (keydown.escape)="closeModal()"
+      tabindex="-1"
+    >
+      <div class="modal-box" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div class="modal-icon" aria-hidden="true"><i class="bi bi-stars"></i></div>
+          <div>
+            <h2 id="home-modal-title" class="modal-title">Genera un nuovo Enigma</h2>
+            <p class="modal-sub">L'IA creerà un enigma unico con immagini e indizi</p>
+          </div>
+          <button class="modal-close" (click)="closeModal()" [disabled]="creating()" aria-label="Chiudi">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <label for="home-argomento" class="modal-label">
+            Tema <span class="modal-label__optional">(opzionale)</span>
+          </label>
+          <div class="modal-input-wrap">
+            <i class="bi bi-tag modal-input-wrap__icon"></i>
+            <input
+              id="home-argomento"
+              type="text"
+              class="modal-input"
+              placeholder="Es. Spazio, Natura, Arte…"
+              [(ngModel)]="argomento"
+              [disabled]="creating()"
+              (keydown.enter)="submitCreate()"
+              maxlength="60"
+              autocomplete="off"
+            >
+          </div>
+          <div class="modal-chips">
+            @for (tema of ['Spazio', 'Storia', 'Natura', 'Scienza', 'Arte', 'Sport']; track tema) {
+              <button class="chip" [class.chip--active]="argomento === tema"
+                (click)="argomento = (argomento === tema ? '' : tema)" [disabled]="creating()" type="button">
+                {{ tema }}
+              </button>
+            }
+          </div>
+          @if (createError()) {
+            <div class="modal-error" role="alert">
+              <i class="bi bi-exclamation-triangle-fill"></i> {{ createError() }}
+            </div>
+          }
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-enigma-outline" (click)="closeModal()" [disabled]="creating()" type="button">Annulla</button>
+          <button id="btn-home-submit-create" class="btn-enigma-gold" (click)="submitCreate()" [disabled]="creating()" type="button">
+            @if (creating()) {
+              <span class="spinner" aria-hidden="true"></span>Generazione in corso…
+            } @else {
+              <i class="bi bi-stars me-1"></i>Genera Enigma
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+} <!-- fine @if logged-in -->

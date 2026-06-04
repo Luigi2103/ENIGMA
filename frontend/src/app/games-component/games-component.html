@@ -1,0 +1,364 @@
+<!-- ============================================================
+     ENIGMA – Pagina Enigmi
+     ============================================================ -->
+
+<!-- ========= HERO: versione GUEST ========= -->
+@if (!authService.isLoggedIn()) {
+  <header class="games-hero games-hero--guest" aria-label="Intestazione pagina enigmi">
+    <div class="games-hero__bg" aria-hidden="true">
+      <div class="games-hero__orb"></div>
+      <div class="games-hero__grid"></div>
+    </div>
+    <div class="container games-hero__content">
+      <div class="games-hero__label fade-in">
+        <i class="bi bi-puzzle-fill"></i>
+        Tutti gli Enigmi
+      </div>
+      <h1 class="games-hero__title fade-in delay-1">
+        Scegli la tua <span class="text-accent">sfida</span>
+      </h1>
+      <p class="games-hero__sub fade-in delay-2">
+        Sfoglia gli enigmi della community. Accedi per crearne uno tutto tuo!
+      </p>
+      <div class="games-hero__cta fade-in delay-3">
+        <a routerLink="/login" class="btn-enigma-primary btn-lg" id="btn-hero-login">
+          <i class="bi bi-person-circle me-2"></i>Accedi
+        </a>
+        <a routerLink="/signup" class="btn-enigma-outline btn-lg" id="btn-hero-signup">
+          Registrati gratis
+        </a>
+      </div>
+    </div>
+  </header>
+}
+
+<!-- ========= HERO: versione LOGGED IN ========= -->
+@if (authService.isLoggedIn()) {
+  <header class="games-hero games-hero--user" aria-label="Dashboard utente">
+    <div class="games-hero__bg" aria-hidden="true">
+      <div class="games-hero__orb games-hero__orb--user"></div>
+      <div class="games-hero__grid"></div>
+    </div>
+    <div class="container games-hero__content">
+
+      <!-- Greeting -->
+      <div class="user-greeting fade-in">
+        <div class="user-greeting__avatar" aria-hidden="true">
+          {{ authService.username()?.charAt(0)?.toUpperCase() }}
+        </div>
+        <div>
+          <p class="user-greeting__welcome">Bentornato/a,</p>
+          <h1 class="user-greeting__name">{{ authService.username() }} <span class="wave" aria-hidden="true">👋</span></h1>
+        </div>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="user-stats fade-in delay-2" role="list" aria-label="Le tue statistiche">
+
+        <div class="stat-card fade-in delay-1" role="listitem">
+          <div class="stat-card__icon stat-card__icon--purple">
+            <i class="bi bi-puzzle-fill"></i>
+          </div>
+          <div class="stat-card__body">
+            <span class="stat-card__value">{{ myGamesCount() }}</span>
+            <span class="stat-card__label">Enigmi Creati</span>
+          </div>
+        </div>
+
+        <div class="stat-card fade-in delay-2" role="listitem">
+          <div class="stat-card__icon stat-card__icon--green">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+          <div class="stat-card__body">
+            <span class="stat-card__value">{{ mySolved() }}</span>
+            <span class="stat-card__label">Enigmi Risolti</span>
+          </div>
+        </div>
+
+        <div class="stat-card fade-in delay-3" role="listitem">
+          <div class="stat-card__icon stat-card__icon--gold">
+            <i class="bi bi-trophy-fill"></i>
+          </div>
+          <div class="stat-card__body">
+            <span class="stat-card__value">
+              {{ myRank() ? '#' + myRank() : '–' }}
+            </span>
+            <span class="stat-card__label">In Classifica</span>
+          </div>
+        </div>
+
+        <!-- CTA card -->
+        <button
+          id="btn-create-hero"
+          class="stat-card stat-card--cta fade-in delay-4"
+          (click)="openModal()"
+          [disabled]="creating()"
+          type="button"
+          aria-label="Crea un nuovo enigma"
+          role="listitem"
+        >
+          <div class="stat-card__icon stat-card__icon--cta">
+            <i class="bi bi-plus-lg"></i>
+          </div>
+          <div class="stat-card__body">
+            <span class="stat-card__value">Crea</span>
+            <span class="stat-card__label">Nuovo Enigma</span>
+          </div>
+          <i class="bi bi-arrow-right stat-card__arrow"></i>
+        </button>
+
+      </div>
+    </div>
+  </header>
+}
+
+
+<!-- ========= SEARCH + LISTA ========= -->
+<main class="games-main" id="main-content">
+  <div class="container">
+
+    <!-- Search + filtro -->
+    <div class="games-topbar fade-in-up">
+      <div class="games-search">
+        <i class="bi bi-search games-search__icon" aria-hidden="true"></i>
+        <input
+          type="search"
+          id="games-search-input"
+          class="games-search__input"
+          placeholder="Cerca per argomento, indizio o autore…"
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="onSearch()"
+          aria-label="Cerca enigmi"
+        >
+      </div>
+
+      <div class="games-meta">
+        @if (!loading() && !error()) {
+          <span class="games-count">
+            <i class="bi bi-grid-3x3-gap"></i>
+            {{ filteredGames().length }}
+            {{ filteredGames().length === 1 ? 'enigma' : 'enigmi' }}
+          </span>
+        }
+        @if (authService.isLoggedIn()) {
+          <button
+            id="btn-create-topbar"
+            class="btn-enigma-gold btn-sm"
+            (click)="openModal()"
+            [disabled]="creating()"
+            type="button"
+          >
+            <i class="bi bi-plus-circle me-1"></i>Crea Enigma
+          </button>
+        } @else {
+          <a routerLink="/login" class="btn-enigma-outline btn-sm" id="btn-login-topbar">
+            <i class="bi bi-lock me-1"></i>Accedi per creare
+          </a>
+        }
+      </div>
+    </div>
+
+    <!-- ---- Loading skeleton ---- -->
+    @if (loading()) {
+      <div class="games-grid" aria-busy="true" aria-label="Caricamento enigmi">
+        @for (n of [1,2,3,4,5,6]; track n) {
+          <div class="game-card-skeleton" aria-hidden="true"></div>
+        }
+      </div>
+    }
+
+    <!-- ---- Error state ---- -->
+    @if (error()) {
+      <div class="state-box state-box--error fade-in-up" role="alert">
+        <i class="bi bi-wifi-off"></i>
+        <h2>Connessione al server fallita</h2>
+        <p>Assicurati che il backend sia in esecuzione su <code>localhost:3000</code></p>
+        <button id="btn-retry" class="btn-enigma-outline mt-3" (click)="retry()">
+          <i class="bi bi-arrow-clockwise me-1"></i> Riprova
+        </button>
+      </div>
+    }
+
+    <!-- ---- Empty / no results ---- -->
+    @if (!loading() && !error() && filteredGames().length === 0) {
+      <div class="state-box fade-in-up" role="status">
+        @if (searchQuery) {
+          <i class="bi bi-search"></i>
+          <h2>Nessun risultato per "{{ searchQuery }}"</h2>
+          <p>Prova con un termine diverso o crea un nuovo enigma</p>
+        } @else {
+          <i class="bi bi-inbox"></i>
+          <h2>Nessun enigma attivo al momento</h2>
+          <p>Sii il primo a crearne uno!</p>
+        }
+        @if (authService.isLoggedIn()) {
+          <button id="btn-create-empty" class="btn-enigma-primary mt-3" (click)="openModal()">
+            <i class="bi bi-plus-circle me-1"></i> Crea Enigma
+          </button>
+        } @else {
+          <a routerLink="/login" class="btn-enigma-primary mt-3" id="btn-login-empty">
+            <i class="bi bi-person-circle me-1"></i> Accedi per creare
+          </a>
+        }
+      </div>
+    }
+
+    <!-- ---- Games grid ---- -->
+    @if (!loading() && !error() && filteredGames().length > 0) {
+      <div class="games-grid">
+        @for (game of filteredGames(); track game.id; let i = $index) {
+          <article
+            class="game-card enigma-card fade-in-up"
+            [class]="'delay-' + ((i % 3) + 1)"
+            [class.game-card--mine]="game.Utente?.username === authService.username()"
+            [attr.aria-label]="'Enigma: ' + game.argomento"
+          >
+            <!-- Badge "tuo" -->
+            @if (game.Utente?.username === authService.username()) {
+              <div class="game-card__yours-badge" aria-label="Creato da te">
+                <i class="bi bi-person-check-fill me-1"></i>Tuo
+              </div>
+            }
+
+            <!-- Immagine -->
+            <div class="game-card__img">
+              @if (getGameImage(game); as imgUrl) {
+                <img [src]="imgUrl" [alt]="'Immagine enigma: ' + game.argomento" loading="lazy">
+              } @else {
+                <div class="game-card__placeholder" aria-hidden="true">
+                  <i class="bi bi-question-lg"></i>
+                </div>
+              }
+              <span class="badge-enigma game-card__topic">{{ game.argomento }}</span>
+            </div>
+
+            <!-- Body -->
+            <div class="game-card__body">
+              <p class="game-card__clue">
+                <i class="bi bi-lightbulb-fill me-1" aria-hidden="true"></i>
+                {{ game.suggerimento }}
+              </p>
+
+              <div class="game-card__footer">
+                <div class="game-card__meta">
+                  <i class="bi bi-person-circle" aria-hidden="true"></i>
+                  <span>{{ game.Utente?.username ?? 'Anonimo' }}</span>
+                  <span class="dot" aria-hidden="true">·</span>
+                  <span>{{ formatDate(game.createdAt) }}</span>
+                </div>
+                <a
+                  [routerLink]="['/games', game.id]"
+                  class="btn-enigma-primary btn-sm"
+                  [id]="'btn-play-' + game.id"
+                >
+                  <i class="bi bi-play-fill me-1"></i> Gioca
+                </a>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    }
+
+  </div>
+</main>
+
+
+<!-- ========= MODAL: CREA ENIGMA ========= -->
+@if (showModal()) {
+  <div
+    class="modal-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+    (click)="closeModal()"
+    (keydown.escape)="closeModal()"
+    tabindex="-1"
+  >
+    <div class="modal-box" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div class="modal-icon" aria-hidden="true">
+          <i class="bi bi-stars"></i>
+        </div>
+        <div>
+          <h2 id="modal-title" class="modal-title">Genera un nuovo Enigma</h2>
+          <p class="modal-sub">L'IA creerà un enigma unico con immagini e indizi</p>
+        </div>
+        <button
+          class="modal-close"
+          (click)="closeModal()"
+          aria-label="Chiudi dialog"
+          [disabled]="creating()"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <label for="argomento-input" class="modal-label">
+          Tema dell'enigma
+          <span class="modal-label__optional">(opzionale)</span>
+        </label>
+        <div class="modal-input-wrap">
+          <i class="bi bi-tag modal-input-wrap__icon" aria-hidden="true"></i>
+          <input
+            id="argomento-input"
+            type="text"
+            class="modal-input"
+            placeholder="Es. Spazio, Natura, Arte, Scienza…"
+            [(ngModel)]="argomento"
+            [disabled]="creating()"
+            (keydown.enter)="submitCreate()"
+            maxlength="60"
+            autocomplete="off"
+          >
+        </div>
+
+        <div class="modal-chips" aria-label="Temi suggeriti">
+          @for (tema of ['Spazio', 'Storia', 'Natura', 'Scienza', 'Arte', 'Sport']; track tema) {
+            <button
+              class="chip"
+              [class.chip--active]="argomento === tema"
+              (click)="argomento = (argomento === tema ? '' : tema)"
+              [disabled]="creating()"
+              type="button"
+            >{{ tema }}</button>
+          }
+        </div>
+
+        @if (createError()) {
+          <div class="modal-error" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            {{ createError() }}
+          </div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button
+          class="btn-enigma-outline"
+          (click)="closeModal()"
+          [disabled]="creating()"
+          type="button"
+        >Annulla</button>
+
+        <button
+          id="btn-submit-create"
+          class="btn-enigma-gold"
+          (click)="submitCreate()"
+          [disabled]="creating()"
+          type="button"
+        >
+          @if (creating()) {
+            <span class="spinner" aria-hidden="true"></span>
+            Generazione in corso…
+          } @else {
+            <i class="bi bi-stars me-1"></i>
+            Genera Enigma
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}

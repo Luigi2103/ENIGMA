@@ -1,0 +1,55 @@
+.enigma-footer {
+  background: var(--enigma-dark-2);
+  border-top: 1px solid var(--enigma-border);
+  padding: 2rem 0;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: var(--enigma-purple-light);
+
+  i { font-size: 1.2rem; }
+}
+
+.footer-copy {
+  color: var(--enigma-text-muted);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.25rem;
+
+  a {
+    color: var(--enigma-text-muted);
+    font-size: 0.85rem;
+    transition: color 0.2s ease;
+
+    &:hover { color: var(--enigma-purple-light); }
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-links {
+    justify-content: center;
+  }
+}
