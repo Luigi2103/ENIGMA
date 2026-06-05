@@ -1,0 +1,23 @@
+{
+  "name": "enigma",
+  "version": "1.0.0",
+  "description": "Progetto universitario per l'esame di Tecnologie Web tenuto dal prof. Starace presso l'università Federico II di Napoli",
+  "main": "index.js",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^25.9.1"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Luigi2103/ENIGMA.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Luigi2103/ENIGMA/issues"
+  },
+  "homepage": "https://github.com/Luigi2103/ENIGMA#readme"
+}
