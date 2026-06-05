@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, AfterViewInit, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +18,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private gameService   = inject(GameService);
   readonly auth         = inject(AuthService);
   private router        = inject(Router);
+
+  constructor() {
+    effect(() => {
+      // Re-trigger scroll animations observation when auth state changes (e.g., login/logout)
+      // because new template blocks (guest vs dashboard) are inserted into the DOM.
+      this.auth.isLoggedIn();
+      setTimeout(() => this.initScrollAnimations(), 100);
+    });
+  }
 
   // --- Static ---
   readonly currentYear = new Date().getFullYear();

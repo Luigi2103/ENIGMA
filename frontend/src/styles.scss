@@ -538,3 +538,9 @@ a {
     }
   }
 }
+
+// Hides browser native password reveal/clear buttons (avoids "two eyes" issue)
+input::-ms-reveal,
+input::-ms-clear {
+  display: none !important;
+}

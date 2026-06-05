@@ -4,6 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { LeaderboardComponent } from './leaderboard/leaderboard.component';
 import { GamesComponent } from './games-component/games-component';
+import { GamePlayComponent } from './game-play/game-play';
 
 export const routes: Routes = [
   {
@@ -30,6 +31,11 @@ export const routes: Routes = [
     path: 'games',
     component: GamesComponent,
     title: 'ENIGMA – Enigmi'
+  },
+  {
+    path: 'games/:id',
+    component: GamePlayComponent,
+    title: 'ENIGMA – Gioca'
   },
   {
     path: '**',

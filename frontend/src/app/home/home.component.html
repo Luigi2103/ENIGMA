@@ -149,7 +149,7 @@
                   <div class="game-card__footer">
                     <div class="game-card__meta">
                       <i class="bi bi-person-circle"></i>
-                      <span>{{ game.Utente?.username ?? 'Anonimo' }}</span>
+                      <span>{{ game.Utente.username }}</span>
                       <span class="dot">·</span>
                       <span>{{ formatDate(game.createdAt) }}</span>
                     </div>
@@ -318,7 +318,7 @@
                   <div class="game-card__footer">
                     <div class="game-card__meta">
                       <i class="bi bi-person-circle"></i>
-                      <span>{{ game.Utente?.username ?? 'Anonimo' }}</span>
+                      <span>{{ game.Utente.username }}</span>
                       <span class="dot">·</span>
                       <span>{{ formatDate(game.createdAt) }}</span>
                     </div>

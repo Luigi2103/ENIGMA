@@ -84,6 +84,24 @@ export class GestorePartita {
         return await partita.save();
     }
 
+    static async OttieniTentativi(req) {
+        const utente = await GestorePartita._verificaUtente(req.username);
+        const partita = await Partita.findOne({ where: { id: req.params.id } });
+        if (!partita) {
+            const err = new Error("Partita non trovata");
+            err.status = 404;
+            throw err;
+        }
+
+        return await Tentativo.findAll({
+            where: {
+                utenteId: utente.id,
+                partitaId: partita.id
+            },
+            order: [['createdAt', 'ASC']]
+        });
+    }
+
 
     // --- FUNZIONI AUSILIARIE ---
 

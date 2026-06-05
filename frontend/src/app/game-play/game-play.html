@@ -1,0 +1,231 @@
+<!-- ============================================================
+     ENIGMA – Game Play Page  /games/:id
+     ============================================================ -->
+
+<!-- ========= LOADING ========= -->
+@if (loading()) {
+<div class="gp-loading" aria-busy="true" aria-label="Caricamento enigma">
+  <div class="gp-loading__spinner"></div>
+  <p>Caricamento enigma…</p>
+</div>
+}
+
+<!-- ========= ERRORE CARICAMENTO ========= -->
+@if (!loading() && loadError()) {
+<div class="gp-error-state">
+  <div class="gp-error-state__icon" aria-hidden="true">
+    <i class="bi bi-slash-circle"></i>
+  </div>
+  <h1>Enigma non disponibile</h1>
+  <p>{{ loadError() }}</p>
+  <a routerLink="/games" class="btn-enigma-primary" id="btn-back-error">
+    <i class="bi bi-arrow-left me-2"></i>Torna agli enigmi
+  </a>
+</div>
+}
+
+<!-- ========= PAGINA DI GIOCO ========= -->
+@if (!loading() && !loadError() && game(); as g) {
+<div class="gp-page">
+
+  <!-- ---- Breadcrumb ---- -->
+  <nav class="gp-breadcrumb container" aria-label="Breadcrumb">
+    <a routerLink="/games" id="btn-back-list">
+      <i class="bi bi-arrow-left"></i> Enigmi
+    </a>
+    <i class="bi bi-chevron-right" aria-hidden="true"></i>
+    <span>{{ g.argomento }}</span>
+  </nav>
+
+  <div class="container gp-layout">
+
+    <!-- =============================================
+           COLONNA SINISTRA: immagini + indizio
+           ============================================= -->
+    <aside class="gp-media" aria-label="Indizi visivi">
+
+      <!-- Griglia immagini -->
+      @if (g.foto && g.foto.length > 0) {
+      <div class="gp-photo-grid" [attr.data-count]="g.foto.length" aria-label="Immagini indizio">
+        @for (foto of g.foto; track $index) {
+          <div class="gp-photo-grid__item" (click)="selectImage(foto)" role="button" tabindex="0" (keydown.enter)="selectImage(foto)" [attr.aria-label]="'Ingrandisci immagine ' + ($index + 1)">
+            <img [src]="foto" [alt]="'Immagine indizio ' + ($index + 1)" class="gp-photo-grid__img" loading="lazy">
+            <div class="gp-photo-grid__overlay" aria-hidden="true">
+              <span class="gp-photo-grid__zoom-icon"><i class="bi bi-zoom-in"></i></span>
+            </div>
+          </div>
+        }
+      </div>
+      } @else {
+      <!-- Placeholder se non ci sono immagini -->
+      <div class="gp-no-img" aria-hidden="true">
+        <i class="bi bi-question-lg"></i>
+      </div>
+      }
+
+      <!-- Suggerimento testuale -->
+      <div class="gp-clue">
+        <div class="gp-clue__icon" aria-hidden="true">
+          <i class="bi bi-lightbulb-fill"></i>
+        </div>
+        <div>
+          <p class="gp-clue__label">Indizio</p>
+          <p class="gp-clue__text">{{ g.suggerimento }}</p>
+        </div>
+      </div>
+
+      <!-- Metadati partita -->
+      <div class="gp-meta">
+        <span><i class="bi bi-person-circle me-1"></i>{{ g.Utente.username }}</span>
+        <span class="dot" aria-hidden="true">·</span>
+        <span><i class="bi bi-calendar3 me-1"></i>{{ formatDate(g.createdAt) }}</span>
+      </div>
+    </aside>
+
+
+    <!-- =============================================
+           COLONNA DESTRA: area di gioco
+           ============================================= -->
+    <main class="gp-game" aria-label="Area di gioco">
+
+      <!-- STATO: utente non loggato -->
+      @if (!auth.isLoggedIn()) {
+      <div class="gp-state-card gp-state-card--locked">
+        <div class="gp-state-card__icon"><i class="bi bi-lock-fill"></i></div>
+        <h2>Accedi per giocare</h2>
+        <p>Devi essere autenticato per inviare risposte e scalare la classifica.</p>
+        <div class="gp-state-card__actions">
+          <a routerLink="/login" class="btn-enigma-primary" id="btn-play-login">
+            <i class="bi bi-person-circle me-2"></i>Accedi
+          </a>
+          <a routerLink="/signup" class="btn-enigma-outline" id="btn-play-signup">
+            Registrati gratis
+          </a>
+        </div>
+      </div>
+      }
+
+      <!-- STATO: vittoria -->
+      @if (auth.isLoggedIn() && haVinto()) {
+      <div class="gp-state-card gp-state-card--win" role="alert" aria-live="polite">
+        <div class="gp-state-card__confetti" aria-hidden="true">🎉</div>
+        <div class="gp-state-card__icon gp-state-card__icon--win">
+          <i class="bi bi-trophy-fill"></i>
+        </div>
+        <h2>Hai vinto!</h2>
+        <p>Hai risolto l'enigma in <strong>{{ tentativi().length }}</strong>
+          {{ tentativi().length === 1 ? 'tentativo' : 'tentativi' }}!</p>
+        <div class="gp-state-card__actions">
+          <a routerLink="/games" class="btn-enigma-gold" id="btn-win-back">
+            <i class="bi bi-puzzle me-2"></i>Altri Enigmi
+          </a>
+          <a routerLink="/leaderboard" class="btn-enigma-outline" id="btn-win-leaderboard">
+            <i class="bi bi-trophy me-2"></i>Classifica
+          </a>
+        </div>
+      </div>
+      }
+
+      <!-- STATO: sconfitta -->
+      @if (auth.isLoggedIn() && haPerso()) {
+      <div class="gp-state-card gp-state-card--lose" role="alert" aria-live="polite">
+        <div class="gp-state-card__icon gp-state-card__icon--lose">
+          <i class="bi bi-x-circle-fill"></i>
+        </div>
+        <h2>Tentativi esauriti</h2>
+        <p>Hai esaurito tutti i {{ MAX_TENTATIVI }} tentativi. Meglio fortuna la prossima volta!</p>
+        <a routerLink="/games" class="btn-enigma-primary mt-3" id="btn-lose-back">
+          <i class="bi bi-arrow-left me-2"></i>Torna agli enigmi
+        </a>
+      </div>
+      }
+
+      <!-- STATO: in gioco -->
+      @if (auth.isLoggedIn() && inGioco()) {
+      <!-- Progress tentativi -->
+      <div class="gp-progress" aria-label="Tentativi rimasti">
+        <div class="gp-progress__header">
+          <span class="gp-progress__label">Tentativi</span>
+          <span class="gp-progress__count" [class.gp-progress__count--warning]="tentativiRimasti() <= 3">
+            {{ tentativiRimasti() }} / {{ MAX_TENTATIVI }} rimasti
+          </span>
+        </div>
+        <div class="gp-progress__dots" role="list" aria-label="Stato tentativi">
+          @for (n of [].constructor(MAX_TENTATIVI); track $index) {
+          @if ($index < tentativi().length) { <div class="gp-dot" [class.gp-dot--win]="tentativi()[$index].vincente"
+            [class.gp-dot--fail]="!tentativi()[$index].vincente"
+            [attr.aria-label]="tentativi()[$index].vincente ? 'Tentativo ' + ($index+1) + ': corretto' : 'Tentativo ' + ($index+1) + ': errato'"
+            role="listitem">
+        </div>
+        } @else {
+        <div class="gp-dot gp-dot--empty" role="listitem"
+          [attr.aria-label]="'Tentativo ' + ($index+1) + ': non ancora usato'"></div>
+        }
+        }
+      </div>
+  </div>
+
+  <!-- Form risposta -->
+  <form class="gp-form" (ngSubmit)="submitRisposta()" aria-label="Inserisci risposta">
+    <label for="risposta-input" class="gp-form__label">La tua risposta</label>
+    <div class="gp-form__row">
+      <div class="gp-form__input-wrap">
+        <i class="bi bi-pencil-fill gp-form__icon" aria-hidden="true"></i>
+        <input id="risposta-input" type="text" class="gp-form__input" placeholder="Scrivi la tua risposta…"
+          [(ngModel)]="risposta" name="risposta" [disabled]="submitting()" autocomplete="off" autofocus maxlength="80">
+      </div>
+      <button id="btn-submit-risposta" class="gp-form__btn btn-enigma-primary" type="submit"
+        [disabled]="submitting() || !risposta.trim()">
+        @if (submitting()) {
+        <span class="spinner" aria-hidden="true"></span>
+        } @else {
+        <i class="bi bi-send-fill"></i>
+        }
+      </button>
+    </div>
+
+    @if (submitError()) {
+    <p class="gp-form__error" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-1"></i>{{ submitError() }}
+    </p>
+    }
+  </form>
+
+  <!-- Storico tentativi -->
+  @if (tentativi().length > 0) {
+  <div class="gp-attempts" aria-label="Storico tentativi" aria-live="polite">
+    <h3 class="gp-attempts__title">I tuoi tentativi</h3>
+    <ul class="gp-attempts__list">
+      @for (t of tentativi(); track t.id; let i = $index) {
+      <li class="gp-attempt" [class]="tentativoClass(t)" aria-label="Tentativo {{ i + 1 }}: {{ t.risposta }}">
+        <span class="gp-attempt__num">{{ i + 1 }}</span>
+        <span class="gp-attempt__text">{{ t.risposta }}</span>
+        <span class="gp-attempt__icon">
+          @if (t.vincente) {
+          <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+          } @else {
+          <i class="bi bi-x-circle-fill" aria-hidden="true"></i>
+          }
+        </span>
+      </li>
+      }
+    </ul>
+  </div>
+  }
+
+  }
+
+  </main>
+</div>
+</div>
+
+<!-- Lightbox Modal -->
+@if (activeModalImage()) {
+<div class="gp-lightbox" (click)="closeLightbox()" role="dialog" aria-modal="true" aria-label="Ingrandimento immagine">
+  <button class="gp-lightbox__close" (click)="closeLightbox()" aria-label="Chiudi ingrandimento">
+    <i class="bi bi-x-lg"></i>
+  </button>
+  <img [src]="activeModalImage()" alt="Ingrandimento indizio" class="gp-lightbox__img" (click)="$event.stopPropagation()">
+</div>
+}
+}

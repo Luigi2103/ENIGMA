@@ -159,6 +159,50 @@ gameRouter.post("/games/:id/attempts", async (req, res, next) => {
     });
 });
 
+/**
+ * @swagger
+ * /games/{id}/attempts:
+ *   get:
+ *     summary: Ottieni i tentativi dell'utente per una partita
+ *     tags: [Games]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID della partita
+ *     responses:
+ *       200:
+ *         description: Lista dei tentativi recuperata con successo
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   risposta:
+ *                     type: string
+ *                   vincente:
+ *                     type: boolean
+ *                   partitaId:
+ *                     type: integer
+ *                   utenteId:
+ *                     type: integer
+ */
+gameRouter.get("/games/:id/attempts", async (req, res, next) => {
+    GestorePartita.OttieniTentativi(req).then((tentativi) => {
+        res.status(200).json(tentativi);
+    }).catch((error) => {
+        next({ status: error.status || 400, message: error.message });
+    });
+});
+
 
 /**
  * @swagger

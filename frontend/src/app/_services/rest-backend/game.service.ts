@@ -45,6 +45,13 @@ export class GameService {
   }
 
   /**
+   * GET /games/:id/attempts – Recupera i tentativi dell'utente per una partita (richiede token JWT)
+   */
+  getAttempts(gameId: number): Observable<AttemptResult[]> {
+    return this.http.get<AttemptResult[]>(`${this.apiUrl}/games/${gameId}/attempts`);
+  }
+
+  /**
    * PATCH /games/:id – Disabilita/abbandona una partita (richiede token JWT)
    */
   disableGame(gameId: number): Observable<void> {
