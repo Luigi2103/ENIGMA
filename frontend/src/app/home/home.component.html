@@ -129,36 +129,7 @@
         } @else {
           <div class="games-grid">
             @for (game of games(); track game.id; let i = $index) {
-              <article class="game-card enigma-card fade-in-up"
-                [class.delay-1]="i % 3 === 0"
-                [class.delay-2]="i % 3 === 1"
-                [class.delay-3]="i % 3 === 2">
-
-                <div class="game-card__img">
-                  @if (getGameImage(game); as imgUrl) {
-                    <img [src]="imgUrl" [alt]="'Enigma: ' + game.argomento" loading="lazy">
-                  } @else {
-                    <div class="game-card__img-placeholder" aria-hidden="true">
-                      <i class="bi bi-question-lg"></i>
-                    </div>
-                  }
-                  <span class="badge-enigma game-card__topic">{{ game.argomento }}</span>
-                </div>
-                <div class="game-card__body">
-                  <p class="game-card__clue"><i class="bi bi-lightbulb me-1"></i>{{ game.suggerimento }}</p>
-                  <div class="game-card__footer">
-                    <div class="game-card__meta">
-                      <i class="bi bi-person-circle"></i>
-                      <span>{{ game.Utente.username }}</span>
-                      <span class="dot">·</span>
-                      <span>{{ formatDate(game.createdAt) }}</span>
-                    </div>
-                    <a routerLink="/login" class="btn-enigma-outline btn-sm">
-                      <i class="bi bi-lock me-1"></i>Accedi
-                    </a>
-                  </div>
-                </div>
-              </article>
+              <app-enigma-card [game]="game" [index]="i"></app-enigma-card>
             }
           </div>
         }
@@ -298,36 +269,7 @@
         } @else {
           <div class="games-grid">
             @for (game of games(); track game.id; let i = $index) {
-              <article class="game-card enigma-card fade-in-up"
-                [class.delay-1]="i % 3 === 0"
-                [class.delay-2]="i % 3 === 1"
-                [class.delay-3]="i % 3 === 2">
-
-                <div class="game-card__img">
-                  @if (getGameImage(game); as imgUrl) {
-                    <img [src]="imgUrl" [alt]="'Enigma: ' + game.argomento" loading="lazy">
-                  } @else {
-                    <div class="game-card__img-placeholder" aria-hidden="true">
-                      <i class="bi bi-question-lg"></i>
-                    </div>
-                  }
-                  <span class="badge-enigma game-card__topic">{{ game.argomento }}</span>
-                </div>
-                <div class="game-card__body">
-                  <p class="game-card__clue"><i class="bi bi-lightbulb me-1"></i>{{ game.suggerimento }}</p>
-                  <div class="game-card__footer">
-                    <div class="game-card__meta">
-                      <i class="bi bi-person-circle"></i>
-                      <span>{{ game.Utente.username }}</span>
-                      <span class="dot">·</span>
-                      <span>{{ formatDate(game.createdAt) }}</span>
-                    </div>
-                    <a [routerLink]="['/games', game.id]" class="btn-enigma-primary btn-sm" [id]="'btn-game-' + game.id">
-                      <i class="bi bi-play-fill me-1"></i>Gioca
-                    </a>
-                  </div>
-                </div>
-              </article>
+              <app-enigma-card [game]="game" [index]="i"></app-enigma-card>
             }
           </div>
         }

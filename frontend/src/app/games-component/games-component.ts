@@ -5,10 +5,11 @@ import { FormsModule } from '@angular/forms';
 import { PublicService, Partita, LeaderboardEntry } from '../_services/rest-backend/rest-backend.service';
 import { AuthService } from '../_services/auth/auth.service';
 import { GameService } from '../_services/rest-backend/game.service';
+import { EnigmaCardComponent } from '../enigma-card/enigma-card.component';
 
 @Component({
   selector: 'app-games-component',
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, EnigmaCardComponent],
   templateUrl: './games-component.html',
   styleUrl: './games-component.scss'
 })
@@ -89,18 +90,20 @@ export class GamesComponent implements OnInit, AfterViewInit {
   }
 
   onSearch(): void {
-    const q = this.searchQuery.trim().toLowerCase();
+    const q = (this.searchQuery || '').trim().toLowerCase();
     if (!q) {
       this.filteredGames.set(this.games());
     } else {
       this.filteredGames.set(
         this.games().filter(g =>
-          g.argomento.toLowerCase().includes(q) ||
-          g.suggerimento.toLowerCase().includes(q) ||
+          (g.argomento || '').toLowerCase().includes(q) ||
+          (g.suggerimento || '').toLowerCase().includes(q) ||
           (g.Utente?.username ?? '').toLowerCase().includes(q)
         )
       );
     }
+    // Re-run scroll animations observation so the restored/filtered elements get the 'visible' class
+    setTimeout(() => this.initScrollAnimations(), 0);
   }
 
   // --- Modal ---

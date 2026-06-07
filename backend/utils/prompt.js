@@ -61,12 +61,13 @@ STRATEGIA per le PAROLE_IMMAGINI:
 Le 4 immagini devono essere INDIZI VISIVI CHIARI. Ogni immagine mostra qualcosa di CONCRETO e RICONOSCIBILE che è fortemente associato alla parola. Il giocatore deve poter capire il collegamento guardando l'immagine.
 
 REGOLE per le PAROLE_IMMAGINI (query Unsplash in inglese):
-- Devono essere ESATTAMENTE 4 query in inglese di 2-4 parole
-- Ogni query DEVE contenere almeno un SOSTANTIVO concreto (non solo aggettivi)
-- Le 4 query devono mostrare 4 aspetti DIVERSI: caratteristica fisica, comportamento/uso, habitat/contesto, dettaglio iconico
-- NON usare la traduzione inglese diretta della parola come UNICA parola della query
-- Le query devono essere abbastanza specifiche da restituire foto chiare su Unsplash
-- È accettabile mostrare l'oggetto/animale stesso purché la query non sia solo il suo sinonimo diretto
+- Devono essere ESATTAMENTE 4 query in inglese semplici, di 2-3 parole, composte da termini estremamente comuni e diffusi.
+- Usa concetti standard e facili da fotografare (es. "lion safari", "coffee cup table", "guitar strings closeup").
+- Evita descrizioni lunghe, combinazioni strane o scene complesse (ad esempio, invece di "giraffe eating high green acacia tree leaves" usa "giraffe eating leaves").
+- Ogni query DEVE contenere almeno un SOSTANTIVO concreto (non solo aggettivi).
+- Le 4 query devono mostrare 4 aspetti DIVERSI (es. dettaglio fisico, habitat/contesto, uso/comportamento, particolare iconico).
+- NON usare la traduzione inglese diretta della parola come UNICA parola della query.
+- Le query devono essere formulate per garantire che Unsplash trovi foto reali e ben definite.
 
 ESEMPI CORRETTI (query concrete con sostantivi):
 - Per "Ippopotamo": ["hippo open mouth water", "hippo body mud pool", "africa river wildlife", "hippo teeth closeup"]

@@ -46,5 +46,5 @@ export async function RecuperaImmagini(parole) {
             }
         })
     );
-    return urls;
+    return urls.filter(url => url !== null);
 }

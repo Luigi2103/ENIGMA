@@ -5,10 +5,11 @@ import { FormsModule } from '@angular/forms';
 import { PublicService, Partita, LeaderboardEntry } from '../_services/rest-backend/rest-backend.service';
 import { AuthService } from '../_services/auth/auth.service';
 import { GameService } from '../_services/rest-backend/game.service';
+import { EnigmaCardComponent } from '../enigma-card/enigma-card.component';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, EnigmaCardComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
