@@ -49,7 +49,9 @@ export class SignupComponent {
     if (
       !this.signupData.username ||
       !this.signupData.email ||
-      !this.signupData.password
+      !this.signupData.password ||
+      !this.signupData.nome ||
+      !this.signupData.cognome
     ) {
       this.errorMessage.set('Compila tutti i campi obbligatori.');
       return;

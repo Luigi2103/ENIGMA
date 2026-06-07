@@ -1,10 +1,10 @@
-import { Component, OnInit, AfterViewInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PublicService, Partita, LeaderboardEntry } from '../_services/rest-backend/rest-backend.service';
 import { AuthService } from '../_services/auth/auth.service';
-import { GameService } from '../_services/rest-backend/game.service';
+import { GameService, CreatedGame } from '../_services/rest-backend/game.service';
 import { EnigmaCardComponent } from '../enigma-card/enigma-card.component';
 
 @Component({
@@ -13,7 +13,7 @@ import { EnigmaCardComponent } from '../enigma-card/enigma-card.component';
   templateUrl: './games-component.html',
   styleUrl: './games-component.scss'
 })
-export class GamesComponent implements OnInit, AfterViewInit {
+export class GamesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private publicService = inject(PublicService);
   private gameService   = inject(GameService);
@@ -46,8 +46,10 @@ export class GamesComponent implements OnInit, AfterViewInit {
   // --- Modal crea enigma ---
   showModal      = signal(false);
   creating       = signal(false);
+  creationPhase  = signal<'idle' | 'waiting' | 'success' | 'error'>('idle');
   createError    = signal<string | null>(null);
   argomento      = '';
+  createdPartita: CreatedGame | null = null;
 
   // --- Filtro ---
   searchQuery    = '';
@@ -62,6 +64,10 @@ export class GamesComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initScrollAnimations();
+  }
+
+  ngOnDestroy(): void {
+    document.body.style.overflow = '';
   }
 
   private loadGames(): void {
@@ -114,32 +120,46 @@ export class GamesComponent implements OnInit, AfterViewInit {
     }
     this.argomento = '';
     this.createError.set(null);
+    this.creationPhase.set('idle');
+    this.createdPartita = null;
     this.showModal.set(true);
     document.body.style.overflow = 'hidden';
   }
 
   closeModal(): void {
-    if (this.creating()) return;
+    if (this.creationPhase() === 'waiting' || this.creationPhase() === 'success') return;
     this.showModal.set(false);
+    this.creationPhase.set('idle');
     document.body.style.overflow = '';
   }
 
   submitCreate(): void {
-    if (this.creating()) return;
+    if (this.creationPhase() === 'waiting' || this.creationPhase() === 'success') return;
+    
     this.creating.set(true);
+    this.creationPhase.set('waiting');
     this.createError.set(null);
 
     this.gameService.createGame(this.argomento.trim() || undefined).subscribe({
       next: (partita) => {
         this.creating.set(false);
-        this.closeModal();
-        this.router.navigate(['/games', partita.id]);
+        this.createdPartita = partita;
+        this.creationPhase.set('success');
       },
       error: (err) => {
         this.creating.set(false);
+        this.creationPhase.set('error');
         this.createError.set(err?.error?.message ?? 'Errore durante la creazione. Riprova.');
       }
     });
+  }
+
+  handleSuccessVideoEnded(): void {
+    if (this.createdPartita) {
+      const id = this.createdPartita.id;
+      this.closeModal();
+      this.router.navigate(['/games', id]);
+    }
   }
 
   retry(): void {

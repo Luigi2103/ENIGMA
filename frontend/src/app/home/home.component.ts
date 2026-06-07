@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, inject, signal, computed, effect } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -13,7 +13,7 @@ import { EnigmaCardComponent } from '../enigma-card/enigma-card.component';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent implements OnInit, AfterViewInit {
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private publicService = inject(PublicService);
   private gameService   = inject(GameService);
@@ -67,6 +67,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initScrollAnimations();
+  }
+
+  ngOnDestroy(): void {
+    document.body.style.overflow = '';
   }
 
   private loadGames(): void {
