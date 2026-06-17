@@ -3,7 +3,7 @@
 import express from "express";
 import { Partita, Utente, Tentativo, database } from "../models/database.js";
 
-export const publicrouter = express.Router(); 
+export const publicrouter = express.Router();
 
 /**
  * @swagger
@@ -11,6 +11,10 @@ export const publicrouter = express.Router();
  *   name: Public
  *   description: API pubbliche accessibili senza autenticazione
  */
+
+publicrouter.get("/", (req, res) => {
+    res.json({ message: "ENIGMA API", status: "Running", docs: "/api-docs" });
+});
 
 /**
  * @swagger
@@ -55,9 +59,9 @@ export const publicrouter = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-publicrouter.get("/games" , async (req,res,next) => {
+publicrouter.get("/games", async (req, res, next) => {
     try {
-        const page  = Math.max(1, parseInt(req.query.page)  || 1);
+        const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.max(1, parseInt(req.query.limit) || 9);
         const offset = (page - 1) * limit;
 
@@ -79,7 +83,7 @@ publicrouter.get("/games" , async (req,res,next) => {
             page,
             totalPages: Math.ceil(count / limit)
         });
-    }catch(error) {
+    } catch (error) {
         next({ status: 500, message: error.message });
     }
 })

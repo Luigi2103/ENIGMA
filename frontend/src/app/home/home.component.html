@@ -259,11 +259,14 @@
       }
       @if (!gamesLoading() && !gamesError()) {
         @if (games().length === 0) {
-          <div class="state-message">
-            <i class="bi bi-inbox"></i>
-            <p>Nessun enigma attivo. Sii il primo a crearne uno!</p>
-            <button class="btn-enigma-primary mt-3" (click)="openModal()">
-              <i class="bi bi-plus-circle me-1"></i>Crea Enigma
+          <div class="empty-state">
+            <div class="empty-state__icon-wrap" aria-hidden="true">
+              <i class="bi bi-puzzle empty-state__icon"></i>
+            </div>
+            <h3 class="empty-state__title">Nessun enigma attivo</h3>
+            <p class="empty-state__text">Sii il primo a lanciare una sfida.<br>L'IA genererà un enigma unico per te.</p>
+            <button class="btn-enigma-primary btn-sm empty-state__cta" (click)="openModal()" id="btn-empty-create">
+              <i class="bi bi-stars me-1"></i>Genera il primo Enigma
             </button>
           </div>
         } @else {

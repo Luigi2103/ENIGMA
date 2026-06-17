@@ -2,7 +2,7 @@
 
 import { Utente } from "../models/database.js";
 import Jwt from "jsonwebtoken";
-import { createHash } from "crypto";
+import bcrypt from "bcrypt";
 
 export class LoginController {
 
@@ -25,13 +25,12 @@ export class LoginController {
     }
 
     static async verificaLogin(req, res) {
-        const trovato = await Utente.findOne({
-            where: {
-                username: req.body.username,
-                password: createHash('sha256').update(req.body.password).digest('hex')
-            }
-        })
-        return trovato !== null;
+        // Cerca l'utente solo per username, poi confronta la password con bcrypt
+        const utente = await Utente.findOne({
+            where: { username: req.body.username }
+        });
+        if (!utente) return false;
+        return await bcrypt.compare(req.body.password, utente.password);
     }
 
     static async InserisciUtente(req, res) {

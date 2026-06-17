@@ -1,7 +1,9 @@
 "use strict";
 
 import { DataTypes } from "sequelize";
-import { createHash } from "crypto";
+import bcrypt from "bcrypt";
+
+const SALT_ROUNDS = 12;
 
 // ==========================================
 // CREAZIONE MODELLO UTENTE
@@ -60,18 +62,14 @@ export function CreaUtente(database) {
         tableName: 'utenti',
         timestamps: true,
         hooks: {
-            beforeCreate: (utente) => {
+            beforeCreate: async (utente) => {
                 if (utente.password) {
-                    utente.password = createHash('sha256')
-                        .update(utente.password)
-                        .digest('hex');
+                    utente.password = await bcrypt.hash(utente.password, SALT_ROUNDS);
                 }
             },
-            beforeUpdate: (utente) => {
+            beforeUpdate: async (utente) => {
                 if (utente.changed('password') && utente.password) {
-                    utente.password = createHash('sha256')
-                        .update(utente.password)
-                        .digest('hex');
+                    utente.password = await bcrypt.hash(utente.password, SALT_ROUNDS);
                 }
             }
         }

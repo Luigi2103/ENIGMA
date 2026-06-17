@@ -220,15 +220,18 @@ h3,
 
 // --- Badge ---
 .badge-enigma {
-  background: rgba(124, 58, 237, 0.2);
-  color: var(--enigma-purple-light);
+  background: rgba(124, 58, 237, 0.85);
+  backdrop-filter: blur(4px);
+  color: #e9d5ff;
   border: 1px solid rgba(167, 139, 250, 0.3);
-  border-radius: 4px;
-  font-size: 0.72rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.25em 0.65em;
+  padding: 0.2rem 0.6rem;
+  display: inline-flex;
+  align-items: center;
 }
 
 // Badge dorato "Hall of Fame" – usato in home e leaderboard

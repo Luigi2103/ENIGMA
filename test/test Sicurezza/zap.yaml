@@ -1,5 +1,10 @@
 env:
   contexts:
+
+    # ─────────────────────────────────────────────────────────
+    # Contesto 1: API REST backend (porta 3000)
+    # Autenticazione JWT: ZAP fa login e usa il token Bearer
+    # ─────────────────────────────────────────────────────────
     - name: Enigma-API
       urls:
         - http://host.docker.internal:3000
@@ -8,6 +13,30 @@ env:
       excludePaths:
         - http://host.docker.internal:3000/api-docs.*
 
+      authentication:
+        method: json
+        parameters:
+          loginUrl: http://host.docker.internal:3000/auth
+          loginRequestData: '{"username":"zaptest","password":"ZapTest123!"}'
+        verification:
+          method: response
+          loggedInRegex: '"token"\s*:\s*"[^"]+'
+          loggedOutRegex: '"error"'
+
+      sessionManagement:
+        method: headers
+        parameters:
+          headersAuthorizationHeader: "Bearer {%json:token%}"
+
+      users:
+        - name: utente-zap
+          credentials:
+            username: zaptest
+            password: ZapTest123!
+
+    # ─────────────────────────────────────────────────────────
+    # Contesto 2: Frontend Angular SPA (porta 4200)
+    # ─────────────────────────────────────────────────────────
     - name: Enigma-Frontend
       urls:
         - http://host.docker.internal:4200
@@ -15,34 +44,51 @@ env:
         - http://host.docker.internal:4200.*
 
 jobs:
-  # --- 1. Spider classico sul backend API ---
+
+  # --- 1. Passive scan config (analizza tutto il traffico) ---
+  - type: passiveScan-config
+    parameters:
+      maxAlertsPerRule: 10
+      scanOnlyInScope: true
+
+  # --- 2. Spider classico sul backend (trova le route REST) ---
   - type: spider
     parameters:
       context: Enigma-API
+      user: utente-zap
       maxDuration: 3
+      maxDepth: 5
 
-  # --- 2. AJAX Spider sul frontend Angular (SPA) ---
+  # --- 3. AJAX Spider sul frontend Angular (SPA) ---
   - type: spiderAjax
     parameters:
       context: Enigma-Frontend
       maxDuration: 3
       browserId: firefox-headless
 
-  # --- 3. Scansione attiva sul backend API ---
+  # --- 4. Attendi fine passive scan ---
+  - type: passiveScan-wait
+    parameters:
+      maxDuration: 5
+
+  # --- 5. Scansione ATTIVA sul backend (XSS, SQLi, IDOR...) ---
   - type: activeScan
     parameters:
       context: Enigma-API
+      user: utente-zap
       maxRuleDurationInMins: 5
       maxScanDurationInMins: 15
 
-  # --- 4. Report HTML ---
+  # --- 6. Report HTML (apri nel browser per leggere i risultati) ---
   - type: report
     parameters:
       template: traditional-html
       reportDir: /zap/wrk/reports
       reportFile: report.html
+      reportTitle: "ENIGMA — OWASP ZAP Security Report"
+      reportDescription: "Scansione automatica di XSS, SQLi, IDOR, Missing Headers e altro"
 
-  # --- 5. Report JSON (utile per automazione) ---
+  # --- 7. Report JSON (per automazione CI/CD) ---
   - type: report
     parameters:
       template: traditional-json

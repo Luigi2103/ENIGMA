@@ -26,11 +26,12 @@
   "scripts": {
     "dev": "nodemon index.js",
     "test": "",
-    "security": "cd test\\test Sicurezza && run-zap.bat"
+    "security": "cd \"../test/test Sicurezza\" && run-zap.bat"
   },
   "dependencies": {
     "@angular/cli": "^21.2.12",
     "@google/generative-ai": "^0.24.1",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
