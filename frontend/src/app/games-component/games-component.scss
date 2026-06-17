@@ -390,6 +390,69 @@ $navbar-height: 68px;
 }
 
 
+// --- Paginazione ---
+.games-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  min-width: 40px;
+  height: 40px;
+  padding: 0 0.6rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--enigma-border);
+  color: var(--enigma-text-muted);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(124, 58, 237, 0.12);
+    border-color: rgba(167, 139, 250, 0.35);
+    color: var(--enigma-purple-light);
+    transform: translateY(-1px);
+  }
+
+  &--active {
+    background: rgba(124, 58, 237, 0.2) !important;
+    border-color: rgba(167, 139, 250, 0.5) !important;
+    color: var(--enigma-purple-light) !important;
+    box-shadow: 0 0 12px rgba(124, 58, 237, 0.25);
+  }
+
+  &--arrow {
+    i { font-size: 0.8rem; }
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.pagination-ellipsis {
+  width: 32px;
+  text-align: center;
+  color: var(--enigma-text-muted);
+  font-size: 0.9rem;
+  opacity: 0.5;
+  user-select: none;
+}
+
+
+
 // --- Skeleton ---
 .game-card-skeleton {
   height: 280px;

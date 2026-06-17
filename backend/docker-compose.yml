@@ -10,3 +10,10 @@ services:
     environment:
       - NODE_ENV=production
     restart: unless-stopped
+
+  zap:
+    image: ghcr.io/zaproxy/zaproxy:stable
+    volumes:
+      - ../test/test Sicurezza:/zap/wrk
+    command: >
+      zap.sh -cmd -autorun /zap/wrk/zap.yaml

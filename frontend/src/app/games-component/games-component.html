@@ -124,8 +124,8 @@
         @if (!loading() && !error()) {
         <span class="games-count">
           <i class="bi bi-grid-3x3-gap"></i>
-          {{ filteredGames().length }}
-          {{ filteredGames().length === 1 ? 'enigma' : 'enigmi' }}
+          {{ totalGames() }}
+          {{ totalGames() === 1 ? 'enigma' : 'enigmi' }}
         </span>
         }
         @if (authService.isLoggedIn()) {
@@ -188,11 +188,46 @@
 
     <!-- ---- Games grid ---- -->
     @if (!loading() && !error() && filteredGames().length > 0) {
-    <div class="games-grid">
+    <div id="games-grid-anchor" class="games-grid">
       @for (game of filteredGames(); track game.id; let i = $index) {
       <app-enigma-card [game]="game" [index]="i"></app-enigma-card>
       }
     </div>
+
+    <!-- ---- Paginazione ---- -->
+    @if (totalPages() > 1) {
+    <nav class="games-pagination fade-in-up" aria-label="Paginazione enigmi">
+      <!-- Precedente -->
+      <button class="pagination-btn pagination-btn--arrow" id="btn-page-prev"
+        [disabled]="currentPage() === 1" (click)="goToPage(currentPage() - 1)"
+        aria-label="Pagina precedente">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+
+      <!-- Numeri pagina -->
+      @for (p of pageNumbers(); track p) {
+        @if (
+          p === 1 || p === totalPages() ||
+          (p >= currentPage() - 1 && p <= currentPage() + 1)
+        ) {
+        <button class="pagination-btn" [class.pagination-btn--active]="p === currentPage()"
+          (click)="goToPage(p)" [id]="'btn-page-' + p" [attr.aria-current]="p === currentPage() ? 'page' : null"
+          [attr.aria-label]="'Pagina ' + p">
+          {{ p }}
+        </button>
+        } @else if (p === currentPage() - 2 || p === currentPage() + 2) {
+        <span class="pagination-ellipsis" aria-hidden="true">…</span>
+        }
+      }
+
+      <!-- Successivo -->
+      <button class="pagination-btn pagination-btn--arrow" id="btn-page-next"
+        [disabled]="currentPage() === totalPages()" (click)="goToPage(currentPage() + 1)"
+        aria-label="Pagina successiva">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </nav>
+    }
     }
 
   </div>

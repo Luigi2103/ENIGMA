@@ -57,15 +57,28 @@ export const publicrouter = express.Router();
  */
 publicrouter.get("/games" , async (req,res,next) => {
     try {
-            const partite = await Partita.findAll({
+        const page  = Math.max(1, parseInt(req.query.page)  || 1);
+        const limit = Math.max(1, parseInt(req.query.limit) || 9);
+        const offset = (page - 1) * limit;
+
+        const { count, rows } = await Partita.findAndCountAll({
             where: { attiva: true },
             attributes: ['id', 'argomento', 'suggerimento', 'foto', 'utenteId', 'createdAt'],
             include: [{
                 model: Utente,
                 attributes: ['username']
-            }]
+            }],
+            limit,
+            offset,
+            order: [['createdAt', 'DESC']]
         });
-        res.json(partite);
+
+        res.json({
+            data: rows,
+            total: count,
+            page,
+            totalPages: Math.ceil(count / limit)
+        });
     }catch(error) {
         next({ status: 500, message: error.message });
     }

@@ -1,0 +1,50 @@
+env:
+  contexts:
+    - name: Enigma-API
+      urls:
+        - http://host.docker.internal:3000
+      includePaths:
+        - http://host.docker.internal:3000.*
+      excludePaths:
+        - http://host.docker.internal:3000/api-docs.*
+
+    - name: Enigma-Frontend
+      urls:
+        - http://host.docker.internal:4200
+      includePaths:
+        - http://host.docker.internal:4200.*
+
+jobs:
+  # --- 1. Spider classico sul backend API ---
+  - type: spider
+    parameters:
+      context: Enigma-API
+      maxDuration: 3
+
+  # --- 2. AJAX Spider sul frontend Angular (SPA) ---
+  - type: spiderAjax
+    parameters:
+      context: Enigma-Frontend
+      maxDuration: 3
+      browserId: firefox-headless
+
+  # --- 3. Scansione attiva sul backend API ---
+  - type: activeScan
+    parameters:
+      context: Enigma-API
+      maxRuleDurationInMins: 5
+      maxScanDurationInMins: 15
+
+  # --- 4. Report HTML ---
+  - type: report
+    parameters:
+      template: traditional-html
+      reportDir: /zap/wrk/reports
+      reportFile: report.html
+
+  # --- 5. Report JSON (utile per automazione) ---
+  - type: report
+    parameters:
+      template: traditional-json
+      reportDir: /zap/wrk/reports
+      reportFile: report.json

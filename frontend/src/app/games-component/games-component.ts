@@ -27,7 +27,7 @@ export class GamesComponent implements OnInit, OnDestroy {
   loading = signal(true);
   error = signal(false);
 
-  // --- Stat personali (calcolate dalla lista pubblica) ---
+  // --- Stat personali (calcolate dalla pagina corrente) ---
   myGames = computed(() =>
     this.games().filter(g => g.Utente?.username === this.authService.username())
   );
@@ -53,12 +53,20 @@ export class GamesComponent implements OnInit, OnDestroy {
   argomento = '';
   createdPartita: CreatedGame | null = null;
 
-  // --- Filtro ---
+  // --- Ricerca ---
   searchQuery = '';
-  filteredGames = signal<Partita[]>([]);
+
+  // --- Paginazione (server-side) ---
+  readonly PAGE_SIZE = 9;
+  currentPage  = signal(1);
+  totalPages   = signal(1);
+  totalGames   = signal(0);
+  pageNumbers  = computed(() => Array.from({ length: this.totalPages() }, (_, i) => i + 1));
+  // La griglia mostra direttamente games() (già la pagina corrente)
+  filteredGames = this.games;
 
   ngOnInit(): void {
-    this.loadGames();
+    this.loadGames(1);
     if (this.authService.isLoggedIn()) {
       this.loadLeaderboard();
     }
@@ -71,15 +79,16 @@ export class GamesComponent implements OnInit, OnDestroy {
   }
 
 
-  private loadGames(): void {
+  private loadGames(page: number = 1): void {
     this.loading.set(true);
     this.error.set(false);
-    this.publicService.getGames().subscribe({
-      next: (data) => {
-        this.games.set(data);
-        this.filteredGames.set(data);
+    this.publicService.getGames(page, this.PAGE_SIZE).subscribe({
+      next: (res) => {
+        this.games.set(res.data);
+        this.currentPage.set(res.page);
+        this.totalPages.set(res.totalPages);
+        this.totalGames.set(res.total);
         this.loading.set(false);
-        // DOM aggiornato → osserva i nuovi elementi per le animazioni
         setTimeout(() => this.initScrollAnimations(), 0);
       },
       error: () => {
@@ -97,20 +106,17 @@ export class GamesComponent implements OnInit, OnDestroy {
   }
 
   onSearch(): void {
-    const q = (this.searchQuery || '').trim().toLowerCase();
-    if (!q) {
-      this.filteredGames.set(this.games());
-    } else {
-      this.filteredGames.set(
-        this.games().filter(g =>
-          (g.argomento || '').toLowerCase().includes(q) ||
-          (g.suggerimento || '').toLowerCase().includes(q) ||
-          (g.Utente?.username ?? '').toLowerCase().includes(q)
-        )
-      );
-    }
-    // Re-run scroll animations observation so the restored/filtered elements get the 'visible' class
-    setTimeout(() => this.initScrollAnimations(), 0);
+    // La ricerca lato backend non è implementata: ricarica dalla pagina 1
+    // con il query param search (futura estensione), per ora resetta la pagina
+    this.loadGames(1);
+  }
+
+  goToPage(page: number): void {
+    const clamped = Math.max(1, Math.min(page, this.totalPages()));
+    this.loadGames(clamped);
+    setTimeout(() => {
+      document.getElementById('games-grid-anchor')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 0);
   }
 
   // --- Modal ---
@@ -167,7 +173,7 @@ export class GamesComponent implements OnInit, OnDestroy {
   }
 
   retry(): void {
-    this.loadGames();
+    this.loadGames(this.currentPage());
   }
 
   // --- Helpers ---

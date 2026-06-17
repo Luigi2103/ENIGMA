@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 // --- Interfacce modello ---
@@ -11,6 +11,13 @@ export interface Partita {
   utenteId: number;
   createdAt: string;
   Utente: { username: string };
+}
+
+export interface PaginatedGames {
+  data: Partita[];
+  total: number;
+  page: number;
+  totalPages: number;
 }
 
 export interface LeaderboardEntry {
@@ -28,10 +35,13 @@ export class PublicService {
   private http = inject(HttpClient);
 
   /**
-   * GET /games – Lista di tutte le partite attive (pubblica)
+   * GET /games?page=X&limit=Y – Lista paginata delle partite attive (pubblica)
    */
-  getGames(): Observable<Partita[]> {
-    return this.http.get<Partita[]>(`${this.apiUrl}/games`);
+  getGames(page = 1, limit = 9): Observable<PaginatedGames> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+    return this.http.get<PaginatedGames>(`${this.apiUrl}/games`, { params });
   }
 
   /**

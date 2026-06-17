@@ -129,14 +129,20 @@
       <!-- STATO: sconfitta -->
       @if (auth.isLoggedIn() && haPerso()) {
       <div class="gp-state-card gp-state-card--lose" role="alert" aria-live="polite">
+        <div class="gp-state-card__skull" aria-hidden="true">💀</div>
         <div class="gp-state-card__icon gp-state-card__icon--lose">
           <i class="bi bi-x-circle-fill"></i>
         </div>
-        <h2>Tentativi esauriti</h2>
-        <p>Hai esaurito tutti i {{ MAX_TENTATIVI }} tentativi. Meglio fortuna la prossima volta!</p>
-        <a routerLink="/games" class="btn-enigma-primary mt-3" id="btn-lose-back">
-          <i class="bi bi-arrow-left me-2"></i>Torna agli enigmi
-        </a>
+        <h2>Tentativi Esauriti</h2>
+        <p>Nessuno dei {{ MAX_TENTATIVI }} tentativi era quello giusto.<br>Riprova con un altro enigma!</p>
+        <div class="gp-state-card__actions">
+          <a routerLink="/games" class="btn-enigma-outline" id="btn-lose-back">
+            <i class="bi bi-arrow-left me-2"></i>Altri Enigmi
+          </a>
+          <a routerLink="/leaderboard" class="btn-enigma-primary" id="btn-lose-leaderboard">
+            <i class="bi bi-trophy me-2"></i>Classifica
+          </a>
+        </div>
       </div>
       }
 

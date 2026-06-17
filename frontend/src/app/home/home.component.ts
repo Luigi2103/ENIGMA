@@ -74,9 +74,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private loadGames(): void {
-    this.publicService.getGames().subscribe({
-      next: (data) => {
-        this.games.set(data.slice(0, 6));
+    this.publicService.getGames(1, 6).subscribe({
+      next: (res) => {
+        this.games.set(res.data);
         this.gamesLoading.set(false);
         setTimeout(() => this.initScrollAnimations(), 0);
       },

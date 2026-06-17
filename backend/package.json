@@ -25,7 +25,8 @@
   "contributors": [],
   "scripts": {
     "dev": "nodemon index.js",
-    "test": ""
+    "test": "",
+    "security": "cd test\\test Sicurezza && run-zap.bat"
   },
   "dependencies": {
     "@angular/cli": "^21.2.12",
