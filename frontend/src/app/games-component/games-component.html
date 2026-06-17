@@ -259,33 +259,29 @@
     </div>
     }
 
-    <!-- Phase 2: Waiting (Playing waiting video) -->
+    <!-- Phase 2: Waiting (Loading) -->
     @if (creationPhase() === 'waiting') {
-    <div class="modal-video-container">
-      <video class="modal-video" src="/animazione%20creazione%20enigma.mp4" autoplay loop [muted]="true" playsinline></video>
-      <div class="modal-video-overlay">
-        <div class="modal-video-spinner"></div>
-        <h2 class="modal-video-title">Plasmando l'Enigma...</h2>
-        <p class="modal-video-text">
-          L'IA sta generando immagini e indizi originali per te. Potrebbe richiedere qualche secondo.
-        </p>
-      </div>
+    <div class="modal-waiting-container">
+      <div class="modal-waiting-orb" aria-hidden="true"></div>
+      <div class="modal-waiting-spinner"></div>
+      <h2 class="modal-waiting-title">Plasmando l'Enigma...</h2>
+      <p class="modal-waiting-text">
+        L'IA sta generando immagini e indizi originali per te. Potrebbe richiedere qualche secondo.
+      </p>
     </div>
     }
 
-    <!-- Phase 3: Success (Playing success video) -->
+
+    <!-- Phase 3: Success -->
     @if (creationPhase() === 'success') {
-    <div class="modal-video-container">
-      <video class="modal-video" src="/successo.mp4" autoplay [muted]="true" playsinline
-        (ended)="handleSuccessVideoEnded()"></video>
-      <div class="modal-video-overlay modal-video-overlay--success">
-        <i class="bi bi-check-circle-fill modal-video-success-icon"></i>
-        <h2 class="modal-video-title">Enigma Creato!</h2>
-        <p class="modal-video-text">Pronto per essere giocato</p>
-        <button class="btn-enigma-gold btn-sm mt-3" (click)="handleSuccessVideoEnded()">
-          Gioca Ora <i class="bi bi-arrow-right ms-1"></i>
-        </button>
-      </div>
+    <div class="modal-success-container">
+      <div class="modal-success-orb" aria-hidden="true"></div>
+      <i class="bi bi-check-circle-fill modal-success-icon"></i>
+      <h2 class="modal-success-title">Enigma Creato!</h2>
+      <p class="modal-success-text">Pronto per essere giocato</p>
+      <button class="btn-enigma-gold btn-sm mt-3" (click)="handleSuccessVideoEnded()">
+        Gioca Ora <i class="bi bi-arrow-right ms-1"></i>
+      </button>
     </div>
     }
 

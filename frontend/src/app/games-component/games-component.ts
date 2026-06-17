@@ -1,7 +1,8 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { forkJoin, timer } from 'rxjs';
 import { PublicService, Partita, LeaderboardEntry } from '../_services/rest-backend/rest-backend.service';
 import { AuthService } from '../_services/auth/auth.service';
 import { GameService, CreatedGame } from '../_services/rest-backend/game.service';
@@ -13,62 +14,62 @@ import { EnigmaCardComponent } from '../enigma-card/enigma-card.component';
   templateUrl: './games-component.html',
   styleUrl: './games-component.scss'
 })
-export class GamesComponent implements OnInit, AfterViewInit, OnDestroy {
+export class GamesComponent implements OnInit, OnDestroy {
+
 
   private publicService = inject(PublicService);
-  private gameService   = inject(GameService);
-  readonly authService  = inject(AuthService);
-  private router        = inject(Router);
+  private gameService = inject(GameService);
+  readonly authService = inject(AuthService);
+  private router = inject(Router);
 
   // --- State ---
-  games          = signal<Partita[]>([]);
-  loading        = signal(true);
-  error          = signal(false);
+  games = signal<Partita[]>([]);
+  loading = signal(true);
+  error = signal(false);
 
   // --- Stat personali (calcolate dalla lista pubblica) ---
-  myGames        = computed(() =>
+  myGames = computed(() =>
     this.games().filter(g => g.Utente?.username === this.authService.username())
   );
-  myGamesCount   = computed(() => this.myGames().length);
+  myGamesCount = computed(() => this.myGames().length);
 
   // --- Leaderboard rank ---
-  leaderboard    = signal<LeaderboardEntry[]>([]);
-  myRank         = computed(() => {
+  leaderboard = signal<LeaderboardEntry[]>([]);
+  myRank = computed(() => {
     const lb = this.leaderboard();
     const idx = lb.findIndex(e => e.Utente?.username === this.authService.username());
     return idx >= 0 ? idx + 1 : null;
   });
-  mySolved       = computed(() => {
+  mySolved = computed(() => {
     const entry = this.leaderboard().find(e => e.Utente?.username === this.authService.username());
     return entry ? Number(entry.enigmi_risolti) : 0;
   });
 
   // --- Modal crea enigma ---
-  showModal      = signal(false);
-  creating       = signal(false);
-  creationPhase  = signal<'idle' | 'waiting' | 'success' | 'error'>('idle');
-  createError    = signal<string | null>(null);
-  argomento      = '';
+  showModal = signal(false);
+  creating = signal(false);
+  creationPhase = signal<'idle' | 'waiting' | 'success' | 'error'>('idle');
+  createError = signal<string | null>(null);
+  argomento = '';
   createdPartita: CreatedGame | null = null;
 
   // --- Filtro ---
-  searchQuery    = '';
-  filteredGames  = signal<Partita[]>([]);
+  searchQuery = '';
+  filteredGames = signal<Partita[]>([]);
 
   ngOnInit(): void {
     this.loadGames();
     if (this.authService.isLoggedIn()) {
       this.loadLeaderboard();
     }
+    setTimeout(() => this.initScrollAnimations(), 0);
   }
 
-  ngAfterViewInit(): void {
-    this.initScrollAnimations();
-  }
 
   ngOnDestroy(): void {
     document.body.style.overflow = '';
   }
+
 
   private loadGames(): void {
     this.loading.set(true);
@@ -127,7 +128,7 @@ export class GamesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   closeModal(): void {
-    if (this.creationPhase() === 'waiting' || this.creationPhase() === 'success') return;
+    if (this.creationPhase() === 'waiting') return;
     this.showModal.set(false);
     this.creationPhase.set('idle');
     document.body.style.overflow = '';
@@ -135,13 +136,16 @@ export class GamesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   submitCreate(): void {
     if (this.creationPhase() === 'waiting' || this.creationPhase() === 'success') return;
-    
+
     this.creating.set(true);
     this.creationPhase.set('waiting');
     this.createError.set(null);
 
-    this.gameService.createGame(this.argomento.trim() || undefined).subscribe({
-      next: (partita) => {
+    forkJoin({
+      partita: this.gameService.createGame(this.argomento.trim() || undefined),
+      delay: timer(3000)
+    }).subscribe({
+      next: ({ partita }) => {
         this.creating.set(false);
         this.createdPartita = partita;
         this.creationPhase.set('success');
