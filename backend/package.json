@@ -24,12 +24,12 @@
   },
   "contributors": [],
   "scripts": {
+    "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "",
     "security": "cd \"../test/test Sicurezza\" && run-zap.bat"
   },
   "dependencies": {
-    "@angular/cli": "^21.2.12",
     "@google/generative-ai": "^0.24.1",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
@@ -44,6 +44,7 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "@angular/cli": "^21.2.12",
     "nodemon": "^3.1.14"
   }
 }
