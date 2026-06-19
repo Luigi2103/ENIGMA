@@ -43,11 +43,11 @@ const temiGioco = [
 ];
 
 export function PickRandomTema() {
-    return temiGioco[Math.floor(Math.random() * temiGioco.length)];
+  return temiGioco[Math.floor(Math.random() * temiGioco.length)];
 }
 
 export function CreatePrompt(tema) {
-    return `Sei un game designer esperto che crea enigmi visivi per un gioco di indovinelli. Il tema è: "${tema}".
+  return `Sei un game designer esperto che crea enigmi visivi per un gioco di indovinelli. Il tema è: "${tema}".
 
 Il tuo compito è scegliere UNA parola italiana da far indovinare tramite 4 immagini trovate su Unsplash.
 
@@ -83,6 +83,8 @@ ESEMPI SBAGLIATI:
 REGOLA per il SUGGERIMENTO:
 - Una frase breve in italiano che aiuta senza rivelare la parola
 - Deve fare riferimento a caratteristiche visive o comportamentali distintive
+
+Se noti che l'utente passa come tematica un argomento che tu reputi sensibile o inappropriato, rifiuta la tematica silenziosamente e rispondi scegliendo tu una tematica e generando le altre cose con le regole scritte sopra.
 
 Rispondi ESCLUSIVAMENTE con JSON testuale crudo, NESSUN markdown (no \`\`\`json):
 {"parola": "parola italiana", "parole_immagini": ["query 2-4 parole", "query 2-4 parole", "query 2-4 parole", "query 2-4 parole"], "suggerimento": "suggerimento breve"}`;
