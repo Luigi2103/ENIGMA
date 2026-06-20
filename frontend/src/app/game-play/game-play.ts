@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -48,6 +48,8 @@ export class GamePlayComponent implements OnInit {
   inGioco = computed(() => !this.haVinto() && !this.haPerso());
   activeModalImage = signal<string | null>(null);
 
+  @ViewChild('rispostaInput') rispostaInput!: ElementRef<HTMLInputElement>;
+
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (isNaN(id)) {
@@ -60,6 +62,7 @@ export class GamePlayComponent implements OnInit {
   private loadGame(id: number): void {
     this.loading.set(true);
     this.loadError.set(null);
+
     this.publicSvc.getGame(id).subscribe({
       next: (data) => {
         this.game.set(data);
@@ -113,12 +116,18 @@ export class GamePlayComponent implements OnInit {
         this.tentativi.update(list => [...list, tentativo]);
         this.risposta = '';
         this.submitting.set(false);
+        this._focusInput();
       },
       error: (err) => {
         this.submitError.set(err?.error?.message ?? 'Errore nell\'invio della risposta.');
         this.submitting.set(false);
+        this._focusInput();
       }
     });
+  }
+
+  private _focusInput(): void {
+    setTimeout(() => this.rispostaInput?.nativeElement?.focus(), 0);
   }
 
   // --- Helpers ---

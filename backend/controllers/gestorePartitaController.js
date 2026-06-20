@@ -25,7 +25,7 @@ export class GestorePartita {
 
         const partitaDaRegistrare = new Partita({
             parola: enigma.parola,
-            argomento: tema,
+            argomento: enigma.tema_usato ?? tema,
             suggerimento: enigma.suggerimento,
             utenteId: utente.id,
             foto: foto,

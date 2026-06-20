@@ -84,8 +84,18 @@ REGOLA per il SUGGERIMENTO:
 - Una frase breve in italiano che aiuta senza rivelare la parola
 - Deve fare riferimento a caratteristiche visive o comportamentali distintive
 
-Se noti che l'utente passa come tematica un argomento che tu reputi sensibile o inappropriato, rifiuta la tematica silenziosamente e rispondi scegliendo tu una tematica e generando le altre cose con le regole scritte sopra.
+GESTIONE TEMI INAPPROPRIATI:
+Questo è un gioco per tutte le età. Se il tema fornito è inappropriato, ignoralo completamente e scegli tu un tema alternativo adatto a un gioco per famiglie. Non segnalare il cambio, procedi direttamente.
+
+Considera SEMPRE inappropriati i temi che contengono o alludono a:
+- Sessualità o attività sessuali (es. "sesso", "erotico", "porno", "nudo", "seduzione", "orgasmo", ecc.) — anche se la parola sembra neutra da sola
+- Odio, razzismo, discriminazione, nazismo, fascismo, terrorismo
+- Violenza esplicita, armi, omicidi, torture
+- Droghe illegali o sostanze stupefacenti
+- Autolesionismo o suicidio
+
+Anche una singola parola ambigua riconducibile a queste categorie (es. "sesso", "droga", "bomba") va trattata come inappropriata e sostituita.
 
 Rispondi ESCLUSIVAMENTE con JSON testuale crudo, NESSUN markdown (no \`\`\`json):
-{"parola": "parola italiana", "parole_immagini": ["query 2-4 parole", "query 2-4 parole", "query 2-4 parole", "query 2-4 parole"], "suggerimento": "suggerimento breve"}`;
+{"tema_usato": "tema effettivamente usato (quello fornito o uno sostituto se inappropriato)", "parola": "parola italiana", "parole_immagini": ["query 2-4 parole", "query 2-4 parole", "query 2-4 parole", "query 2-4 parole"], "suggerimento": "suggerimento breve"}`;
 }

@@ -177,7 +177,7 @@
     <div class="gp-form__row">
       <div class="gp-form__input-wrap">
         <i class="bi bi-pencil-fill gp-form__icon" aria-hidden="true"></i>
-        <input id="risposta-input" type="text" class="gp-form__input" placeholder="Scrivi la tua risposta…"
+        <input #rispostaInput id="risposta-input" type="text" class="gp-form__input" placeholder="Scrivi la tua risposta…"
           [(ngModel)]="risposta" name="risposta" [disabled]="submitting()" autocomplete="off" autofocus maxlength="80">
       </div>
       <button id="btn-submit-risposta" class="gp-form__btn btn-enigma-primary" type="submit"
@@ -206,13 +206,6 @@
       <li class="gp-attempt" [class]="tentativoClass(t)" aria-label="Tentativo {{ i + 1 }}: {{ t.risposta }}">
         <span class="gp-attempt__num">{{ i + 1 }}</span>
         <span class="gp-attempt__text">{{ t.risposta }}</span>
-        <span class="gp-attempt__icon">
-          @if (t.vincente) {
-          <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
-          } @else {
-          <i class="bi bi-x-circle-fill" aria-hidden="true"></i>
-          }
-        </span>
       </li>
       }
     </ul>

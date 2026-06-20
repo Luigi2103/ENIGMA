@@ -1,10 +1,12 @@
-<article
+<a
+  [routerLink]="['/games', game.id]"
   class="game-card enigma-card fade-in-up"
   [class.delay-1]="index % 3 === 0"
   [class.delay-2]="index % 3 === 1"
   [class.delay-3]="index % 3 === 2"
   [class.game-card--mine]="isMine()"
-  [attr.aria-label]="'Enigma: ' + game.argomento"
+  [attr.aria-label]="'Gioca all\'enigma: ' + game.argomento"
+  [id]="'card-' + game.id"
 >
   <!-- Badge "tuo" -->
   @if (isMine()) {
@@ -39,13 +41,9 @@
         <span class="dot" aria-hidden="true">·</span>
         <span>{{ formatDate(game.createdAt) }}</span>
       </div>
-      <a
-        [routerLink]="['/games', game.id]"
-        class="btn-enigma-primary btn-sm"
-        [id]="'btn-play-' + game.id"
-      >
+      <span class="btn-enigma-primary btn-sm" aria-hidden="true">
         <i class="bi bi-play-fill me-1"></i> Gioca
-      </a>
+      </span>
     </div>
   </div>
-</article>
+</a>
