@@ -53,6 +53,13 @@ export class GameService {
   }
 
   /**
+   * GET /games/:id/solution – Recupera la parola segreta (solo se l'utente ha perso)
+   */
+  getSolution(gameId: number): Observable<{ parola: string }> {
+    return this.http.get<{ parola: string }>(`${this.apiUrl}/games/${gameId}/solution`);
+  }
+
+  /**
    * PATCH /games/:id – Disabilita/abbandona una partita (richiede token JWT)
    */
   disableGame(gameId: number): Observable<void> {

@@ -134,7 +134,14 @@
           <i class="bi bi-x-circle-fill"></i>
         </div>
         <h2>Tentativi Esauriti</h2>
-        <p>Nessuno dei {{ MAX_TENTATIVI }} tentativi era quello giusto.<br>Riprova con un altro enigma!</p>
+        <p>Nessuno dei {{ MAX_TENTATIVI }} tentativi era quello giusto.</p>
+        @if (parolaSegreta()) {
+        <div class="gp-solution-reveal" aria-label="Parola segreta rivelata">
+          <p class="gp-solution-reveal__label">La parola segreta era</p>
+          <span class="gp-solution-reveal__word">{{ parolaSegreta() }}</span>
+        </div>
+        }
+        <p class="gp-state-card__sub">Riprova con un altro enigma!</p>
         <div class="gp-state-card__actions">
           <a routerLink="/games" class="btn-enigma-outline" id="btn-lose-back">
             <i class="bi bi-arrow-left me-2"></i>Altri Enigmi

@@ -393,6 +393,48 @@ $navbar-height: 68px;
 
     i { color: rgba(245, 158, 11, 0.6); flex-shrink: 0; margin-top: 0.1rem; }
   }
+  &__sub {
+    font-size: 0.82rem !important;
+    color: rgba(255,255,255,0.35) !important;
+    margin-top: 0.15rem !important;
+  }
+}
+
+// --- Rivelazione parola segreta (stato sconfitta) ---
+.gp-solution-reveal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(248, 113, 113, 0.07);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: 14px;
+  padding: 1rem 2rem;
+  width: 100%;
+  animation: reveal-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &__label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(252, 165, 165, 0.7);
+    margin: 0;
+  }
+
+  &__word {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 900;
+    color: #fca5a5;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(248, 113, 113, 0.4);
+  }
+}
+
+@keyframes reveal-pop {
+  from { transform: scale(0.85); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
 }
 
 @keyframes skull-drop {

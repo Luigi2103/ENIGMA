@@ -247,6 +247,60 @@ gameRouter.get("/games/:id/attempts", async (req, res, next) => {
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
+/**
+ * @swagger
+ * /games/{id}/solution:
+ *   get:
+ *     summary: Ottieni la parola segreta (solo se hai esaurito i tentativi senza vincere)
+ *     tags: [Games]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID della partita
+ *     responses:
+ *       200:
+ *         description: Parola segreta restituita
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 parola:
+ *                   type: string
+ *       403:
+ *         description: Non hai ancora esaurito i tentativi
+ *       404:
+ *         description: Partita non trovata
+ */
+gameRouter.get("/games/:id/solution", async (req, res, next) => {
+    try {
+        const utente = await Utente.findOne({ where: { username: req.username } });
+        if (!utente) return next({ status: 401, message: "Utente non trovato" });
+
+        const partita = await Partita.findOne({ where: { id: req.params.id } });
+        if (!partita) return next({ status: 404, message: "Partita non trovata" });
+
+        const [numeroTentativi, haVinto] = await Promise.all([
+            Tentativo.count({ where: { utenteId: utente.id, partitaId: partita.id } }),
+            Tentativo.findOne({ where: { utenteId: utente.id, partitaId: partita.id, vincente: true } })
+        ]);
+
+        // Rivela la parola solo se l'utente ha perso (tentativi esauriti e non ha vinto)
+        if (haVinto || numeroTentativi < 10) {
+            return next({ status: 403, message: "Non puoi vedere la soluzione: non hai ancora esaurito i tentativi." });
+        }
+
+        res.json({ parola: partita.parola });
+    } catch (error) {
+        next({ status: 500, message: error.message });
+    }
+});
+
 gameRouter.patch("/games/:id", async (req,res,next) => {
     GestorePartita.DisabilitaPartita(req).then((partita) => {
         res.status(204).send();

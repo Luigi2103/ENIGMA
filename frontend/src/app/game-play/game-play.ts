@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, ViewChild, ElementRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -47,6 +47,22 @@ export class GamePlayComponent implements OnInit {
   haPerso = computed(() => !this.haVinto() && this.tentativiRimasti() <= 0);
   inGioco = computed(() => !this.haVinto() && !this.haPerso());
   activeModalImage = signal<string | null>(null);
+  parolaSegreta = signal<string | null>(null);
+
+  constructor() {
+    // Quando l'utente perde, carica automaticamente la parola segreta
+    effect(() => {
+      if (this.haPerso()) {
+        const gameId = this.game()?.id;
+        if (gameId) {
+          this.gameSvc.getSolution(gameId).subscribe({
+            next: (res) => this.parolaSegreta.set(res.parola),
+            error: () => this.parolaSegreta.set(null)
+          });
+        }
+      }
+    });
+  }
 
   @ViewChild('rispostaInput') rispostaInput!: ElementRef<HTMLInputElement>;
 
