@@ -25,7 +25,6 @@ export class LoginController {
     }
 
     static async verificaLogin(req, res) {
-        // Cerca l'utente solo per username, poi confronta la password con bcrypt
         const utente = await Utente.findOne({
             where: { username: req.body.username }
         });

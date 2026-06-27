@@ -38,7 +38,6 @@ export class GestorePartita {
 
     static async RegistraTentativo(req) {
 
-        //Controlla che la partita sia valida e attiva e che l'utente esista e che non abbia già vinto
         const [partita, utente] = await Promise.all([
             GestorePartita._verificaPartita(req.params.id),
             GestorePartita._verificaUtente(req.username)
@@ -103,7 +102,9 @@ export class GestorePartita {
     }
 
 
-    // --- FUNZIONI AUSILIARIE ---
+    // ==========================================
+    // FUNZIONI PRIVATE
+    // ==========================================
 
     static async _verificaPartita(idPartita) {
         const partita = await Partita.findOne({ where: { id: idPartita } });
@@ -145,5 +146,6 @@ export class GestorePartita {
 
 
 }
+
 
 

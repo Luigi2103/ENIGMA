@@ -1,8 +1,3 @@
-<!-- ============================================================
-     ENIGMA – Leaderboard Page
-     ============================================================ -->
-
-<!-- ========= PAGE HERO ========= -->
 <section class="lb-hero" aria-label="Intestazione classifica">
   <div class="lb-hero__bg" aria-hidden="true">
     <div class="lb-orb lb-orb--1"></div>
@@ -35,13 +30,11 @@
 </section>
 
 
-<!-- ========= PODIO (top 3) ========= -->
 @if (!loading() && !error() && leaderboard().length >= 3) {
   <section class="podium-section" aria-label="Podio top 3">
     <div class="container">
       <div class="podium">
 
-        <!-- 2° posto -->
         <div class="podium-card podium-card--silver fade-in-up delay-2" aria-label="Secondo posto">
           <div class="podium-card__rank-badge">
             <i class="bi bi-award-fill"></i>
@@ -58,7 +51,6 @@
           <div class="podium-card__bar podium-card__bar--2"></div>
         </div>
 
-        <!-- 1° posto -->
         <div class="podium-card podium-card--gold podium-card--top fade-in-up delay-1" aria-label="Primo posto">
           <div class="podium-card__crown" aria-hidden="true">👑</div>
           <div class="podium-card__rank-badge">
@@ -76,7 +68,6 @@
           <div class="podium-card__bar podium-card__bar--1"></div>
         </div>
 
-        <!-- 3° posto -->
         <div class="podium-card podium-card--bronze fade-in-up delay-3" aria-label="Terzo posto">
           <div class="podium-card__rank-badge">
             <i class="bi bi-star-fill"></i>
@@ -99,7 +90,6 @@
 }
 
 
-<!-- ========= CLASSIFICA COMPLETA ========= -->
 <section class="rankings-section" aria-label="Classifica completa">
   <div class="container">
 
@@ -108,7 +98,6 @@
       <p class="section-subtitle">Tutti i partecipanti ordinati per enigmi risolti</p>
     </div>
 
-    <!-- Loading skeleton -->
     @if (loading()) {
       <div class="lb-skeleton-list" aria-busy="true" aria-label="Caricamento classifica">
         @for (n of [1,2,3,4,5,6,7,8]; track n) {
@@ -117,7 +106,6 @@
       </div>
     }
 
-    <!-- Stato di errore -->
     @if (error()) {
       <div class="state-message" role="alert">
         <i class="bi bi-wifi-off" aria-hidden="true"></i>
@@ -128,7 +116,6 @@
       </div>
     }
 
-    <!-- Lista vuota -->
     @if (!loading() && !error() && leaderboard().length === 0) {
       <div class="state-message">
         <i class="bi bi-people" aria-hidden="true"></i>
@@ -139,7 +126,6 @@
       </div>
     }
 
-    <!-- Tabella classifica -->
     @if (!loading() && !error() && leaderboard().length > 0) {
       <ol class="rankings-list" aria-label="Classifica dei giocatori">
         @for (entry of leaderboard(); track entry.utenteId; let i = $index) {
@@ -149,7 +135,6 @@
             [class]="'delay-' + ((i % 5) + 1)"
             [attr.aria-label]="getRankLabel(i) + ': ' + entry.Utente.username"
           >
-            <!-- Rank -->
             <div class="rk-rank" [class.rk-rank--podium]="isPodium(i)">
               @if (isPodium(i)) {
                 <i class="bi" [class]="getRankIcon(i) + ' ' + getRankClass(i)" aria-hidden="true"></i>
@@ -158,12 +143,10 @@
               }
             </div>
 
-            <!-- Avatar -->
             <div class="rk-avatar" [style.background]="getAvatarColor(i)" aria-hidden="true">
               {{ entry.Utente.username.charAt(0).toUpperCase() }}
             </div>
 
-            <!-- Username + label podio -->
             <div class="rk-info">
               <span class="rk-username">{{ entry.Utente.username }}</span>
               @if (isPodium(i)) {
@@ -171,7 +154,6 @@
               }
             </div>
 
-            <!-- Score -->
             <div class="rk-score">
               <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
               <strong>{{ entry.enigmi_risolti }}</strong>

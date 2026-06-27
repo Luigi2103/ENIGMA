@@ -27,17 +27,11 @@ export class GameService {
   private readonly apiUrl = environment.apiUrl;
   private http = inject(HttpClient);
 
-  /**
-   * POST /games – Crea una nuova partita (richiede token JWT)
-   */
   createGame(argomento?: string): Observable<CreatedGame> {
     const body = argomento ? { argomento } : {};
     return this.http.post<CreatedGame>(`${this.apiUrl}/games`, body);
   }
 
-  /**
-   * POST /games/:id/attempts – Invia un tentativo (richiede token JWT)
-   */
   submitAttempt(gameId: number, risposta: string): Observable<AttemptResult> {
     return this.http.post<AttemptResult>(
       `${this.apiUrl}/games/${gameId}/attempts`,
@@ -45,23 +39,14 @@ export class GameService {
     );
   }
 
-  /**
-   * GET /games/:id/attempts – Recupera i tentativi dell'utente per una partita (richiede token JWT)
-   */
   getAttempts(gameId: number): Observable<AttemptResult[]> {
     return this.http.get<AttemptResult[]>(`${this.apiUrl}/games/${gameId}/attempts`);
   }
 
-  /**
-   * GET /games/:id/solution – Recupera la parola segreta (solo se l'utente ha perso)
-   */
   getSolution(gameId: number): Observable<{ parola: string }> {
     return this.http.get<{ parola: string }>(`${this.apiUrl}/games/${gameId}/solution`);
   }
 
-  /**
-   * PATCH /games/:id – Disabilita/abbandona una partita (richiede token JWT)
-   */
   disableGame(gameId: number): Observable<void> {
     return this.http.patch<void>(`${this.apiUrl}/games/${gameId}`, {});
   }

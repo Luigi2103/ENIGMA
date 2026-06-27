@@ -1,13 +1,5 @@
-<!-- ============================================================
-     ENIGMA – Homepage  (guest vs logged-in)
-     ============================================================ -->
-
-<!-- ================================================================
-     ██████  VISTA GUEST (non loggato)
-     ================================================================ -->
 @if (!auth.isLoggedIn()) {
 
-  <!-- ========= HERO ========= -->
   <section class="hero-section" id="hero" aria-label="Sezione principale">
     <div class="hero-bg" aria-hidden="true">
       <div class="hero-orb hero-orb--1"></div>
@@ -63,7 +55,6 @@
     <div class="scroll-indicator fade-in delay-6" aria-hidden="true"><span></span></div>
   </section>
 
-  <!-- ========= COME FUNZIONA ========= -->
   <section class="how-section" id="come-funziona" aria-label="Come funziona il gioco">
     <div class="container">
       <div class="text-center mb-5">
@@ -99,7 +90,6 @@
     </div>
   </section>
 
-  <!-- ========= ENIGMI IN EVIDENZA (guest) ========= -->
   <section class="games-section" id="enigmi" aria-label="Enigmi in evidenza">
     <div class="container">
       <div class="section-header">
@@ -137,7 +127,6 @@
     </div>
   </section>
 
-  <!-- ========= CTA FINALE (guest) ========= -->
   <section class="cta-section" id="call-to-action" aria-label="Inizia a giocare">
     <div class="container">
       <div class="cta-card fade-in-up">
@@ -156,15 +145,11 @@
     </div>
   </section>
 
-} <!-- fine @if guest -->
+}
 
 
-<!-- ================================================================
-     ██████  VISTA UTENTE LOGGATO – Dashboard
-     ================================================================ -->
 @if (auth.isLoggedIn()) {
 
-  <!-- ========= DASHBOARD HERO ========= -->
   <section class="dash-hero" aria-label="Dashboard utente">
     <div class="dash-hero__bg" aria-hidden="true">
       <div class="dash-hero__orb dash-hero__orb--1"></div>
@@ -173,7 +158,6 @@
     </div>
 
     <div class="container dash-hero__content">
-      <!-- Greeting -->
       <div class="dash-greeting fade-in">
         <div class="dash-greeting__avatar" aria-hidden="true">
           {{ auth.username()?.charAt(0)?.toUpperCase() }}
@@ -186,7 +170,6 @@
         </div>
       </div>
 
-      <!-- Quick stat cards -->
       <div class="dash-stats fade-in delay-2" role="list" aria-label="Le tue statistiche">
 
         <div class="dstat-card fade-in delay-1" role="listitem">
@@ -213,7 +196,6 @@
           <span class="dstat-card__label">In Classifica</span>
         </div>
 
-        <!-- CTA Crea enigma -->
         <button
           id="btn-home-create"
           class="dstat-card dstat-card--cta fade-in delay-4"
@@ -236,7 +218,6 @@
   </section>
 
 
-  <!-- ========= ENIGMI IN EVIDENZA (dashboard) ========= -->
   <section class="games-section games-section--dash" id="enigmi" aria-label="Enigmi recenti">
     <div class="container">
       <div class="section-header">
@@ -281,7 +262,6 @@
   </section>
 
 
-  <!-- ========= LEADERBOARD PREVIEW (dashboard) ========= -->
   <section class="leaderboard-section" id="classifica" aria-label="Classifica">
     <div class="container">
       <div class="leaderboard-inner">
@@ -293,7 +273,6 @@
           <h2 class="section-title">I Migliori Risolutori</h2>
           <p class="section-subtitle">I campioni degli enigmi ENIGMA</p>
 
-          <!-- Evidenzia il rank dell'utente corrente se presente -->
           @if (myRank()) {
             <div class="my-rank-badge fade-in delay-2">
               <i class="bi bi-person-fill me-1"></i>
@@ -320,7 +299,6 @@
           } @else {
             <div class="podium" aria-label="Podio top 3">
 
-              <!-- 2° posto -->
               <div class="podium-card podium-card--silver fade-in-up delay-2" [class.podium-card--me]="leaderboard()[1]?.Utente?.username === auth.username()" aria-label="Secondo posto">
                 <div class="podium-card__rank-badge"><i class="bi bi-award-fill"></i></div>
                 <div class="podium-card__avatar" [style.background]="getAvatarColor(1)">
@@ -335,7 +313,6 @@
                 <div class="podium-card__bar podium-card__bar--2"></div>
               </div>
 
-              <!-- 1° posto -->
               <div class="podium-card podium-card--gold podium-card--top fade-in-up delay-1" [class.podium-card--me]="leaderboard()[0]?.Utente?.username === auth.username()" aria-label="Primo posto">
                 <div class="podium-card__crown" aria-hidden="true">👑</div>
                 <div class="podium-card__rank-badge"><i class="bi bi-trophy-fill"></i></div>
@@ -351,7 +328,6 @@
                 <div class="podium-card__bar podium-card__bar--1"></div>
               </div>
 
-              <!-- 3° posto -->
               <div class="podium-card podium-card--bronze fade-in-up delay-3" [class.podium-card--me]="leaderboard()[2]?.Utente?.username === auth.username()" aria-label="Terzo posto">
                 <div class="podium-card__rank-badge"><i class="bi bi-star-fill"></i></div>
                 <div class="podium-card__avatar" [style.background]="getAvatarColor(2)">
@@ -381,7 +357,6 @@
   </section>
 
 
-  <!-- ========= MODAL: CREA ENIGMA ========= -->
   @if (showModal()) {
     <div
       class="modal-overlay"
@@ -451,4 +426,4 @@
     </div>
   }
 
-} <!-- fine @if logged-in -->
+}

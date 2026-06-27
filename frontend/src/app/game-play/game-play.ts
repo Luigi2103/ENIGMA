@@ -30,18 +30,15 @@ export class GamePlayComponent implements OnInit {
   private gameSvc = inject(GameService);
   readonly auth = inject(AuthService);
 
-  // --- Caricamento partita ---
   game = signal<Partita | null>(null);
   loading = signal(true);
   loadError = signal<string | null>(null);
 
-  // --- Stato di gioco ---
   tentativi = signal<Tentativo[]>([]);
   risposta = '';
   submitting = signal(false);
   submitError = signal<string | null>(null);
 
-  // --- Computed ---
   tentativiRimasti = computed(() => MAX_TENTATIVI - this.tentativi().length);
   haVinto = computed(() => this.tentativi().some(t => t.vincente));
   haPerso = computed(() => !this.haVinto() && this.tentativiRimasti() <= 0);
@@ -50,7 +47,7 @@ export class GamePlayComponent implements OnInit {
   parolaSegreta = signal<string | null>(null);
 
   constructor() {
-    // Quando l'utente perde, carica automaticamente la parola segreta
+    // Carica la parola segreta automaticamente quando l'utente esaurisce i tentativi
     effect(() => {
       if (this.haPerso()) {
         const gameId = this.game()?.id;
@@ -89,7 +86,7 @@ export class GamePlayComponent implements OnInit {
               this.loading.set(false);
             },
             error: () => {
-              // Anche se fallisce il caricamento dei tentativi, mostriamo comunque il gioco
+              // Il gioco viene mostrato anche se il recupero dei tentativi fallisce
               this.loading.set(false);
             }
           });
@@ -104,7 +101,6 @@ export class GamePlayComponent implements OnInit {
     });
   }
 
-  // --- Lightbox ---
   selectImage(url: string): void {
     this.activeModalImage.set(url);
   }
@@ -113,7 +109,6 @@ export class GamePlayComponent implements OnInit {
     this.activeModalImage.set(null);
   }
 
-  // --- Gioco ---
   submitRisposta(): void {
     const r = this.risposta.trim();
     if (!r || this.submitting() || !this.inGioco()) return;
@@ -146,7 +141,6 @@ export class GamePlayComponent implements OnInit {
     setTimeout(() => this.rispostaInput?.nativeElement?.focus(), 0);
   }
 
-  // --- Helpers ---
   formatDate(dateStr: string): string {
     return new Date(dateStr).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
   }

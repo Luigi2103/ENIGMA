@@ -38,7 +38,6 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  // --- Stato reattivo ---
   private _token = signal<string | null>(localStorage.getItem('enigma_token'));
   private _username = signal<string | null>(localStorage.getItem('enigma_username'));
 
@@ -46,7 +45,6 @@ export class AuthService {
   readonly username = this._username.asReadonly();
   readonly isLoggedIn = computed(() => this._token() !== null);
 
-  // --- Login ---
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth`, credentials).pipe(
       tap(response => {
@@ -58,12 +56,10 @@ export class AuthService {
     );
   }
 
-  // --- Signup ---
   signup(data: SignupRequest): Observable<SignupResponse> {
     return this.http.post<SignupResponse>(`${this.apiUrl}/signup`, data);
   }
 
-  // --- Logout ---
   logout(): void {
     this._token.set(null);
     this._username.set(null);

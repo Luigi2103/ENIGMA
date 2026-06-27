@@ -1,8 +1,3 @@
-<!-- ============================================================
-     ENIGMA – Pagina Enigmi
-     ============================================================ -->
-
-<!-- ========= HERO: versione GUEST ========= -->
 @if (!authService.isLoggedIn()) {
 <header class="games-hero games-hero--guest" aria-label="Intestazione pagina enigmi">
   <div class="games-hero__bg" aria-hidden="true">
@@ -32,7 +27,6 @@
 </header>
 }
 
-<!-- ========= HERO: versione LOGGED IN ========= -->
 @if (authService.isLoggedIn()) {
 <header class="games-hero games-hero--user" aria-label="Dashboard utente">
   <div class="games-hero__bg" aria-hidden="true">
@@ -41,7 +35,6 @@
   </div>
   <div class="container games-hero__content">
 
-    <!-- Greeting -->
     <div class="user-greeting fade-in">
       <div class="user-greeting__avatar" aria-hidden="true">
         {{ authService.username()?.charAt(0)?.toUpperCase() }}
@@ -53,7 +46,6 @@
       </div>
     </div>
 
-    <!-- Stat cards -->
     <div class="user-stats fade-in delay-2" role="list" aria-label="Le tue statistiche">
 
       <div class="stat-card fade-in delay-1" role="listitem">
@@ -88,7 +80,6 @@
         </div>
       </div>
 
-      <!-- CTA card -->
       <button id="btn-create-hero" class="stat-card stat-card--cta fade-in delay-4" (click)="openModal()"
         [disabled]="creating()" type="button" aria-label="Crea un nuovo enigma" role="listitem">
         <div class="stat-card__icon stat-card__icon--cta">
@@ -107,18 +98,10 @@
 }
 
 
-<!-- ========= SEARCH + LISTA ========= -->
 <main class="games-main" id="main-content">
   <div class="container">
 
-    <!-- Search + filtro -->
     <div class="games-topbar fade-in-up">
-      <div class="games-search">
-        <i class="bi bi-search games-search__icon" aria-hidden="true"></i>
-        <input type="search" id="games-search-input" class="games-search__input"
-          placeholder="Cerca per argomento, indizio o autore…" [(ngModel)]="searchQuery" (ngModelChange)="onSearch()"
-          aria-label="Cerca enigmi">
-      </div>
 
       <div class="games-meta">
         @if (!loading() && !error()) {
@@ -141,7 +124,6 @@
       </div>
     </div>
 
-    <!-- ---- Loading skeleton ---- -->
     @if (loading()) {
     <div class="games-grid" aria-busy="true" aria-label="Caricamento enigmi">
       @for (n of [1,2,3,4,5,6]; track n) {
@@ -150,7 +132,6 @@
     </div>
     }
 
-    <!-- ---- Error state ---- -->
     @if (error()) {
     <div class="state-box state-box--error fade-in-up" role="alert">
       <i class="bi bi-wifi-off"></i>
@@ -162,18 +143,11 @@
     </div>
     }
 
-    <!-- ---- Empty / no results ---- -->
     @if (!loading() && !error() && filteredGames().length === 0) {
     <div class="state-box fade-in-up" role="status">
-      @if (searchQuery) {
-      <i class="bi bi-search"></i>
-      <h2>Nessun risultato per "{{ searchQuery }}"</h2>
-      <p>Prova con un termine diverso o crea un nuovo enigma</p>
-      } @else {
       <i class="bi bi-inbox"></i>
       <h2>Nessun enigma attivo al momento</h2>
       <p>Sii il primo a crearne uno!</p>
-      }
       @if (authService.isLoggedIn()) {
       <button id="btn-create-empty" class="btn-enigma-primary btn-sm mt-3" (click)="openModal()">
         <i class="bi bi-plus-circle me-1"></i> Crea Enigma
@@ -186,7 +160,6 @@
     </div>
     }
 
-    <!-- ---- Games grid ---- -->
     @if (!loading() && !error() && filteredGames().length > 0) {
     <div id="games-grid-anchor" class="games-grid">
       @for (game of filteredGames(); track game.id; let i = $index) {
@@ -194,33 +167,25 @@
       }
     </div>
 
-    <!-- ---- Paginazione ---- -->
     @if (totalPages() > 1) {
     <nav class="games-pagination fade-in-up" aria-label="Paginazione enigmi">
-      <!-- Precedente -->
-      <button class="pagination-btn pagination-btn--arrow" id="btn-page-prev"
-        [disabled]="currentPage() === 1" (click)="goToPage(currentPage() - 1)"
-        aria-label="Pagina precedente">
+      <button class="pagination-btn pagination-btn--arrow" id="btn-page-prev" [disabled]="currentPage() === 1"
+        (click)="goToPage(currentPage() - 1)" aria-label="Pagina precedente">
         <i class="bi bi-chevron-left"></i>
       </button>
 
-      <!-- Numeri pagina -->
       @for (p of pageNumbers(); track p) {
-        @if (
-          p === 1 || p === totalPages() ||
-          (p >= currentPage() - 1 && p <= currentPage() + 1)
-        ) {
-        <button class="pagination-btn" [class.pagination-btn--active]="p === currentPage()"
-          (click)="goToPage(p)" [id]="'btn-page-' + p" [attr.aria-current]="p === currentPage() ? 'page' : null"
-          [attr.aria-label]="'Pagina ' + p">
-          {{ p }}
-        </button>
-        } @else if (p === currentPage() - 2 || p === currentPage() + 2) {
-        <span class="pagination-ellipsis" aria-hidden="true">…</span>
-        }
+      @if (p === 1 || p === totalPages() || (p >= currentPage() - 1 && p <= currentPage() + 1)) {
+      <button class="pagination-btn" [class.pagination-btn--active]="p === currentPage()"
+        (click)="goToPage(p)" [id]="'btn-page-' + p" [attr.aria-current]="p === currentPage() ? 'page' : null"
+        [attr.aria-label]="'Pagina ' + p">
+        {{ p }}
+      </button>
+      } @else if (p === currentPage() - 2 || p === currentPage() + 2) {
+      <span class="pagination-ellipsis" aria-hidden="true">…</span>
+      }
       }
 
-      <!-- Successivo -->
       <button class="pagination-btn pagination-btn--arrow" id="btn-page-next"
         [disabled]="currentPage() === totalPages()" (click)="goToPage(currentPage() + 1)"
         aria-label="Pagina successiva">
@@ -234,13 +199,11 @@
 </main>
 
 
-<!-- ========= MODAL: CREA ENIGMA ========= -->
 @if (showModal()) {
 <div class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" (click)="closeModal()"
   (keydown.escape)="closeModal()" tabindex="-1">
   <div class="modal-box" (click)="$event.stopPropagation()">
 
-    <!-- Phase 1: Idle (Form) -->
     @if (creationPhase() === 'idle') {
     <div class="modal-header">
       <div class="modal-icon" aria-hidden="true">
@@ -294,7 +257,6 @@
     </div>
     }
 
-    <!-- Phase 2: Waiting (Loading) -->
     @if (creationPhase() === 'waiting') {
     <div class="modal-waiting-container">
       <div class="modal-waiting-orb" aria-hidden="true"></div>
@@ -306,8 +268,6 @@
     </div>
     }
 
-
-    <!-- Phase 3: Success -->
     @if (creationPhase() === 'success') {
     <div class="modal-success-container">
       <div class="modal-success-orb" aria-hidden="true"></div>
@@ -320,7 +280,6 @@
     </div>
     }
 
-    <!-- Phase 4: Error (Show error screen, return to form option) -->
     @if (creationPhase() === 'error') {
     <div class="modal-header">
       <div class="modal-icon modal-icon--error" aria-hidden="true">

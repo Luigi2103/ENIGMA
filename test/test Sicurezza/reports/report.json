@@ -1,8 +1,8 @@
 {
 	"@programName": "ZAP",
 	"@version": "2.17.0",
-	"@generated": "Mon, 22 Jun 2026 10:27:21",
-	"created": "2026-06-22T10:27:21.381460488Z",
+	"@generated": "Fri, 26 Jun 2026 15:46:09",
+	"created": "2026-06-26T15:46:09.935266529Z",
 	"site":[ 
 		{
 			"@name": "http://host.docker.internal:3000",

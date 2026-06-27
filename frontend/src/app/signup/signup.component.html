@@ -1,12 +1,10 @@
 <section class="signup-page">
 
-  <!-- Background particles -->
   <div class="bg-glow bg-glow--1"></div>
   <div class="bg-glow bg-glow--2"></div>
 
   <div class="signup-card fade-in-up visible">
 
-    <!-- Logo / Brand -->
     <div class="signup-brand">
       <span class="brand-icon"><i class="bi bi-puzzle-fill"></i></span>
       <span class="brand-name">ENIGMA</span>
@@ -15,7 +13,6 @@
     <h1 class="signup-title">Crea il tuo account</h1>
     <p class="signup-subtitle">Unisciti alla community e sfida la tua mente</p>
 
-    <!-- ===== FEEDBACK MESSAGES ===== -->
     @if (errorMessage()) {
       <div class="alert-box alert-box--error" role="alert">
         <i class="bi bi-exclamation-circle-fill"></i>
@@ -29,7 +26,6 @@
       </div>
     }
 
-    <!-- ===== SIGNUP FORM ===== -->
     <form class="auth-form" (ngSubmit)="onSignup()" novalidate>
 
       <div class="form-row">
@@ -178,5 +174,5 @@
       <a routerLink="/login" class="link-btn">Accedi</a>
     </p>
 
-  </div><!-- /signup-card -->
+  </div>
 </section>

@@ -1,8 +1,3 @@
-<!-- ============================================================
-     ENIGMA – Game Play Page  /games/:id
-     ============================================================ -->
-
-<!-- ========= LOADING ========= -->
 @if (loading()) {
 <div class="gp-loading" aria-busy="true" aria-label="Caricamento enigma">
   <div class="gp-loading__spinner"></div>
@@ -10,7 +5,6 @@
 </div>
 }
 
-<!-- ========= ERRORE CARICAMENTO ========= -->
 @if (!loading() && loadError()) {
 <div class="gp-error-state">
   <div class="gp-error-state__icon" aria-hidden="true">
@@ -24,11 +18,9 @@
 </div>
 }
 
-<!-- ========= PAGINA DI GIOCO ========= -->
 @if (!loading() && !loadError() && game(); as g) {
 <div class="gp-page">
 
-  <!-- ---- Breadcrumb ---- -->
   <nav class="gp-breadcrumb container" aria-label="Breadcrumb">
     <a routerLink="/games" id="btn-back-list">
       <i class="bi bi-arrow-left"></i> Enigmi
@@ -39,12 +31,8 @@
 
   <div class="container gp-layout">
 
-    <!-- =============================================
-           COLONNA SINISTRA: immagini + indizio
-           ============================================= -->
     <aside class="gp-media" aria-label="Indizi visivi">
 
-      <!-- Griglia immagini -->
       @if (g.foto && g.foto.length > 0) {
       <div class="gp-photo-grid" [attr.data-count]="g.foto.length" aria-label="Immagini indizio">
         @for (foto of g.foto; track $index) {
@@ -57,13 +45,11 @@
         }
       </div>
       } @else {
-      <!-- Placeholder se non ci sono immagini -->
       <div class="gp-no-img" aria-hidden="true">
         <i class="bi bi-question-lg"></i>
       </div>
       }
 
-      <!-- Suggerimento testuale -->
       <div class="gp-clue">
         <div class="gp-clue__icon" aria-hidden="true">
           <i class="bi bi-lightbulb-fill"></i>
@@ -74,7 +60,6 @@
         </div>
       </div>
 
-      <!-- Metadati partita -->
       <div class="gp-meta">
         <span><i class="bi bi-person-circle me-1"></i>{{ g.Utente.username }}</span>
         <span class="dot" aria-hidden="true">·</span>
@@ -83,12 +68,8 @@
     </aside>
 
 
-    <!-- =============================================
-           COLONNA DESTRA: area di gioco
-           ============================================= -->
     <main class="gp-game" aria-label="Area di gioco">
 
-      <!-- STATO: utente non loggato -->
       @if (!auth.isLoggedIn()) {
       <div class="gp-state-card gp-state-card--locked">
         <div class="gp-state-card__icon"><i class="bi bi-lock-fill"></i></div>
@@ -105,7 +86,6 @@
       </div>
       }
 
-      <!-- STATO: vittoria -->
       @if (auth.isLoggedIn() && haVinto()) {
       <div class="gp-state-card gp-state-card--win" role="alert" aria-live="polite">
         <div class="gp-state-card__confetti" aria-hidden="true">🎉</div>
@@ -126,7 +106,6 @@
       </div>
       }
 
-      <!-- STATO: sconfitta -->
       @if (auth.isLoggedIn() && haPerso()) {
       <div class="gp-state-card gp-state-card--lose" role="alert" aria-live="polite">
         <div class="gp-state-card__skull" aria-hidden="true">💀</div>
@@ -153,9 +132,7 @@
       </div>
       }
 
-      <!-- STATO: in gioco -->
       @if (auth.isLoggedIn() && inGioco()) {
-      <!-- Progress tentativi -->
       <div class="gp-progress" aria-label="Tentativi rimasti">
         <div class="gp-progress__header">
           <span class="gp-progress__label">Tentativi</span>
@@ -178,7 +155,6 @@
       </div>
   </div>
 
-  <!-- Form risposta -->
   <form class="gp-form" (ngSubmit)="submitRisposta()" aria-label="Inserisci risposta">
     <label for="risposta-input" class="gp-form__label">La tua risposta</label>
     <div class="gp-form__row">
@@ -204,7 +180,6 @@
     }
   </form>
 
-  <!-- Storico tentativi -->
   @if (tentativi().length > 0) {
   <div class="gp-attempts" aria-label="Storico tentativi" aria-live="polite">
     <h3 class="gp-attempts__title">I tuoi tentativi</h3>
@@ -225,7 +200,6 @@
 </div>
 </div>
 
-<!-- Lightbox Modal -->
 @if (activeModalImage()) {
 <div class="gp-lightbox" (click)="closeLightbox()" role="dialog" aria-modal="true" aria-label="Ingrandimento immagine">
   <button class="gp-lightbox__close" (click)="closeLightbox()" aria-label="Chiudi ingrandimento">

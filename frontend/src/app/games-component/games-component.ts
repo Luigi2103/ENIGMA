@@ -22,18 +22,15 @@ export class GamesComponent implements OnInit, OnDestroy {
   readonly authService = inject(AuthService);
   private router = inject(Router);
 
-  // --- State ---
   games = signal<Partita[]>([]);
   loading = signal(true);
   error = signal(false);
 
-  // --- Stat personali (calcolate dalla pagina corrente) ---
   myGames = computed(() =>
     this.games().filter(g => g.Utente?.username === this.authService.username())
   );
   myGamesCount = computed(() => this.myGames().length);
 
-  // --- Leaderboard rank ---
   leaderboard = signal<LeaderboardEntry[]>([]);
   myRank = computed(() => {
     const lb = this.leaderboard();
@@ -45,7 +42,6 @@ export class GamesComponent implements OnInit, OnDestroy {
     return entry ? Number(entry.enigmi_risolti) : 0;
   });
 
-  // --- Modal crea enigma ---
   showModal = signal(false);
   creating = signal(false);
   creationPhase = signal<'idle' | 'waiting' | 'success' | 'error'>('idle');
@@ -53,16 +49,16 @@ export class GamesComponent implements OnInit, OnDestroy {
   argomento = '';
   createdPartita: CreatedGame | null = null;
 
-  // --- Ricerca ---
   searchQuery = '';
 
-  // --- Paginazione (server-side) ---
+  // ==========================================
+  // PAGINAZIONE SERVER-SIDE
+  // ==========================================
   readonly PAGE_SIZE = 9;
   currentPage  = signal(1);
   totalPages   = signal(1);
   totalGames   = signal(0);
   pageNumbers  = computed(() => Array.from({ length: this.totalPages() }, (_, i) => i + 1));
-  // La griglia mostra direttamente games() (già la pagina corrente)
   filteredGames = this.games;
 
   ngOnInit(): void {
@@ -106,8 +102,6 @@ export class GamesComponent implements OnInit, OnDestroy {
   }
 
   onSearch(): void {
-    // La ricerca lato backend non è implementata: ricarica dalla pagina 1
-    // con il query param search (futura estensione), per ora resetta la pagina
     this.loadGames(1);
   }
 
@@ -119,7 +113,6 @@ export class GamesComponent implements OnInit, OnDestroy {
     }, 0);
   }
 
-  // --- Modal ---
   openModal(): void {
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/login'], { queryParams: { returnUrl: '/games' } });
@@ -176,7 +169,6 @@ export class GamesComponent implements OnInit, OnDestroy {
     this.loadGames(this.currentPage());
   }
 
-  // --- Helpers ---
   getGameImage(game: Partita): string | null {
     return game.foto && game.foto.length > 0 ? game.foto[0] : null;
   }

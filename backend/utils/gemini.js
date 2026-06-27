@@ -1,4 +1,5 @@
 "use strict";
+
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { CreatePrompt } from "./prompt.js";
 

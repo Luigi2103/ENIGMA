@@ -72,16 +72,13 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // MIDDLEWARE
 // ==========================================
 
-// FIX SICUREZZA: Nasconde il header X-Powered-By per non rivelare Express
 app.disable('x-powered-by');
 
-// FIX SICUREZZA: Restringe CORS alle origini consentite (no wildcard *)
 const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:4200,http://localhost:3000')
   .split(',').map(o => o.trim());
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Permette richieste senza origin (es. Postman, curl) e origini nella whitelist
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -91,7 +88,6 @@ app.use(cors({
   credentials: true,
 }));
 
-// FIX SICUREZZA: Aggiunge X-Content-Type-Options: nosniff su tutte le risposte
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   next();
@@ -101,11 +97,9 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 
-
 // ==========================================
 // ROTTE DICHIARATE
 // ==========================================
-
 
 app.use(loginRouter);
 app.use(publicrouter);

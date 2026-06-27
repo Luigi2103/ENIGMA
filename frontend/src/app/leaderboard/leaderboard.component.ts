@@ -30,7 +30,6 @@ export class LeaderboardComponent implements OnInit, AfterViewInit {
       next: (data) => {
         this.leaderboard.set(data);
         this.loading.set(false);
-        // Riavvia le animazioni dopo che i dati sono stati caricati
         setTimeout(() => this.initScrollAnimations(), 50);
       },
       error: () => {
@@ -84,9 +83,9 @@ export class LeaderboardComponent implements OnInit, AfterViewInit {
 
   getAvatarColor(index: number): string {
     const colors = [
-      'linear-gradient(135deg, #f59e0b, #d97706)',   // gold
-      'linear-gradient(135deg, #94a3b8, #64748b)',   // silver
-      'linear-gradient(135deg, #b45309, #92400e)',   // bronze
+      'linear-gradient(135deg, #f59e0b, #d97706)',  // gold
+      'linear-gradient(135deg, #94a3b8, #64748b)',  // silver
+      'linear-gradient(135deg, #b45309, #92400e)',  // bronze
     ];
     return colors[index] ?? 'linear-gradient(135deg, #7c3aed, #9f67ff)';
   }

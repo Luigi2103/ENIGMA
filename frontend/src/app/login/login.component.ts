@@ -17,11 +17,7 @@ export class LoginComponent {
 
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
-
-  // --- Password visibility toggle ---
   showPassword = signal(false);
-
-  // --- Login form ---
   loginData = { username: '', password: '' };
 
   focusNext(event: Event, nextId: string | null): void {

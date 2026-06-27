@@ -16,49 +16,43 @@ import { EnigmaCardComponent } from '../enigma-card/enigma-card.component';
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private publicService = inject(PublicService);
-  private gameService   = inject(GameService);
-  readonly auth         = inject(AuthService);
-  private router        = inject(Router);
+  private gameService = inject(GameService);
+  readonly auth = inject(AuthService);
+  private router = inject(Router);
 
   constructor() {
     effect(() => {
-      // Re-trigger scroll animations observation when auth state changes (e.g., login/logout)
-      // because new template blocks (guest vs dashboard) are inserted into the DOM.
       this.auth.isLoggedIn();
       setTimeout(() => this.initScrollAnimations(), 100);
     });
   }
 
-  // --- Static ---
   readonly currentYear = new Date().getFullYear();
 
-  // --- State condiviso ---
-  games             = signal<Partita[]>([]);
-  leaderboard       = signal<LeaderboardEntry[]>([]);
-  gamesLoading      = signal(true);
+  games = signal<Partita[]>([]);
+  leaderboard = signal<LeaderboardEntry[]>([]);
+  gamesLoading = signal(true);
   leaderboardLoading = signal(true);
-  gamesError        = signal(false);
-  leaderboardError  = signal(false);
+  gamesError = signal(false);
+  leaderboardError = signal(false);
 
-  // --- Stat personali (solo se loggato) ---
-  myGames    = computed(() =>
+  myGames = computed(() =>
     this.games().filter(g => g.Utente?.username === this.auth.username())
   );
   myGamesCount = computed(() => this.myGames().length);
-  mySolved   = computed(() => {
+  mySolved = computed(() => {
     const entry = this.leaderboard().find(e => e.Utente?.username === this.auth.username());
     return entry ? Number(entry.enigmi_risolti) : 0;
   });
-  myRank     = computed(() => {
+  myRank = computed(() => {
     const idx = this.leaderboard().findIndex(e => e.Utente?.username === this.auth.username());
     return idx >= 0 ? idx + 1 : null;
   });
 
-  // --- Modal crea enigma ---
-  showModal   = signal(false);
-  creating    = signal(false);
+  showModal = signal(false);
+  creating = signal(false);
   createError = signal<string | null>(null);
-  argomento   = '';
+  argomento = '';
 
   ngOnInit(): void {
     this.loadGames();
@@ -115,7 +109,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     document.querySelectorAll('.fade-in-up, .fade-in').forEach(el => observer.observe(el));
   }
 
-  // --- Modal ---
   openModal(): void {
     this.argomento = '';
     this.createError.set(null);
@@ -146,7 +139,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  // --- Helpers ---
   formatDate(dateStr: string): string {
     return new Date(dateStr).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' });
   }

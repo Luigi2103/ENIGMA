@@ -18,11 +18,9 @@ export class SignupComponent {
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
 
-  // --- Password visibility toggles ---
   showPassword = signal(false);
   showConfirmPassword = signal(false);
 
-  // --- Signup form data ---
   signupData = {
     username: '',
     email: '',

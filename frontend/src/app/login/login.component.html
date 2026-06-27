@@ -1,12 +1,10 @@
 <section class="login-page">
 
-  <!-- Background particles -->
   <div class="bg-glow bg-glow--1"></div>
   <div class="bg-glow bg-glow--2"></div>
 
   <div class="login-card fade-in-up visible">
 
-    <!-- Logo / Brand -->
     <div class="login-brand">
       <span class="brand-icon"><i class="bi bi-puzzle-fill"></i></span>
       <span class="brand-name">ENIGMA</span>
@@ -15,7 +13,6 @@
     <h1 class="login-title">Bentornato</h1>
     <p class="login-subtitle">Accedi al tuo account per continuare</p>
 
-    <!-- ===== FEEDBACK MESSAGES ===== -->
     @if (errorMessage()) {
       <div class="alert-box alert-box--error" role="alert">
         <i class="bi bi-exclamation-circle-fill"></i>
@@ -23,7 +20,6 @@
       </div>
     }
 
-    <!-- ===== LOGIN FORM ===== -->
     <form class="auth-form" (ngSubmit)="onLogin()" novalidate>
 
       <div class="form-group">
@@ -92,5 +88,5 @@
       <a routerLink="/signup" class="link-btn">Registrati ora</a>
     </p>
 
-  </div><!-- /login-card -->
+  </div>
 </section>

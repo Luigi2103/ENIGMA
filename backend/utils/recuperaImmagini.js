@@ -31,7 +31,7 @@ export async function RecuperaImmagini(parole) {
                     return null;
                 }
 
-                // Prendi i migliori 5 per like, poi scegli uno casualmente per variare
+                // Prendi i migliori 5 per like, poi scegli casualmente per variare i risultati
                 const top5 = [...data.results]
                     .sort((a, b) => b.likes - a.likes)
                     .slice(0, 5);
