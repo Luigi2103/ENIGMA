@@ -65,7 +65,9 @@ $navbar-height: 68px;
     letter-spacing: 0.04em;
     margin-bottom: 1.5rem;
 
-    i { font-size: 1rem; }
+    i {
+      font-size: 1rem;
+    }
   }
 
   &__title {
@@ -106,8 +108,15 @@ $navbar-height: 68px;
 }
 
 @keyframes orb-pulse {
-  from { transform: translateX(-50%) scale(1); opacity: 0.7; }
-  to   { transform: translateX(-50%) scale(1.1); opacity: 1; }
+  from {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.7;
+  }
+
+  to {
+    transform: translateX(-50%) scale(1.1);
+    opacity: 1;
+  }
 }
 
 .text-accent {
@@ -167,13 +176,33 @@ $navbar-height: 68px;
 }
 
 @keyframes wave-anim {
-  0%   { transform: rotate(0deg); }
-  15%  { transform: rotate(14deg); }
-  30%  { transform: rotate(-8deg); }
-  45%  { transform: rotate(14deg); }
-  60%  { transform: rotate(-4deg); }
-  75%  { transform: rotate(10deg); }
-  100% { transform: rotate(0deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  15% {
+    transform: rotate(14deg);
+  }
+
+  30% {
+    transform: rotate(-8deg);
+  }
+
+  45% {
+    transform: rotate(14deg);
+  }
+
+  60% {
+    transform: rotate(-4deg);
+  }
+
+  75% {
+    transform: rotate(10deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 // ============================================================
@@ -218,16 +247,19 @@ $navbar-height: 68px;
       color: #a78bfa;
       border: 1px solid rgba(124, 58, 237, 0.25);
     }
+
     &--green {
       background: rgba(52, 211, 153, 0.15);
       color: #6ee7b7;
       border: 1px solid rgba(52, 211, 153, 0.2);
     }
+
     &--gold {
       background: rgba(245, 158, 11, 0.15);
       color: #fbbf24;
       border: 1px solid rgba(245, 158, 11, 0.2);
     }
+
     &--cta {
       background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(245, 158, 11, 0.1));
       color: #f59e0b;
@@ -275,7 +307,9 @@ $navbar-height: 68px;
       transition: opacity 0.25s ease;
     }
 
-    &:hover::before { opacity: 1; }
+    &:hover::before {
+      opacity: 1;
+    }
 
     &:hover {
       border-color: rgba(245, 158, 11, 0.6);
@@ -285,7 +319,11 @@ $navbar-height: 68px;
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
-      &:hover { transform: none; box-shadow: none; }
+
+      &:hover {
+        transform: none;
+        box-shadow: none;
+      }
     }
   }
 
@@ -332,7 +370,10 @@ $navbar-height: 68px;
     transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
     outline: none;
 
-    &::placeholder { color: var(--enigma-text-muted); opacity: 0.7; }
+    &::placeholder {
+      color: var(--enigma-text-muted);
+      opacity: 0.7;
+    }
 
     &:focus {
       border-color: rgba(167, 139, 250, 0.5);
@@ -340,7 +381,9 @@ $navbar-height: 68px;
       box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
     }
 
-    &::-webkit-search-cancel-button { filter: invert(1); }
+    &::-webkit-search-cancel-button {
+      filter: invert(1);
+    }
   }
 }
 
@@ -372,7 +415,9 @@ $navbar-height: 68px;
   color: var(--enigma-text-muted);
   font-weight: 500;
 
-  i { color: var(--enigma-purple-light); }
+  i {
+    color: var(--enigma-purple-light);
+  }
 }
 
 .games-meta {
@@ -432,7 +477,9 @@ $navbar-height: 68px;
   }
 
   &--arrow {
-    i { font-size: 0.8rem; }
+    i {
+      font-size: 0.8rem;
+    }
   }
 
   &:disabled {
@@ -457,12 +504,10 @@ $navbar-height: 68px;
 .game-card-skeleton {
   height: 280px;
   border-radius: 12px;
-  background: linear-gradient(
-    90deg,
-    var(--enigma-surface) 25%,
-    rgba(255, 255, 255, 0.04) 50%,
-    var(--enigma-surface) 75%
-  );
+  background: linear-gradient(90deg,
+      var(--enigma-surface) 25%,
+      rgba(255, 255, 255, 0.04) 50%,
+      var(--enigma-surface) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -496,7 +541,10 @@ $navbar-height: 68px;
     margin: 0;
   }
 
-  &--error i { color: #f87171; opacity: 0.6; }
+  &--error i {
+    color: #f87171;
+    opacity: 0.6;
+  }
 }
 
 
@@ -518,8 +566,13 @@ $navbar-height: 68px;
 }
 
 @keyframes overlay-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .modal-box {
@@ -534,8 +587,15 @@ $navbar-height: 68px;
 }
 
 @keyframes modal-in {
-  from { transform: scale(0.9) translateY(16px); opacity: 0; }
-  to   { transform: scale(1) translateY(0); opacity: 1; }
+  from {
+    transform: scale(0.9) translateY(16px);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
 }
 
 .modal-header {
@@ -585,8 +645,14 @@ $navbar-height: 68px;
   transition: color 0.2s;
   line-height: 1;
 
-  &:hover { color: var(--enigma-text); }
-  &:disabled { opacity: 0.4; cursor: not-allowed; }
+  &:hover {
+    color: var(--enigma-text);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
 }
 
 .modal-body {
@@ -633,14 +699,20 @@ $navbar-height: 68px;
   transition: border-color 0.25s, box-shadow 0.25s;
   outline: none;
 
-  &::placeholder { color: var(--enigma-text-muted); opacity: 0.7; }
+  &::placeholder {
+    color: var(--enigma-text-muted);
+    opacity: 0.7;
+  }
 
   &:focus {
     border-color: rgba(167, 139, 250, 0.5);
     box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
   }
 
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 // Chips suggeriti
@@ -674,7 +746,10 @@ $navbar-height: 68px;
     background: rgba(124, 58, 237, 0.15);
   }
 
-  &:disabled { opacity: 0.4; cursor: not-allowed; }
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
 }
 
 .modal-error {
@@ -689,7 +764,9 @@ $navbar-height: 68px;
   padding: 0.65rem 0.9rem;
   margin-top: 1rem;
 
-  i { flex-shrink: 0; }
+  i {
+    flex-shrink: 0;
+  }
 }
 
 .modal-footer {
@@ -715,7 +792,9 @@ $navbar-height: 68px;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 
@@ -746,7 +825,9 @@ $navbar-height: 68px;
   letter-spacing: 0.08em;
   color: var(--enigma-purple-light);
 
-  i { font-size: 1.2rem; }
+  i {
+    font-size: 1.2rem;
+  }
 }
 
 .footer-copy {
@@ -764,29 +845,30 @@ $navbar-height: 68px;
     font-size: 0.85rem;
     transition: color 0.2s ease;
 
-    &:hover { color: var(--enigma-purple-light); }
+    &:hover {
+      color: var(--enigma-purple-light);
+    }
   }
 }
 
 
-// ============================================================
-// SHIMMER + FADE ANIMATIONS
-// ============================================================
 @keyframes shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 
-// ============================================================
-// MODAL CREATION FLOW – senza video
-// ============================================================
 
 // --- Fase Waiting ---
 .modal-waiting-container {
   position: relative;
   width: 100%;
-  padding: 3.5rem 2rem;
+  padding: 2rem 2rem 2.5rem;
   background: #090611;
   display: flex;
   flex-direction: column;
@@ -798,28 +880,16 @@ $navbar-height: 68px;
   min-height: 260px;
 }
 
-.modal-waiting-orb {
-  position: absolute;
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(124, 58, 237, 0.35) 0%, transparent 70%);
-  filter: blur(60px);
-  animation: modal-orb-float 4s ease-in-out infinite alternate;
-  pointer-events: none;
-}
-
-.modal-waiting-spinner {
-  width: 52px;
-  height: 52px;
-  border: 3px solid rgba(167, 139, 250, 0.15);
-  border-top: 3px solid var(--enigma-purple-light, #a78bfa);
-  border-radius: 50%;
-  animation: spin 1s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+.modal-waiting-video {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  border-radius: 12px;
   margin-bottom: 1.5rem;
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
   position: relative;
   z-index: 1;
+  display: block;
+  object-fit: cover;
 }
 
 .modal-waiting-title {
@@ -842,6 +912,7 @@ $navbar-height: 68px;
   z-index: 1;
 }
 
+
 // --- Fase Success ---
 .modal-success-container {
   position: relative;
@@ -858,54 +929,56 @@ $navbar-height: 68px;
   min-height: 260px;
 }
 
-.modal-success-orb {
-  position: absolute;
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
-  filter: blur(60px);
-  animation: modal-orb-float 4s ease-in-out infinite alternate;
-  pointer-events: none;
-}
-
-.modal-success-icon {
-  font-size: 3.8rem;
-  color: #10b981;
-  margin-bottom: 1rem;
-  filter: drop-shadow(0 0 14px rgba(16, 185, 129, 0.55));
-  animation: pop-scale 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+// --- Video risultato (success + error) condiviso ---
+.modal-result-video {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  border-radius: 12px;
+  margin-bottom: 1.25rem;
+  display: block;
+  object-fit: cover;
   position: relative;
   z-index: 1;
 }
 
-@keyframes pop-scale {
-  0%   { transform: scale(0); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes modal-orb-float {
-  from { transform: scale(0.85) translate(-8%, -8%); }
-  to   { transform: scale(1.15) translate(8%, 8%); }
-}
-
-.modal-success-title {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 800;
-  margin: 0 0 0.4rem 0;
+// --- Fase Success ---
+.modal-success-container {
+  position: relative;
+  width: 100%;
+  padding: 2rem 2rem 2.5rem;
+  background: #090611;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   color: #fff;
-  position: relative;
-  z-index: 1;
+  overflow: hidden;
 }
 
-.modal-success-text {
-  font-size: 0.88rem;
-  color: rgba(255, 255, 255, 0.65);
-  margin: 0 0 0.25rem;
+// --- Fase Error ---
+.modal-error-container {
   position: relative;
-  z-index: 1;
+  width: 100%;
+  padding: 2rem 2rem 2.5rem;
+  background: #090611;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #fff;
+  overflow: hidden;
 }
+
+.modal-result-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+
 
 .modal-icon--error {
   background: rgba(239, 68, 68, 0.15) !important;

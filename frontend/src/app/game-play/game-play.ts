@@ -47,13 +47,15 @@ export class GamePlayComponent implements OnInit {
   parolaSegreta = signal<string | null>(null);
 
   constructor() {
-    // Carica la parola segreta automaticamente quando l'utente esaurisce i tentativi
     effect(() => {
       if (this.haPerso()) {
         const gameId = this.game()?.id;
         if (gameId) {
           this.gameSvc.getSolution(gameId).subscribe({
-            next: (res) => this.parolaSegreta.set(res.parola),
+            next: (res) => {
+              this.parolaSegreta.set(res.parola);
+              this.gameSvc.disableGame(gameId).subscribe();
+            },
             error: () => this.parolaSegreta.set(null)
           });
         }
@@ -86,7 +88,6 @@ export class GamePlayComponent implements OnInit {
               this.loading.set(false);
             },
             error: () => {
-              // Il gioco viene mostrato anche se il recupero dei tentativi fallisce
               this.loading.set(false);
             }
           });

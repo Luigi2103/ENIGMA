@@ -259,8 +259,16 @@
 
     @if (creationPhase() === 'waiting') {
     <div class="modal-waiting-container">
-      <div class="modal-waiting-orb" aria-hidden="true"></div>
-      <div class="modal-waiting-spinner"></div>
+      <video
+        #loadingVideo
+        class="modal-waiting-video"
+        src="/loading.mp4"
+        autoplay
+        muted
+        playsinline
+        loop
+        aria-label="Caricamento in corso"
+      ></video>
       <h2 class="modal-waiting-title">Plasmando l'Enigma...</h2>
       <p class="modal-waiting-text">
         L'IA sta generando immagini e indizi originali per te. Potrebbe richiedere qualche secondo.
@@ -270,8 +278,15 @@
 
     @if (creationPhase() === 'success') {
     <div class="modal-success-container">
-      <div class="modal-success-orb" aria-hidden="true"></div>
-      <i class="bi bi-check-circle-fill modal-success-icon"></i>
+      <video
+        #successVideo
+        class="modal-result-video"
+        src="/success.mp4"
+        autoplay
+        muted
+        playsinline
+        aria-label="Enigma creato con successo"
+      ></video>
       <h2 class="modal-success-title">Enigma Creato!</h2>
       <p class="modal-success-text">Pronto per essere giocato</p>
       <button class="btn-enigma-gold btn-sm mt-3" (click)="handleSuccessVideoEnded()">
@@ -281,34 +296,22 @@
     }
 
     @if (creationPhase() === 'error') {
-    <div class="modal-header">
-      <div class="modal-icon modal-icon--error" aria-hidden="true">
-        <i class="bi bi-exclamation-triangle-fill"></i>
+    <div class="modal-error-container">
+      <video
+        #errorVideo
+        class="modal-result-video"
+        src="/errore.mp4"
+        autoplay
+        muted
+        playsinline
+        aria-label="Errore durante la generazione"
+      ></video>
+      <h2 class="modal-waiting-title">Generazione Fallita</h2>
+      <p class="modal-waiting-text">{{ createError() || 'Errore di connessione o risposta non valida dal server.' }}</p>
+      <div class="modal-result-actions">
+        <button class="btn-enigma-outline" (click)="closeModal()" type="button">Chiudi</button>
+        <button class="btn-enigma-gold" (click)="creationPhase.set('idle')" type="button">Riprova</button>
       </div>
-      <div>
-        <h2 class="modal-title">Generazione Fallita</h2>
-        <p class="modal-sub">Si è verificato un errore durante la creazione dell'enigma</p>
-      </div>
-      <button class="modal-close" (click)="closeModal()" aria-label="Chiudi dialog">
-        <i class="bi bi-x-lg"></i>
-      </button>
-    </div>
-
-    <div class="modal-body text-center py-4">
-      <p class="text-danger fw-semibold mb-2">Errore riscontrato:</p>
-      <div class="modal-error-box mb-3">
-        {{ createError() || 'Errore di connessione o risposta non valida dal server.' }}
-      </div>
-      <p class="text-muted small">
-        Puoi riprovare cambiando argomento o verificando la connessione al server.
-      </p>
-    </div>
-
-    <div class="modal-footer">
-      <button class="btn-enigma-outline" (click)="closeModal()" type="button">Chiudi</button>
-      <button class="btn-enigma-gold" (click)="creationPhase.set('idle')" type="button">
-        Riprova
-      </button>
     </div>
     }
   </div>

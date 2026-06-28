@@ -41,6 +41,6 @@ Tentativo.belongsTo(Partita, { foreignKey: "partitaId" });
 // ==========================================
 // SYNC DATABASE
 // ==========================================
-database.sync({ alter: true })
+database.sync()
     .then(() => console.log("Database sincronizzato"))
     .catch(err => console.error("Errore sincronizzazione: " + err.message));

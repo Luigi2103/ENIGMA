@@ -4,13 +4,44 @@ import { GeneraEnigma } from "../utils/gemini.js";
 import { RecuperaImmagini } from "../utils/recuperaImmagini.js";
 import { PickRandomTema } from "../utils/prompt.js";
 
+/** Numero massimo di tentativi consentiti per enigma. */
 const MAX_TENTATIVI = 10;
 
 export class GestorePartita {
 
 
+    /**
+     * Genera un nuovo enigma tramite AI e lo persiste nel database come nuova partita.
+     *
+     * Flusso:
+     * 1. Valida l'argomento fornito dall'utente (tipo e lunghezza).
+     * 2. Se non fornito, sceglie un tema casuale dalla lista predefinita.
+     * 3. Chiama Gemini AI per generare parola, query immagini e suggerimento.
+     * 4. Recupera le immagini da Unsplash tramite le query generate.
+     * 5. Salva la partita nel database e la restituisce.
+     *
+     * @param {import('express').Request} req - Legge `req.body.argomento` (opzionale) e `req.username`.
+     * @returns {Promise<Partita>} La partita appena creata e salvata.
+     * @throws {Error} 400 se `argomento` non è una stringa o supera i 100 caratteri.
+     * @throws {Error} Se l'utente non esiste, la generazione AI fallisce o il salvataggio fallisce.
+     */
     static async GeneraECreaPartita(req) {
-        const tema = req.body?.argomento ?? PickRandomTema();
+        // Validazione input: se argomento è fornito deve essere una stringa entro 100 caratteri
+        const argomentoRaw = req.body?.argomento;
+        if (argomentoRaw !== undefined && argomentoRaw !== null) {
+            if (typeof argomentoRaw !== 'string') {
+                const err = new Error("Il campo 'argomento' deve essere una stringa");
+                err.status = 400;
+                throw err;
+            }
+            if (argomentoRaw.length > 100) {
+                const err = new Error("Il campo 'argomento' non può superare i 100 caratteri");
+                err.status = 400;
+                throw err;
+            }
+        }
+
+        const tema = argomentoRaw ?? PickRandomTema();
 
         const utente = await Utente.findOne({ where: { username: req.username } });
         if (!utente) throw new Error("Utente non trovato");
@@ -36,6 +67,17 @@ export class GestorePartita {
     }
 
 
+    /**
+     * Registra un tentativo di risposta dell'utente per una partita attiva.
+     *
+     * Controlla che la partita esista e sia attiva, che l'utente non abbia esaurito
+     * i tentativi e non abbia già vinto. Se la risposta è corretta, disattiva la partita.
+     *
+     * @param {import('express').Request} req - Legge `req.params.id`, `req.body.risposta` e `req.username`.
+     * @returns {Promise<Tentativo>} Il tentativo appena creato e salvato.
+     * @throws {Error} 404 se la partita non esiste.
+     * @throws {Error} 400 se la partita non è attiva, i tentativi sono esauriti o l'utente ha già vinto.
+     */
     static async RegistraTentativo(req) {
 
         const [partita, utente] = await Promise.all([
@@ -65,6 +107,17 @@ export class GestorePartita {
         return await tentativoDaRegistrare.save();
     }
 
+    /**
+     * Disabilita (abbandona) una partita attiva.
+     *
+     * Solo il creatore della partita può disabilitarla.
+     *
+     * @param {import('express').Request} req - Legge `req.params.id` e `req.username`.
+     * @returns {Promise<Partita>} La partita aggiornata con `attiva = false`.
+     * @throws {Error} 404 se la partita non esiste.
+     * @throws {Error} 400 se la partita è già non attiva.
+     * @throws {Error} 403 se l'utente non è il creatore della partita.
+     */
     static async DisabilitaPartita(req) {
 
         const [partita, utente] = await Promise.all([
@@ -83,6 +136,13 @@ export class GestorePartita {
         return await partita.save();
     }
 
+    /**
+     * Restituisce i tentativi effettuati dall'utente autenticato per una partita.
+     *
+     * @param {import('express').Request} req - Legge `req.params.id` e `req.username`.
+     * @returns {Promise<Tentativo[]>} Lista dei tentativi in ordine cronologico ascendente.
+     * @throws {Error} 404 se la partita non esiste.
+     */
     static async OttieniTentativi(req) {
         const utente = await GestorePartita._verificaUtente(req.username);
         const partita = await Partita.findOne({ where: { id: req.params.id } });
@@ -106,6 +166,14 @@ export class GestorePartita {
     // FUNZIONI PRIVATE
     // ==========================================
 
+    /**
+     * Verifica che una partita esista e sia ancora attiva.
+     *
+     * @param {number|string} idPartita - ID della partita da cercare.
+     * @returns {Promise<Partita>} La partita trovata.
+     * @throws {Error} 404 se la partita non esiste.
+     * @throws {Error} 400 se la partita non è attiva.
+     */
     static async _verificaPartita(idPartita) {
         const partita = await Partita.findOne({ where: { id: idPartita } });
         if (!partita) {
@@ -121,12 +189,30 @@ export class GestorePartita {
         return partita;
     }
 
+    /**
+     * Verifica che un utente esista tramite username.
+     *
+     * @param {string} username - Username dell'utente da cercare.
+     * @returns {Promise<Utente>} L'utente trovato.
+     * @throws {Error} Se l'utente non esiste.
+     */
     static async _verificaUtente(username) {
         const utente = await Utente.findOne({ where: { username } });
         if (!utente) throw new Error("Utente non trovato");
         return utente;
     }
 
+    /**
+     * Controlla che l'utente possa ancora effettuare tentativi per la partita.
+     *
+     * Lancia un errore se i tentativi sono esauriti (`>= MAX_TENTATIVI`)
+     * oppure se l'utente ha già vinto la partita.
+     *
+     * @param {number} utenteId - ID dell'utente.
+     * @param {number} partitaId - ID della partita.
+     * @returns {Promise<number>} Il numero di tentativi già effettuati.
+     * @throws {Error} Se i tentativi sono esauriti o l'utente ha già vinto.
+     */
     static async _controllaStatoTentativi(utenteId, partitaId) {
         const [numeroTentativi, haVinto] = await Promise.all([
             Tentativo.count({ where: { utenteId, partitaId } }),

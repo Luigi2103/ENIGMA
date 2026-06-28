@@ -42,7 +42,7 @@ ENIGMA/
 | Auth        | JWT (jsonwebtoken) + bcrypt                     |
 | Docs API    | Swagger (swagger-jsdoc + swagger-ui-express)    |
 | Container   | Docker + Docker Compose                         |
-| Test        | Playwright (E2E), Vitest (frontend), OWASP ZAP  |
+| Test        | Playwright (E2E), OWASP ZAP                     |
 
 ---
 
@@ -249,16 +249,12 @@ npm run security
 cd frontend
 npm test
 ```
-
----
-
-## 📄 Licenza
-
-Questo progetto è distribuito sotto licenza **AGPL-3.0**.  
-Vedi il file [LICENSE](LICENSE) per i dettagli.
-
 ---
 
 ## 👤 Autore
 
 Progetto sviluppato da **Differente Luigi** per il corso di Tecnologie Web — Università degli Studi di Napoli Federico II.
+
+## Hosting
+
+Il deploy è stato effettuato su **Render**. il sito è disponibile al seguente indirizzo : 

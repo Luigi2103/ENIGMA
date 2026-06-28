@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed, ViewChild, ElementRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -21,6 +21,18 @@ export class GamesComponent implements OnInit, OnDestroy {
   private gameService = inject(GameService);
   readonly authService = inject(AuthService);
   private router = inject(Router);
+
+  constructor() {
+    effect(() => {
+      const phase = this.creationPhase();
+      if (phase === 'idle') return;
+      Promise.resolve().then(() => {
+        if (phase === 'waiting') this.playVideo(this.loadingVideoRef);
+        else if (phase === 'success') this.playVideo(this.successVideoRef);
+        else if (phase === 'error') this.playVideo(this.errorVideoRef);
+      });
+    });
+  }
 
   games = signal<Partita[]>([]);
   loading = signal(true);
@@ -49,16 +61,18 @@ export class GamesComponent implements OnInit, OnDestroy {
   argomento = '';
   createdPartita: CreatedGame | null = null;
 
+  @ViewChild('loadingVideo') loadingVideoRef?: ElementRef<HTMLVideoElement>;
+  @ViewChild('successVideo') successVideoRef?: ElementRef<HTMLVideoElement>;
+  @ViewChild('errorVideo') errorVideoRef?: ElementRef<HTMLVideoElement>;
+
   searchQuery = '';
 
-  // ==========================================
-  // PAGINAZIONE SERVER-SIDE
-  // ==========================================
+  // Paginazione
   readonly PAGE_SIZE = 9;
-  currentPage  = signal(1);
-  totalPages   = signal(1);
-  totalGames   = signal(0);
-  pageNumbers  = computed(() => Array.from({ length: this.totalPages() }, (_, i) => i + 1));
+  currentPage = signal(1);
+  totalPages = signal(1);
+  totalGames = signal(0);
+  pageNumbers = computed(() => Array.from({ length: this.totalPages() }, (_, i) => i + 1));
   filteredGames = this.games;
 
   ngOnInit(): void {
@@ -97,7 +111,7 @@ export class GamesComponent implements OnInit, OnDestroy {
   private loadLeaderboard(): void {
     this.publicService.getLeaderboard().subscribe({
       next: (data) => this.leaderboard.set(data),
-      error: () => { /* silent */ }
+      error: () => { }
     });
   }
 
@@ -155,6 +169,16 @@ export class GamesComponent implements OnInit, OnDestroy {
         this.createError.set(err?.error?.message ?? 'Errore durante la creazione. Riprova.');
       }
     });
+  }
+
+
+  /** Avvia un elemento video riportandolo all'inizio. */
+  private playVideo(ref?: ElementRef<HTMLVideoElement>): void {
+    const video = ref?.nativeElement;
+    if (!video) return;
+    video.muted = true;
+    video.currentTime = 0;
+    video.play().catch(() => { });
   }
 
   handleSuccessVideoEnded(): void {

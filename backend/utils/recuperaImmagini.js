@@ -1,5 +1,21 @@
 "use strict"
 
+/**
+ * Recupera un URL immagine da Unsplash per ognuna delle query fornite.
+ *
+ * Per ogni query:
+ * 1. Chiama l'API Unsplash con `content_filter=high` per escludere contenuti espliciti.
+ * 2. Tra i risultati, seleziona i top 5 per like e ne sceglie uno casualmente
+ *    per variare i risultati tra generazioni diverse dello stesso enigma.
+ * 3. Restituisce l'URL in formato `raw` con dimensioni fisse 400x400 ritagliate.
+ *
+ * Gli errori HTTP specifici (401, 403, 429) vengono loggati con messaggi diagnostici
+ * e il risultato per quella query viene impostato a `null`.
+ * I `null` vengono filtrati dal risultato finale.
+ *
+ * @param {string[]} parole - Array di query di ricerca in inglese (tipicamente 4).
+ * @returns {Promise<string[]>} Array di URL immagine validi (possibilmente meno di 4 se alcune query falliscono).
+ */
 export async function RecuperaImmagini(parole) {
     const urls = await Promise.all(
         parole.map(async (parola) => {
