@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, inject, signal, computed, effect } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, inject, signal, computed, effect, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -20,10 +20,23 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly auth = inject(AuthService);
   private router = inject(Router);
 
+  @ViewChild('homeLoadingVideo') loadingVideoRef?: ElementRef<HTMLVideoElement>;
+
   constructor() {
     effect(() => {
       this.auth.isLoggedIn();
       setTimeout(() => this.initScrollAnimations(), 100);
+    });
+    effect(() => {
+      if (this.creating()) {
+        Promise.resolve().then(() => {
+          const video = this.loadingVideoRef?.nativeElement;
+          if (!video) return;
+          video.muted = true;
+          video.currentTime = 0;
+          video.play().catch(() => {});
+        });
+      }
     });
   }
 
