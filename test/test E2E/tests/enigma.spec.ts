@@ -1,12 +1,45 @@
 import { test, expect, type Page } from '@playwright/test';
 
-const TEST_USER = 'Luigi';
-const TEST_PASSWORD = 'prova123';
+const TEST_USER = 'admin';
+const TEST_PASSWORD = 'admin';
+const MOCK_TOKEN = 'mock-token-e2e';
 
 // ─── Helper condivisi ────────────────────────────────────────────────────────
 
-/** Esegue il login con le credenziali di TEST_USER e attende il redirect fuori da /login. */
+/**
+ * Genera uno username univoco, resistente anche a run in parallelo
+ * (Date.now() da solo può collidere se più worker partono nello stesso ms).
+ */
+function uniqueUsername(prefix: string): string {
+  return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+}
+
+/**
+ * Mocka POST /auth in modo che il frontend riceva un token valido senza
+ * bisogno che l'utente TEST_USER esista nel database.
+ * Le richieste autenticate al backend reale vengono comunque moccate
+ * dai singoli workflow che ne hanno bisogno (mockPostGames, mockGamePlay).
+ */
+async function mockAuth(page: Page): Promise<void> {
+  await page.route('**/auth', async (route) => {
+    if (route.request().method() === 'POST') {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ token: MOCK_TOKEN, username: TEST_USER })
+      });
+    } else {
+      await route.continue();
+    }
+  });
+}
+
+/**
+ * Esegue il login simulando il form: usa il mock sull'endpoint /auth
+ * in modo da non dipendere dall'utente nel database.
+ */
 async function loginAs(page: Page): Promise<void> {
+  await mockAuth(page);
   await page.goto('http://localhost:4200/login');
   await page.getByRole('textbox', { name: 'Username' }).fill(TEST_USER);
   await page.getByRole('textbox', { name: 'Password' }).fill(TEST_PASSWORD);
@@ -86,22 +119,39 @@ async function mockGamePlay(page: Page, gameId: number, winAtAttempt?: number): 
   });
 }
 
+/**
+ * Compila e invia il form di signup con i dati forniti.
+ */
+async function fillSignupForm(
+  page: Page,
+  data: { nome: string; cognome: string; username: string; email: string; password: string; confermaPassword: string }
+): Promise<void> {
+  await page.getByRole('textbox', { name: 'Nome *', exact: true }).fill(data.nome);
+  await page.getByRole('textbox', { name: 'Cognome *' }).fill(data.cognome);
+  await page.getByRole('textbox', { name: 'Username *' }).fill(data.username);
+  await page.getByRole('textbox', { name: 'Email *' }).fill(data.email);
+  await page.getByRole('textbox', { name: 'Password *', exact: true }).fill(data.password);
+  await page.getByRole('textbox', { name: 'Conferma Password *' }).fill(data.confermaPassword);
+}
+
 // ─── Test ────────────────────────────────────────────────────────────────────
 
 test('Workflow 1 – Registrazione e accesso con il nuovo account', async ({ page }) => {
-  const username = `mario.rossi_${Date.now()}`;
+  const username = uniqueUsername('mario.rossi');
   const password = 'mario1234';
 
   await page.goto('http://localhost:4200/');
   await page.getByRole('link', { name: 'Registrati' }).click();
   await expect(page).toHaveURL(/signup/);
 
-  await page.getByRole('textbox', { name: 'Nome *', exact: true }).fill('Mario');
-  await page.getByRole('textbox', { name: 'Cognome *' }).fill('Rossi');
-  await page.getByRole('textbox', { name: 'Username *' }).fill(username);
-  await page.getByRole('textbox', { name: 'Email *' }).fill(`${username}@mail.it`);
-  await page.getByRole('textbox', { name: 'Password *', exact: true }).fill(password);
-  await page.getByRole('textbox', { name: 'Conferma Password *' }).fill(password);
+  await fillSignupForm(page, {
+    nome: 'Mario',
+    cognome: 'Rossi',
+    username,
+    email: `${username}@mail.it`,
+    password,
+    confermaPassword: password
+  });
   await page.getByRole('textbox', { name: 'Conferma Password *' }).press('Enter');
 
   await expect(page).toHaveURL(/login/);
@@ -114,6 +164,20 @@ test('Workflow 1 – Registrazione e accesso con il nuovo account', async ({ pag
 });
 
 test('Workflow 2 – Login fallito poi riuscito dopo correzione', async ({ page }) => {
+  let authCallCount = 0;
+  await page.route('**/auth', async (route) => {
+    if (route.request().method() === 'POST') {
+      authCallCount++;
+      if (authCallCount === 1) {
+        await route.fulfill({ status: 401, contentType: 'application/json', body: JSON.stringify({ code: 401, description: 'Credenziali non valide' }) });
+      } else {
+        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ token: MOCK_TOKEN, username: TEST_USER }) });
+      }
+    } else {
+      await route.continue();
+    }
+  });
+
   await page.goto('http://localhost:4200/');
   await page.locator('app-navbar').getByRole('link', { name: 'Accedi' }).click();
   await expect(page).toHaveURL(/login/);
@@ -286,26 +350,50 @@ test('Workflow 8 – Login e logout', async ({ page }) => {
 });
 
 test('Workflow 9 – Registrazione fallita', async ({ page }) => {
+  // 9a) Password non coincidenti → errore di validazione lato form
   await page.goto('http://localhost:4200/signup');
 
-
-  await page.getByRole('textbox', { name: 'Nome *', exact: true }).fill('Mario');
-  await page.getByRole('textbox', { name: 'Cognome *' }).fill('Rossi');
-  await page.getByRole('textbox', { name: 'Username *' }).fill('mario_test_pw');
-  await page.getByRole('textbox', { name: 'Email *' }).fill('mario_test_pw@mail.it');
-  await page.getByRole('textbox', { name: 'Password *', exact: true }).fill('password123');
-  await page.getByRole('textbox', { name: 'Conferma Password *' }).fill('passwordDiversa');
+  await fillSignupForm(page, {
+    nome: 'Mario',
+    cognome: 'Rossi',
+    username: 'mario_test_pw',
+    email: 'mario_test_pw@mail.it',
+    password: 'password123',
+    confermaPassword: 'passwordDiversa'
+  });
   await page.locator('#btn-signup-submit').click();
 
   await expect(page.locator('.alert-box--error')).toBeVisible();
   await expect(page.locator('.alert-box--error')).toContainText('Le password non coincidono.');
   await expect(page).toHaveURL(/signup/);
 
+  const dupUsername = uniqueUsername('luigi_dup');
+  const dupEmail1 = `${dupUsername}_a@mail.it`;
+  const dupEmail2 = `${dupUsername}_b@mail.it`;
 
-  await page.getByRole('textbox', { name: 'Username *' }).fill(TEST_USER);
-  await page.getByRole('textbox', { name: 'Email *' }).fill('luigi_dup@mail.it');
-  await page.getByRole('textbox', { name: 'Password *', exact: true }).fill('prova123');
-  await page.getByRole('textbox', { name: 'Conferma Password *' }).fill('prova123');
+  // Prima registrazione: deve andare a buon fine
+  await page.goto('http://localhost:4200/signup');
+  await fillSignupForm(page, {
+    nome: 'Luigi',
+    cognome: 'Duplicato',
+    username: dupUsername,
+    email: dupEmail1,
+    password: 'prova123',
+    confermaPassword: 'prova123'
+  });
+  await page.locator('#btn-signup-submit').click();
+  await expect(page).toHaveURL(/login/);
+
+  // Seconda registrazione con lo stesso username: deve fallire
+  await page.goto('http://localhost:4200/signup');
+  await fillSignupForm(page, {
+    nome: 'Luigi',
+    cognome: 'Duplicato',
+    username: dupUsername,
+    email: dupEmail2,
+    password: 'prova123',
+    confermaPassword: 'prova123'
+  });
   await page.locator('#btn-signup-submit').click();
 
   await expect(page.locator('.alert-box--error')).toBeVisible();

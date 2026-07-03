@@ -17,6 +17,7 @@ $navbar-height: 68px;
   padding-top: $navbar-height;
 }
 
+
 // --- Sfondo animato ---
 .hero-bg {
   position: absolute;
@@ -70,6 +71,7 @@ $navbar-height: 68px;
   background-size: 60px 60px;
   mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
 }
+
 
 // --- Contenuto hero ---
 .hero-content {
@@ -131,6 +133,7 @@ $navbar-height: 68px;
   margin-bottom: 4rem;
 }
 
+
 // --- Stats bar ---
 .hero-stats {
   display: flex;
@@ -174,6 +177,7 @@ $navbar-height: 68px;
   height: 40px;
   background: var(--enigma-border);
 }
+
 
 // --- Scroll indicator ---
 .scroll-indicator {
@@ -320,7 +324,7 @@ $navbar-height: 68px;
 }
 
 
-// --- Loading skeleton ---
+
 .loading-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -335,7 +339,6 @@ $navbar-height: 68px;
   animation: shimmer 1.5s infinite;
 }
 
-// --- Empty / Error state (generico, route pubbliche) ---
 .state-message {
   text-align: center;
   padding: 4rem 2rem;
@@ -354,7 +357,6 @@ $navbar-height: 68px;
   }
 }
 
-// --- Empty state dashboard (utente loggato, lista vuota) ---
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -450,175 +452,7 @@ $navbar-height: 68px;
   margin-bottom: 2.5rem;
 }
 
-.lb-home-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  background: rgba(245, 158, 11, 0.12);
-  border: 1px solid rgba(245, 158, 11, 0.25);
-  color: #f59e0b;
-  border-radius: 999px;
-  padding: 0.4rem 1.1rem;
-}
 
-// ---- Podio ----
-.home-podium {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 1.25rem;
-  flex-wrap: wrap;
-  margin-bottom: 2rem;
-}
-
-.home-podium-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1.5rem 1.25rem 0;
-  border-radius: 14px 14px 0 0;
-  background: var(--gradient-card);
-  border: 1px solid var(--enigma-border);
-  border-bottom: none;
-  width: 200px;
-  text-align: center;
-  transition: transform 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-  }
-
-  &--gold {
-    border-color: rgba(245, 158, 11, 0.4);
-    background: linear-gradient(180deg, rgba(245, 158, 11, 0.08) 0%, rgba(28, 28, 50, 0.95) 60%);
-    box-shadow: 0 0 40px rgba(245, 158, 11, 0.1);
-  }
-
-  &--silver {
-    border-color: rgba(148, 163, 184, 0.3);
-    background: linear-gradient(180deg, rgba(148, 163, 184, 0.06) 0%, rgba(28, 28, 50, 0.95) 60%);
-  }
-
-  &--bronze {
-    border-color: rgba(180, 83, 9, 0.3);
-    background: linear-gradient(180deg, rgba(180, 83, 9, 0.06) 0%, rgba(28, 28, 50, 0.95) 60%);
-  }
-
-  &--top {
-    padding-top: 2.25rem;
-    z-index: 1;
-  }
-
-  &__crown {
-    position: absolute;
-    top: -1.6rem;
-    font-size: 1.8rem;
-    animation: crown-float-home 2.5s ease-in-out infinite alternate;
-  }
-
-  &__rank {
-    font-size: 1.5rem;
-    margin-bottom: 0.75rem;
-
-    .rank-gold {
-      color: #f59e0b;
-    }
-
-    .rank-silver {
-      color: #94a3b8;
-    }
-
-    .rank-bronze {
-      color: #b45309;
-    }
-  }
-
-  &__avatar {
-    width: 58px;
-    height: 58px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 1.35rem;
-    color: #fff;
-    margin-bottom: 0.65rem;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-  }
-
-  &__username {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: var(--enigma-text);
-    margin-bottom: 0.2rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 140px;
-  }
-
-  &__label {
-    font-size: 0.68rem;
-    color: var(--enigma-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 0.65rem;
-  }
-
-  &__score {
-    display: flex;
-    align-items: baseline;
-    gap: 0.3rem;
-    margin-bottom: 1rem;
-
-    strong {
-      font-family: var(--font-display);
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--enigma-text);
-    }
-
-    span {
-      font-size: 0.75rem;
-      color: var(--enigma-text-muted);
-    }
-  }
-
-  &__bar {
-    width: 100%;
-
-    &--1 {
-      height: 70px;
-      background: linear-gradient(180deg, rgba(245, 158, 11, 0.22), rgba(245, 158, 11, 0.06));
-    }
-
-    &--2 {
-      height: 48px;
-      background: linear-gradient(180deg, rgba(148, 163, 184, 0.14), rgba(148, 163, 184, 0.04));
-    }
-
-    &--3 {
-      height: 34px;
-      background: linear-gradient(180deg, rgba(180, 83, 9, 0.14), rgba(180, 83, 9, 0.04));
-    }
-  }
-}
-
-@keyframes crown-float-home {
-  from {
-    transform: translateY(0) rotate(-5deg);
-  }
-
-  to {
-    transform: translateY(-5px) rotate(5deg);
-  }
-}
-
-// Skeleton leaderboard
 .lb-skeleton-list {
   display: flex;
   flex-direction: column;
@@ -691,58 +525,6 @@ $navbar-height: 68px;
 }
 
 
-// ============================================================
-// FOOTER
-// ============================================================
-.enigma-footer {
-  background: var(--enigma-dark-2);
-  border-top: 1px solid var(--enigma-border);
-  padding: 2rem 0;
-}
-
-.footer-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.footer-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.1rem;
-  letter-spacing: 0.08em;
-  color: var(--enigma-purple-light);
-
-  i {
-    font-size: 1.2rem;
-  }
-}
-
-.footer-copy {
-  color: var(--enigma-text-muted);
-  font-size: 0.8rem;
-  margin: 0;
-}
-
-.footer-links {
-  display: flex;
-  gap: 1.25rem;
-
-  a {
-    color: var(--enigma-text-muted);
-    font-size: 0.85rem;
-    transition: color 0.2s ease;
-
-    &:hover {
-      color: var(--enigma-purple-light);
-    }
-  }
-}
 
 
 // ============================================================
@@ -814,6 +596,7 @@ $navbar-height: 68px;
     padding-bottom: 0;
   }
 }
+
 
 // --- Greeting ---
 .dash-greeting {
@@ -893,7 +676,7 @@ $navbar-height: 68px;
 // --- Stat cards grid ---
 .dash-stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   padding-bottom: 2.5rem;
 }
@@ -1296,6 +1079,7 @@ $navbar-height: 68px;
 }
 
 
+
 // --- Fase Waiting ---
 .modal-waiting-container {
   position: relative;
@@ -1339,6 +1123,98 @@ $navbar-height: 68px;
   z-index: 1;
 }
 
+// --- Fase Success ---
+.modal-success-container {
+  position: relative;
+  width: 100%;
+  padding: 2rem 2rem 2.5rem;
+  background: #090611;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #fff;
+  overflow: hidden;
+}
+
+// --- Video risultato (success + error) condiviso ---
+.modal-result-video {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  border-radius: 12px;
+  margin-bottom: 1.25rem;
+  display: block;
+  object-fit: cover;
+  position: relative;
+  z-index: 1;
+}
+
+.modal-success-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 0.35rem;
+  color: #6ee7b7;
+  position: relative;
+  z-index: 1;
+}
+
+.modal-success-text {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+// --- Fase Error ---
+.modal-error-container {
+  position: relative;
+  width: 100%;
+  padding: 2rem 2rem 0.5rem;
+  background: #090611;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #fff;
+  overflow: hidden;
+
+  .modal-title {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #fca5a5;
+    margin: 0 0 0.75rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .modal-footer {
+    width: 100%;
+    background: transparent;
+    border-top: 1px solid rgba(248, 113, 113, 0.12);
+    padding: 1rem 1.5rem;
+    margin-top: 0.5rem;
+  }
+}
+
+.modal-error-box {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  color: #fca5a5;
+  font-size: 0.88rem;
+  max-width: 440px;
+  margin: 0 auto 0.5rem;
+  word-break: break-word;
+  line-height: 1.5;
+  position: relative;
+  z-index: 1;
+}
+
 // ============================================================
 // RESPONSIVE
 // ============================================================
@@ -1372,7 +1248,7 @@ $navbar-height: 68px;
   }
 
   .dash-stats {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .games-grid {
@@ -1391,10 +1267,6 @@ $navbar-height: 68px;
 
   .footer-links {
     justify-content: center;
-  }
-
-  .leaderboard-row {
-    flex-wrap: wrap;
   }
 
   .modal-box {
@@ -1422,7 +1294,7 @@ $navbar-height: 68px;
   }
 
   .dash-stats {
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
   }
 }

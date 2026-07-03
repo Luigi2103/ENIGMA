@@ -2,9 +2,10 @@ import { Component, OnInit, AfterViewInit, OnDestroy, inject, signal, computed, 
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { forkJoin, timer } from 'rxjs';
 import { PublicService, Partita, LeaderboardEntry } from '../_services/rest-backend/rest-backend.service';
 import { AuthService } from '../_services/auth/auth.service';
-import { GameService } from '../_services/rest-backend/game.service';
+import { GameService, CreatedGame } from '../_services/rest-backend/game.service';
 import { EnigmaCardComponent } from '../enigma-card/enigma-card.component';
 
 @Component({
@@ -21,6 +22,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private router = inject(Router);
 
   @ViewChild('homeLoadingVideo') loadingVideoRef?: ElementRef<HTMLVideoElement>;
+  @ViewChild('homeSuccessVideo') successVideoRef?: ElementRef<HTMLVideoElement>;
+  @ViewChild('homeErrorVideo')   errorVideoRef?: ElementRef<HTMLVideoElement>;
 
   constructor() {
     effect(() => {
@@ -28,19 +31,17 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       setTimeout(() => this.initScrollAnimations(), 100);
     });
     effect(() => {
-      if (this.creating()) {
-        Promise.resolve().then(() => {
-          const video = this.loadingVideoRef?.nativeElement;
-          if (!video) return;
-          video.muted = true;
-          video.currentTime = 0;
-          video.play().catch(() => {});
-        });
-      }
+      const phase = this.creationPhase();
+      if (phase === 'idle') return;
+      Promise.resolve().then(() => {
+        if (phase === 'waiting') this.playVideo(this.loadingVideoRef);
+        else if (phase === 'success') this.playVideo(this.successVideoRef);
+        else if (phase === 'error') this.playVideo(this.errorVideoRef);
+      });
     });
   }
 
-  readonly currentYear = new Date().getFullYear();
+
 
   games = signal<Partita[]>([]);
   leaderboard = signal<LeaderboardEntry[]>([]);
@@ -49,10 +50,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   gamesError = signal(false);
   leaderboardError = signal(false);
 
-  myGames = computed(() =>
-    this.games().filter(g => g.Utente?.username === this.auth.username())
-  );
-  myGamesCount = computed(() => this.myGames().length);
   mySolved = computed(() => {
     const entry = this.leaderboard().find(e => e.Utente?.username === this.auth.username());
     return entry ? Number(entry.enigmi_risolti) : 0;
@@ -63,9 +60,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   });
 
   showModal = signal(false);
-  creating = signal(false);
+  creationPhase = signal<'idle' | 'waiting' | 'success' | 'error'>('idle');
   createError = signal<string | null>(null);
   argomento = '';
+  createdPartita: CreatedGame | null = null;
 
   ngOnInit(): void {
     this.loadGames();
@@ -130,34 +128,45 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   closeModal(): void {
-    if (this.creating()) return;
+    if (this.creationPhase() === 'waiting') return;
     this.showModal.set(false);
+    this.creationPhase.set('idle');
     document.body.style.overflow = '';
   }
 
   submitCreate(): void {
-    if (this.creating()) return;
-    this.creating.set(true);
+    if (this.creationPhase() === 'waiting' || this.creationPhase() === 'success') return;
+    this.creationPhase.set('waiting');
     this.createError.set(null);
-    this.gameService.createGame(this.argomento.trim() || undefined).subscribe({
-      next: (partita) => {
-        this.creating.set(false);
-        this.closeModal();
-        this.router.navigate(['/games', partita.id]);
+    forkJoin({
+      partita: this.gameService.createGame(this.argomento.trim() || undefined),
+      delay: timer(3000)
+    }).subscribe({
+      next: ({ partita }) => {
+        this.createdPartita = partita;
+        this.creationPhase.set('success');
       },
       error: (err) => {
-        this.creating.set(false);
+        this.creationPhase.set('error');
         this.createError.set(err?.error?.message ?? 'Errore durante la creazione. Riprova.');
       }
     });
   }
 
-  formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' });
+  handleSuccessVideoEnded(): void {
+    if (this.createdPartita) {
+      const id = this.createdPartita.id;
+      this.closeModal();
+      this.router.navigate(['/games', id]);
+    }
   }
 
-  getGameImage(game: Partita): string | null {
-    return game.foto && game.foto.length > 0 ? game.foto[0] : null;
+  private playVideo(ref?: ElementRef<HTMLVideoElement>): void {
+    const video = ref?.nativeElement;
+    if (!video) return;
+    video.muted = true;
+    video.currentTime = 0;
+    video.play().catch(() => {});
   }
 
   getAvatarColor(index: number): string {
@@ -167,9 +176,5 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       'linear-gradient(135deg, #b45309, #92400e)',
     ];
     return colors[index] ?? 'linear-gradient(135deg, #7c3aed, #9f67ff)';
-  }
-
-  getRankLabel(index: number): string {
-    return ['Campione', 'Vicecampione', 'Terzo posto'][index] ?? `#${index + 1}`;
   }
 }

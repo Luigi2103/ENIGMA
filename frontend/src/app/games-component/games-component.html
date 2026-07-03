@@ -48,15 +48,7 @@
 
     <div class="user-stats fade-in delay-2" role="list" aria-label="Le tue statistiche">
 
-      <div class="stat-card fade-in delay-1" role="listitem">
-        <div class="stat-card__icon stat-card__icon--purple">
-          <i class="bi bi-puzzle-fill"></i>
-        </div>
-        <div class="stat-card__body">
-          <span class="stat-card__value">{{ myGamesCount() }}</span>
-          <span class="stat-card__label">Enigmi Creati</span>
-        </div>
-      </div>
+
 
       <div class="stat-card fade-in delay-2" role="listitem">
         <div class="stat-card__icon stat-card__icon--green">
@@ -306,10 +298,10 @@
         playsinline
         aria-label="Errore durante la generazione"
       ></video>
-      <h2 class="modal-waiting-title">Generazione Fallita</h2>
-      <p class="modal-waiting-text">{{ createError() || 'Errore di connessione o risposta non valida dal server.' }}</p>
-      <div class="modal-result-actions">
-        <button class="btn-enigma-outline" (click)="closeModal()" type="button">Chiudi</button>
+      <h2 class="modal-title">Generazione Fallita</h2>
+      <div class="modal-error-box">{{ createError() || 'Errore di connessione o risposta non valida dal server.' }}</div>
+      <div class="modal-footer">
+        <button class="btn-enigma-outline" (click)="closeModal()" type="button">Annulla</button>
         <button class="btn-enigma-gold" (click)="creationPhase.set('idle')" type="button">Riprova</button>
       </div>
     </div>

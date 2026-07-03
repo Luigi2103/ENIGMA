@@ -38,10 +38,6 @@ export class GamesComponent implements OnInit, OnDestroy {
   loading = signal(true);
   error = signal(false);
 
-  myGames = computed(() =>
-    this.games().filter(g => g.Utente?.username === this.authService.username())
-  );
-  myGamesCount = computed(() => this.myGames().length);
 
   leaderboard = signal<LeaderboardEntry[]>([]);
   myRank = computed(() => {
