@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { PublicService, Partita } from '../_services/rest-backend/rest-backend.service';
 import { GameService } from '../_services/rest-backend/game.service';
 import { AuthService } from '../_services/auth/auth.service';
+import { formatDate } from '../_utils/format.utils';
 
 const MAX_TENTATIVI = 10;
 
@@ -142,9 +143,7 @@ export class GamePlayComponent implements OnInit {
     setTimeout(() => this.rispostaInput?.nativeElement?.focus(), 0);
   }
 
-  formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
-  }
+  readonly formatDate = formatDate;
 
   tentativoClass(t: Tentativo): string {
     return t.vincente ? 'attempt--win' : 'attempt--fail';

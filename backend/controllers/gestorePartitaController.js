@@ -5,7 +5,7 @@ import { RecuperaImmagini } from "../utils/recuperaImmagini.js";
 import { PickRandomTema } from "../utils/prompt.js";
 
 /** Numero massimo di tentativi consentiti per enigma. */
-const MAX_TENTATIVI = 10;
+export const MAX_TENTATIVI = 10;
 
 export class GestorePartita {
 

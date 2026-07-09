@@ -1,7 +1,7 @@
 "use strict";
 
 import express from "express";
-import { GestorePartita } from "../controllers/gestorePartitaController.js";
+import { GestorePartita, MAX_TENTATIVI } from "../controllers/gestorePartitaController.js";
 import { Partita,Utente,Tentativo } from "../models/database.js";
 
 
@@ -291,7 +291,7 @@ gameRouter.get("/games/:id/solution", async (req, res, next) => {
         ]);
 
         // Rivela la parola solo se l'utente ha perso (tentativi esauriti e non ha vinto)
-        if (haVinto || numeroTentativi < 10) {
+        if (haVinto || numeroTentativi < MAX_TENTATIVI) {
             return next({ status: 403, message: "Non puoi vedere la soluzione: non hai ancora esaurito i tentativi." });
         }
 
