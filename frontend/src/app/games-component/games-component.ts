@@ -7,10 +7,11 @@ import { PublicService, Partita, LeaderboardEntry } from '../_services/rest-back
 import { AuthService } from '../_services/auth/auth.service';
 import { GameService, CreatedGame } from '../_services/rest-backend/game.service';
 import { EnigmaCardComponent } from '../enigma-card/enigma-card.component';
+import { UserStatCardComponent } from '../user-stat-card/user-stat-card.component';
 
 @Component({
   selector: 'app-games-component',
-  imports: [CommonModule, RouterLink, FormsModule, EnigmaCardComponent],
+  imports: [CommonModule, RouterLink, FormsModule, EnigmaCardComponent, UserStatCardComponent],
   templateUrl: './games-component.html',
   styleUrl: './games-component.scss'
 })

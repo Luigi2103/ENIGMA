@@ -454,6 +454,23 @@ h3,
 }
 
 // ============================================================
+// USER STATS GRID (condiviso tra HomeComponent e GamesComponent)
+// ============================================================
+.user-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding-bottom: 2.5rem;
+}
+
+@media (max-width: 480px) {
+  .user-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+}
+
+// ============================================================
 // SCROLLBAR STYLING
 // ============================================================
 ::-webkit-scrollbar {

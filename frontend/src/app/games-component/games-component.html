@@ -46,43 +46,38 @@
       </div>
     </div>
 
-    <div class="user-stats fade-in delay-2" role="list" aria-label="Le tue statistiche">
+    <div class="user-stats-grid fade-in delay-2" role="list" aria-label="Le tue statistiche">
 
+      <app-user-stat-card
+        class="fade-in delay-2"
+        role="listitem"
+        icon="bi-check-circle-fill"
+        [value]="mySolved()"
+        label="Enigmi Risolti"
+        variant="green"
+      />
 
+      <app-user-stat-card
+        class="fade-in delay-3"
+        role="listitem"
+        icon="bi-trophy-fill"
+        [value]="myRank() ? '#' + myRank() : '–'"
+        label="In Classifica"
+        variant="gold"
+      />
 
-      <div class="stat-card fade-in delay-2" role="listitem">
-        <div class="stat-card__icon stat-card__icon--green">
-          <i class="bi bi-check-circle-fill"></i>
-        </div>
-        <div class="stat-card__body">
-          <span class="stat-card__value">{{ mySolved() }}</span>
-          <span class="stat-card__label">Enigmi Risolti</span>
-        </div>
-      </div>
-
-      <div class="stat-card fade-in delay-3" role="listitem">
-        <div class="stat-card__icon stat-card__icon--gold">
-          <i class="bi bi-trophy-fill"></i>
-        </div>
-        <div class="stat-card__body">
-          <span class="stat-card__value">
-            {{ myRank() ? '#' + myRank() : '–' }}
-          </span>
-          <span class="stat-card__label">In Classifica</span>
-        </div>
-      </div>
-
-      <button id="btn-create-hero" class="stat-card stat-card--cta fade-in delay-4" (click)="openModal()"
-        [disabled]="creating()" type="button" aria-label="Crea un nuovo enigma" role="listitem">
-        <div class="stat-card__icon stat-card__icon--cta">
-          <i class="bi bi-plus-lg"></i>
-        </div>
-        <div class="stat-card__body">
-          <span class="stat-card__value">Crea</span>
-          <span class="stat-card__label">Nuovo Enigma</span>
-        </div>
-        <i class="bi bi-arrow-right stat-card__arrow"></i>
-      </button>
+      <app-user-stat-card
+        id="btn-create-hero"
+        class="fade-in delay-4"
+        role="listitem"
+        icon="bi-plus-lg"
+        value="Crea"
+        label="Nuovo Enigma"
+        variant="cta"
+        [isCta]="true"
+        [disabled]="creating()"
+        (cardClick)="openModal()"
+      />
 
     </div>
   </div>

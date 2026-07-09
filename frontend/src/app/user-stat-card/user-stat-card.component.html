@@ -1,0 +1,23 @@
+@if (isCta) {
+  <button
+    class="usc-card usc-card--cta"
+    [disabled]="disabled"
+    (click)="cardClick.emit()"
+    type="button"
+  >
+    <div class="usc-card__icon usc-card__icon--{{ variant }}">
+      <i class="bi {{ icon }}"></i>
+    </div>
+    <span class="usc-card__value">{{ value }}</span>
+    <span class="usc-card__label">{{ label }}</span>
+    <i class="bi bi-arrow-right usc-card__arrow" aria-hidden="true"></i>
+  </button>
+} @else {
+  <div class="usc-card">
+    <div class="usc-card__icon usc-card__icon--{{ variant }}">
+      <i class="bi {{ icon }}"></i>
+    </div>
+    <span class="usc-card__value">{{ value }}</span>
+    <span class="usc-card__label">{{ label }}</span>
+  </div>
+}

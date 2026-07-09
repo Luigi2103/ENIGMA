@@ -170,41 +170,38 @@
         </div>
       </div>
 
-      <div class="dash-stats fade-in delay-2" role="list" aria-label="Le tue statistiche">
+      <div class="user-stats-grid fade-in delay-2" role="list" aria-label="Le tue statistiche">
 
-
-        <div class="dstat-card fade-in delay-2" role="listitem">
-          <div class="dstat-card__icon dstat-card__icon--green">
-            <i class="bi bi-check-circle-fill"></i>
-          </div>
-          <span class="dstat-card__value">{{ mySolved() }}</span>
-          <span class="dstat-card__label">Enigmi Risolti</span>
-        </div>
-
-        <div class="dstat-card fade-in delay-3" role="listitem">
-          <div class="dstat-card__icon dstat-card__icon--gold">
-            <i class="bi bi-trophy-fill"></i>
-          </div>
-          <span class="dstat-card__value">{{ myRank() ? '#' + myRank() : '–' }}</span>
-          <span class="dstat-card__label">In Classifica</span>
-        </div>
-
-        <button
-          id="btn-home-create"
-          class="dstat-card dstat-card--cta fade-in delay-4"
-          (click)="openModal()"
-          [disabled]="creationPhase() === 'waiting'"
-          type="button"
-          aria-label="Crea nuovo enigma"
+        <app-user-stat-card
+          class="fade-in delay-2"
           role="listitem"
-        >
-          <div class="dstat-card__icon dstat-card__icon--cta">
-            <i class="bi bi-stars"></i>
-          </div>
-          <span class="dstat-card__value">Crea</span>
-          <span class="dstat-card__label">Nuovo Enigma</span>
-          <i class="bi bi-arrow-right dstat-card__arrow"></i>
-        </button>
+          icon="bi-check-circle-fill"
+          [value]="mySolved()"
+          label="Enigmi Risolti"
+          variant="green"
+        />
+
+        <app-user-stat-card
+          class="fade-in delay-3"
+          role="listitem"
+          icon="bi-trophy-fill"
+          [value]="myRank() ? '#' + myRank() : '–'"
+          label="In Classifica"
+          variant="gold"
+        />
+
+        <app-user-stat-card
+          id="btn-home-create"
+          class="fade-in delay-4"
+          role="listitem"
+          icon="bi-stars"
+          value="Crea"
+          label="Nuovo Enigma"
+          variant="cta"
+          [isCta]="true"
+          [disabled]="creationPhase() === 'waiting'"
+          (cardClick)="openModal()"
+        />
 
       </div>
     </div>
