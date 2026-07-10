@@ -4,6 +4,56 @@ const TEST_USER = 'admin';
 const TEST_PASSWORD = 'admin';
 const MOCK_TOKEN = 'mock-token-e2e';
 
+/** Credenziali dell'utente creato appositamente per i test E2E nel DB reale. */
+const E2E_USER = {
+  username: `e2e_testuser_${Date.now()}`,
+  password: 'E2ePassword123!',
+  nome: 'E2E',
+  cognome: 'Testuser',
+  email: `e2e_test_${Date.now()}@playwright.local`,
+};
+
+const BACKEND_URL = 'http://localhost:3000';
+
+test.beforeAll(async ({ request }) => {
+  const res = await request.post(`${BACKEND_URL}/signup`, {
+    data: {
+      username: E2E_USER.username,
+      password: E2E_USER.password,
+      nome: E2E_USER.nome,
+      cognome: E2E_USER.cognome,
+      email: E2E_USER.email,
+    },
+  });
+  if (!res.ok()) {
+    throw new Error(
+      `[E2E setup] Impossibile creare l'utente di prova: ${res.status()} ${await res.text()}`
+    );
+  }
+  console.log(`[E2E setup] Utente '${E2E_USER.username}' creato nel DB.`);
+});
+
+
+test.afterAll(async ({ request }) => {
+  const authRes = await request.post(`${BACKEND_URL}/auth`, {
+    data: { username: E2E_USER.username, password: E2E_USER.password },
+  });
+  if (!authRes.ok()) {
+    console.warn(`[E2E teardown] Login fallito, impossibile eliminare l'utente.`);
+    return;
+  }
+  const { token } = await authRes.json();
+
+  const deleteRes = await request.delete(`${BACKEND_URL}/users/${E2E_USER.username}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (deleteRes.ok()) {
+    console.log(`[E2E teardown] Utente '${E2E_USER.username}' eliminato dal DB.`);
+  } else {
+    console.warn(`[E2E teardown] Cleanup fallito: ${deleteRes.status()} ${await deleteRes.text()}`);
+  }
+});
+
 // ─── Helper condivisi ────────────────────────────────────────────────────────
 
 /**
@@ -40,9 +90,22 @@ async function mockAuth(page: Page): Promise<void> {
  */
 async function loginAs(page: Page): Promise<void> {
   await mockAuth(page);
-  await page.goto('http://localhost:4200/login');
+  await page.goto('/login');
   await page.getByRole('textbox', { name: 'Username' }).fill(TEST_USER);
   await page.getByRole('textbox', { name: 'Password' }).fill(TEST_PASSWORD);
+  await page.getByRole('button', { name: ' Accedi' }).click();
+  await expect(page).not.toHaveURL(/login/);
+}
+
+/**
+ * Esegue il login con l'utente E2E reale (nessun mock): usa le credenziali
+ * dell'utente creato in beforeAll e interagisce col backend reale.
+ * Da usare nei test che necessitano di uno stato DB autentico.
+ */
+async function loginAsReal(page: Page): Promise<void> {
+  await page.goto('/login');
+  await page.getByRole('textbox', { name: 'Username' }).fill(E2E_USER.username);
+  await page.getByRole('textbox', { name: 'Password' }).fill(E2E_USER.password);
   await page.getByRole('button', { name: ' Accedi' }).click();
   await expect(page).not.toHaveURL(/login/);
 }
@@ -140,7 +203,7 @@ test('Workflow 1 – Registrazione e accesso con il nuovo account', async ({ pag
   const username = uniqueUsername('mario.rossi');
   const password = 'mario1234';
 
-  await page.goto('http://localhost:4200/');
+  await page.goto('/');
   await page.getByRole('link', { name: 'Registrati' }).click();
   await expect(page).toHaveURL(/signup/);
 
@@ -161,6 +224,15 @@ test('Workflow 1 – Registrazione e accesso con il nuovo account', async ({ pag
   await page.getByRole('button', { name: ' Accedi' }).click();
 
   await expect(page).not.toHaveURL(/login/);
+
+  // cleanup: elimina l'utente creato durante questo test
+  const authRes = await page.request.post(`${BACKEND_URL}/auth`, { data: { username, password } });
+  if (authRes.ok()) {
+    const { token } = await authRes.json();
+    await page.request.delete(`${BACKEND_URL}/users/${username}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
 });
 
 test('Workflow 2 – Login fallito poi riuscito dopo correzione', async ({ page }) => {
@@ -178,7 +250,7 @@ test('Workflow 2 – Login fallito poi riuscito dopo correzione', async ({ page 
     }
   });
 
-  await page.goto('http://localhost:4200/');
+  await page.goto('/');
   await page.locator('app-navbar').getByRole('link', { name: 'Accedi' }).click();
   await expect(page).toHaveURL(/login/);
 
@@ -199,7 +271,7 @@ test('Workflow 2 – Login fallito poi riuscito dopo correzione', async ({ page 
 test('Workflow 3 – Login e navigazione tra le sezioni', async ({ page }) => {
   await loginAs(page);
 
-  await expect(page).toHaveURL('http://localhost:4200/');
+  await expect(page).toHaveURL('/');
 
   await page.locator('app-navbar').getByRole('link', { name: 'Enigmi' }).click();
   await expect(page).toHaveURL(/games/);
@@ -225,7 +297,7 @@ test('Workflow 4 – Login e creazione di un enigma', async ({ page }) => {
 
   await loginAs(page);
 
-  await page.goto('http://localhost:4200/games');
+  await page.goto('/games');
   await expect(page).toHaveURL(/games/);
 
   await page.locator('#btn-create-topbar').click();
@@ -235,9 +307,8 @@ test('Workflow 4 – Login e creazione di un enigma', async ({ page }) => {
   await page.locator('button.chip', { hasText: 'Spazio' }).click();
   await page.locator('#btn-submit-create').click();
 
-  await expect(page.locator('.modal-waiting-title')).toBeVisible();
-  await expect(page.locator('.modal-waiting-title')).toHaveText('Plasmando l\'Enigma...');
-
+  // Il mock risponde istantaneamente → Angular può saltare il frame "waiting";
+  // aspettiamo direttamente la fase "success" come fa il Workflow 5 per quella "error"
   await expect(page.locator('.modal-success-title')).toBeVisible({ timeout: 10000 });
   await expect(page.locator('.modal-success-title')).toHaveText('Enigma Creato!');
 
@@ -252,7 +323,7 @@ test('Workflow 5 – Login e creazione enigma fallita', async ({ page }) => {
 
   await loginAs(page);
 
-  await page.goto('http://localhost:4200/games');
+  await page.goto('/games');
   await expect(page).toHaveURL(/games/);
 
   await page.locator('#btn-create-topbar').click();
@@ -284,7 +355,7 @@ test('Workflow 6 – Login e esaurimento tentativi', async ({ page }) => {
   await mockGamePlay(page, MOCK_GAME_ID);
   await loginAs(page);
 
-  await page.goto(`http://localhost:4200/games/${MOCK_GAME_ID}`);
+  await page.goto(`/games/${MOCK_GAME_ID}`);
   await expect(page.locator('.gp-clue__text')).toBeVisible();
 
   for (let i = 1; i <= 9; i++) {
@@ -311,7 +382,7 @@ test('Workflow 7 – Login, vittoria al gioco e uscita dalla pagina', async ({ p
   await mockGamePlay(page, MOCK_GAME_ID, 3);
   await loginAs(page);
 
-  await page.goto(`http://localhost:4200/games/${MOCK_GAME_ID}`);
+  await page.goto(`/games/${MOCK_GAME_ID}`);
   await expect(page.locator('.gp-clue__text')).toBeVisible();
 
   await page.locator('#risposta-input').fill('risposta_errata_1');
@@ -336,7 +407,7 @@ test('Workflow 7 – Login, vittoria al gioco e uscita dalla pagina', async ({ p
 
 test('Workflow 8 – Login e logout', async ({ page }) => {
   await loginAs(page);
-  await expect(page).toHaveURL('http://localhost:4200/');
+  await expect(page).toHaveURL('/');
 
   await page.locator('#btn-navbar-logout').click();
 
@@ -345,14 +416,12 @@ test('Workflow 8 – Login e logout', async ({ page }) => {
   await expect(page.locator('#btn-navbar-logout')).not.toBeVisible();
 
 
-  await page.goto('http://localhost:4200/games');
+  await page.goto('/games');
   await expect(page.locator('#btn-create-topbar')).not.toBeVisible();
 });
 
 test('Workflow 9 – Registrazione fallita', async ({ page }) => {
-  // 9a) Password non coincidenti → errore di validazione lato form
-  await page.goto('http://localhost:4200/signup');
-
+  await page.goto('/signup');
   await fillSignupForm(page, {
     nome: 'Mario',
     cognome: 'Rossi',
@@ -372,7 +441,7 @@ test('Workflow 9 – Registrazione fallita', async ({ page }) => {
   const dupEmail2 = `${dupUsername}_b@mail.it`;
 
   // Prima registrazione: deve andare a buon fine
-  await page.goto('http://localhost:4200/signup');
+  await page.goto('/signup');
   await fillSignupForm(page, {
     nome: 'Luigi',
     cognome: 'Duplicato',
@@ -385,7 +454,7 @@ test('Workflow 9 – Registrazione fallita', async ({ page }) => {
   await expect(page).toHaveURL(/login/);
 
   // Seconda registrazione con lo stesso username: deve fallire
-  await page.goto('http://localhost:4200/signup');
+  await page.goto('/signup');
   await fillSignupForm(page, {
     nome: 'Luigi',
     cognome: 'Duplicato',
@@ -398,10 +467,19 @@ test('Workflow 9 – Registrazione fallita', async ({ page }) => {
 
   await expect(page.locator('.alert-box--error')).toBeVisible();
   await expect(page).toHaveURL(/signup/);
+
+  // cleanup: elimina l'utente dupUsername creato durante questo test
+  const authRes = await page.request.post(`${BACKEND_URL}/auth`, { data: { username: dupUsername, password: 'prova123' } });
+  if (authRes.ok()) {
+    const { token } = await authRes.json();
+    await page.request.delete(`${BACKEND_URL}/users/${dupUsername}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
 });
 
 test('Workflow 10 – Utente guest visita un enigma e viene bloccato', async ({ page }) => {
-  await page.goto('http://localhost:4200/games/1');
+  await page.goto('/games/1');
 
   await expect(page.locator('.gp-clue__text')).toBeVisible();
 
@@ -415,4 +493,29 @@ test('Workflow 10 – Utente guest visita un enigma e viene bloccato', async ({ 
 
   await page.locator('#btn-play-login').click();
   await expect(page).toHaveURL(/login/);
+});
+
+/**
+ * Workflow 11 – Login reale con l'utente E2E e navigazione.
+ *
+ * Questo test usa `loginAsReal`: nessun mock, credenziali vere nel DB.
+ * Dimostra come usare l'utente creato in beforeAll per test che richiedono
+ * un'autenticazione autentica (es. interazioni che lasciano traccia nel DB).
+ */
+test('Workflow 11 – Login reale con utente E2E e navigazione base', async ({ page }) => {
+  await loginAsReal(page);
+
+  await expect(page).toHaveURL('/');
+
+  // L'utente reale vede la dashboard con il proprio username
+  await expect(page.locator('app-home')).toBeVisible();
+
+  await page.locator('app-navbar').getByRole('link', { name: 'Enigmi' }).click();
+  await expect(page).toHaveURL(/games/);
+
+  // L'utente loggato vede il pulsante "Crea" nella topbar
+  await expect(page.locator('#btn-create-topbar')).toBeVisible();
+
+  await page.locator('#btn-navbar-logout').click();
+  await expect(page.locator('app-navbar').getByRole('link', { name: 'Accedi' })).toBeVisible();
 });

@@ -15,22 +15,22 @@
  * @returns {string}
  */
 export function SanitizzaTema(tema) {
-    if (typeof tema !== 'string') return PickRandomTema();
+  if (typeof tema !== 'string') return PickRandomTema();
 
-    // 1. Lunghezza massima
-    let sanitized = tema.slice(0, 100);
+  // 1. Lunghezza massima
+  let sanitized = tema.slice(0, 100);
 
-    // 2. Strip caratteri usati per rompere il contesto del prompt
-    //    (virgolette doppie, singole, backtick, backslash, parentesi graffe, tag-like)
-    sanitized = sanitized.replace(/["|'`\\{}\[\]<>]/g, '');
+  // 2. Strip caratteri usati per rompere il contesto del prompt
+  //    (virgolette doppie, singole, backtick, backslash, parentesi graffe, tag-like)
+  sanitized = sanitized.replace(/["|'`\\{}\[\]<>]/g, '');
 
-    // 3. Normalizza gli spazi
-    sanitized = sanitized.trim().replace(/\s+/g, ' ');
+  // 3. Normalizza gli spazi
+  sanitized = sanitized.trim().replace(/\s+/g, ' ');
 
-    // 4. Fallback se la stringa è diventata vuota dopo la sanitizzazione
-    if (!sanitized) return PickRandomTema();
+  // 4. Fallback se la stringa è diventata vuota dopo la sanitizzazione
+  if (!sanitized) return PickRandomTema();
 
-    return sanitized;
+  return sanitized;
 }
 
 const temiGioco = [
@@ -135,7 +135,7 @@ REGOLA per il SUGGERIMENTO:
 - Deve fare riferimento a caratteristiche visive o comportamentali distintive
 
 GESTIONE TEMI INAPPROPRIATI:
-Questo è un gioco per tutte le età. Se il tema fornito è inappropriato, ignoralo completamente e scegli tu un tema alternativo adatto a un gioco per famiglie. Non segnalare il cambio, procedi direttamente.
+Questo è un gioco per tutte le età. Se il tema fornito è inappropriato, ignoralo completamente e scegli tu un tema alternativo non banale adatto a un gioco per famiglie. Non segnalare il cambio, procedi direttamente.
 
 Considera SEMPRE inappropriati i temi che contengono o alludono a:
 - Sessualità o attività sessuali (es. "sesso", "erotico", "porno", "nudo", "seduzione", "orgasmo", ecc.) — anche se la parola sembra neutra da sola

@@ -309,6 +309,56 @@ gameRouter.patch("/games/:id", async (req,res,next) => {
     })
 })
 
+/**
+ * @swagger
+ * /users/{username}:
+ *   delete:
+ *     summary: Elimina l'account dell'utente autenticato
+ *     description: >
+ *       L'utente può eliminare solo il proprio account.
+ *       Vengono rimossi in cascata tutti i tentativi e le partite associate.
+ *     tags: [Games]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Account eliminato con successo
+ *       403:
+ *         description: Non autorizzato (stai cercando di eliminare un account altrui)
+ *       404:
+ *         description: Utente non trovato
+ */
+gameRouter.delete("/users/:username", async (req, res, next) => {
+    if (req.username !== req.params.username) {
+        return res.status(403).json({ error: "Non puoi eliminare un account che non è il tuo" });
+    }
+
+    try {
+        const user = await Utente.findOne({ where: { username: req.params.username } });
+        if (!user) {
+            return res.status(404).json({ error: "Utente non trovato" });
+        }
+
+        // Cascade manuale: tentativo → partita → utente (evita errori FK su PostgreSQL)
+        const partite = await Partita.findAll({ where: { utenteId: user.id } });
+        for (const partita of partite) {
+            await Tentativo.destroy({ where: { partitaId: partita.id } });
+        }
+        await Partita.destroy({ where: { utenteId: user.id } });
+        await Utente.destroy({ where: { username: req.params.username } });
+
+        return res.status(200).json({ message: "Account eliminato con successo" });
+    } catch (err) {
+        next(err);
+    }
+});
 
 
-export { gameRouter };
+
+export { gameRouter };
