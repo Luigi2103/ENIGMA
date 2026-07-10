@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, inject, signal } from '@angular/core'
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { PublicService, LeaderboardEntry } from '../_services/rest-backend/rest-backend.service';
+import { getAvatarColor } from '../_utils/format.utils';
 
 @Component({
   selector: 'app-leaderboard',
@@ -81,12 +82,5 @@ export class LeaderboardComponent implements OnInit, AfterViewInit {
     return index < 3;
   }
 
-  getAvatarColor(index: number): string {
-    const colors = [
-      'linear-gradient(135deg, #f59e0b, #d97706)',  // gold
-      'linear-gradient(135deg, #94a3b8, #64748b)',  // silver
-      'linear-gradient(135deg, #b45309, #92400e)',  // bronze
-    ];
-    return colors[index] ?? 'linear-gradient(135deg, #7c3aed, #9f67ff)';
-  }
+  readonly getAvatarColor = getAvatarColor;
 }

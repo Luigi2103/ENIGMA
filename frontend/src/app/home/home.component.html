@@ -199,7 +199,6 @@
           label="Nuovo Enigma"
           variant="cta"
           [isCta]="true"
-          [disabled]="creationPhase() === 'waiting'"
           (cardClick)="openModal()"
         />
 
@@ -348,128 +347,10 @@
 
 
   @if (showModal()) {
-  <div
-    class="modal-overlay"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="home-modal-title"
-    (click)="closeModal()"
-    (keydown.escape)="closeModal()"
-    tabindex="-1"
-  >
-    <div class="modal-box" (click)="$event.stopPropagation()">
-
-      @if (creationPhase() === 'idle') {
-      <div class="modal-header">
-        <div class="modal-icon" aria-hidden="true"><i class="bi bi-stars"></i></div>
-        <div>
-          <h2 id="home-modal-title" class="modal-title">Genera un nuovo Enigma</h2>
-          <p class="modal-sub">L'IA creerà un enigma unico con immagini e indizi</p>
-        </div>
-        <button class="modal-close" (click)="closeModal()" aria-label="Chiudi dialog">
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </div>
-
-      <div class="modal-body">
-        <label for="home-argomento" class="modal-label">
-          Tema dell'enigma
-          <span class="modal-label__optional">(opzionale)</span>
-        </label>
-        <div class="modal-input-wrap">
-          <i class="bi bi-tag modal-input-wrap__icon" aria-hidden="true"></i>
-          <input
-            id="home-argomento"
-            type="text"
-            class="modal-input"
-            placeholder="Es. Spazio, Natura, Arte, Scienza…"
-            [(ngModel)]="argomento"
-            (keydown.enter)="submitCreate()"
-            maxlength="60"
-            autocomplete="off"
-          >
-        </div>
-        <div class="modal-chips" aria-label="Temi suggeriti">
-          @for (tema of ['Spazio', 'Storia', 'Natura', 'Scienza', 'Arte', 'Sport']; track tema) {
-            <button class="chip" [class.chip--active]="argomento === tema"
-              (click)="argomento = (argomento === tema ? '' : tema)" type="button">{{ tema }}</button>
-          }
-        </div>
-        @if (createError()) {
-          <div class="modal-error" role="alert">
-            <i class="bi bi-exclamation-triangle-fill"></i> {{ createError() }}
-          </div>
-        }
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn-enigma-outline" (click)="closeModal()" type="button">Annulla</button>
-        <button id="btn-home-submit-create" class="btn-enigma-gold" (click)="submitCreate()" type="button">
-          <i class="bi bi-stars me-1"></i>Genera Enigma
-        </button>
-      </div>
-      }
-
-      @if (creationPhase() === 'waiting') {
-      <div class="modal-waiting-container">
-        <video
-          #homeLoadingVideo
-          class="modal-waiting-video"
-          src="/loading.mp4"
-          autoplay
-          muted
-          playsinline
-          loop
-          aria-label="Caricamento in corso"
-        ></video>
-        <h2 class="modal-waiting-title">Plasmando l'Enigma...</h2>
-        <p class="modal-waiting-text">
-          L'IA sta generando immagini e indizi originali per te. Potrebbe richiedere qualche secondo.
-        </p>
-      </div>
-      }
-
-      @if (creationPhase() === 'success') {
-      <div class="modal-success-container">
-        <video
-          #homeSuccessVideo
-          class="modal-result-video"
-          src="/success.mp4"
-          autoplay
-          muted
-          playsinline
-          aria-label="Enigma creato con successo"
-        ></video>
-        <h2 class="modal-success-title">Enigma Creato!</h2>
-        <p class="modal-success-text">Pronto per essere giocato</p>
-        <button class="btn-enigma-gold btn-sm mt-3" (click)="handleSuccessVideoEnded()">
-          Gioca Ora <i class="bi bi-arrow-right ms-1"></i>
-        </button>
-      </div>
-      }
-
-      @if (creationPhase() === 'error') {
-      <div class="modal-error-container">
-        <video
-          #homeErrorVideo
-          class="modal-result-video"
-          src="/errore.mp4"
-          autoplay
-          muted
-          playsinline
-          aria-label="Errore durante la generazione"
-        ></video>
-        <h2 class="modal-title">Generazione Fallita</h2>
-        <div class="modal-error-box">{{ createError() || 'Errore di connessione o risposta non valida dal server.' }}</div>
-        <div class="modal-footer">
-          <button class="btn-enigma-outline" (click)="closeModal()" type="button">Annulla</button>
-          <button class="btn-enigma-gold" (click)="creationPhase.set('idle')" type="button">Riprova</button>
-        </div>
-      </div>
-      }
-
-    </div>
-  </div>
-}
+    <app-create-game-modal
+      (closed)="closeModal()"
+      (gameCreated)="onGameCreated($event)"
+    />
+  }
 
 }

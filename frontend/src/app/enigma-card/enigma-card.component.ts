@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Partita } from '../_services/rest-backend/rest-backend.service';
 import { AuthService } from '../_services/auth/auth.service';
+import { getGameImage, formatDate } from '../_utils/format.utils';
 
 @Component({
   selector: 'app-enigma-card',
@@ -17,20 +18,11 @@ export class EnigmaCardComponent {
 
   readonly authService = inject(AuthService);
 
+  readonly getGameImage = getGameImage;
+  readonly formatDate = formatDate;
+
   isMine = computed(() => {
     const currentUsername = this.authService.username();
     return !!currentUsername && this.game.Utente?.username === currentUsername;
   });
-
-  getGameImage(game: Partita): string | null {
-    return game.foto && game.foto.length > 0 ? game.foto[0] : null;
-  }
-
-  formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString('it-IT', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric'
-    });
-  }
 }
