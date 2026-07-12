@@ -67,8 +67,8 @@ export class SignupComponent {
         username: this.signupData.username,
         email: this.signupData.email,
         password: this.signupData.password,
-        nome: this.signupData.nome || undefined,
-        cognome: this.signupData.cognome || undefined,
+        nome: this.signupData.nome,
+        cognome: this.signupData.cognome,
       })
       .subscribe({
         next: (user) => {

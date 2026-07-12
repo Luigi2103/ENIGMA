@@ -15,15 +15,7 @@ import { GameService, CreatedGame } from '../_services/rest-backend/game.service
 
 export type CreationPhase = 'idle' | 'waiting' | 'success' | 'error';
 
-/**
- * Modale standalone per la creazione di un nuovo enigma tramite IA.
- *
- * Gestisce internamente le fasi (idle → waiting → success/error),
- * la riproduzione dei video e la logica di submit.
- *
- * Il padre controlla solo la visibilità tramite @if; il modale
- * emette `closed` e `gameCreated` quando appropriato.
- */
+// modale per creare un enigma via IA – fasi: idle → attesa → successo/errore
 @Component({
   selector: 'app-create-game-modal',
   standalone: true,
@@ -34,10 +26,7 @@ export type CreationPhase = 'idle' | 'waiting' | 'success' | 'error';
 export class CreateGameModalComponent {
   private gameService = inject(GameService);
 
-  /** Emesso quando l'utente chiude il modale (solo se non in fase 'waiting') */
   @Output() closed = new EventEmitter<void>();
-
-  /** Emesso con l'ID della partita appena creata, dopo la fase 'success' */
   @Output() gameCreated = new EventEmitter<number>();
 
   @ViewChild('loadingVideo') loadingVideoRef?: ElementRef<HTMLVideoElement>;
@@ -63,13 +52,12 @@ export class CreateGameModalComponent {
     });
   }
 
-  /** Chiude il modale (ignorato se la creazione è in corso) */
+  // chiude il modale (ignorato se sta generando)
   close(): void {
     if (this.creationPhase() === 'waiting') return;
     this.closed.emit();
   }
 
-  /** Avvia la creazione dell'enigma */
   submitCreate(): void {
     if (this.creationPhase() === 'waiting' || this.creationPhase() === 'success') return;
     this.creationPhase.set('waiting');
@@ -90,14 +78,13 @@ export class CreateGameModalComponent {
     });
   }
 
-  /** Navigazione post-creazione: emette l'ID al padre che gestisce il routing */
+  // emette l'id al padre, che fa il navigate
   handleSuccessAction(): void {
     if (this.createdPartita) {
       this.gameCreated.emit(this.createdPartita.id);
     }
   }
 
-  /** Torna alla fase idle dopo un errore */
   resetToIdle(): void {
     this.creationPhase.set('idle');
   }

@@ -1,6 +1,6 @@
 import { Partita } from '../_services/rest-backend/rest-backend.service';
 
-/** Formatta una data ISO in formato leggibile italiano (es. "9 lug 2026") */
+// converte data ISO in formato italiano leggibile, es. "9 lug 2026"
 export function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString('it-IT', {
     day: 'numeric',
@@ -9,12 +9,12 @@ export function formatDate(dateStr: string): string {
   });
 }
 
-/** Restituisce l'URL della prima foto di una partita, o null se assente */
+// prima foto della partita, o null se non c'è
 export function getGameImage(game: Partita): string | null {
   return game.foto && game.foto.length > 0 ? game.foto[0] : null;
 }
 
-/** Restituisce un gradiente CSS per l'avatar in base alla posizione in classifica */
+// gradiente per l'avatar in base al posto in classifica
 export function getAvatarColor(index: number): string {
   const colors = [
     'linear-gradient(135deg, #f59e0b, #d97706)', // oro

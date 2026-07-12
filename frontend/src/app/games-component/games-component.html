@@ -84,7 +84,7 @@
 }
 
 
-<main class="games-main" id="main-content">
+<div class="games-main" id="main-content">
   <div class="container">
 
     <div class="games-topbar fade-in-up">
@@ -129,7 +129,7 @@
     </div>
     }
 
-    @if (!loading() && !error() && filteredGames().length === 0) {
+    @if (!loading() && !error() && games().length === 0) {
     <div class="state-box fade-in-up" role="status">
       <i class="bi bi-inbox"></i>
       <h2>Nessun enigma attivo al momento</h2>
@@ -146,9 +146,9 @@
     </div>
     }
 
-    @if (!loading() && !error() && filteredGames().length > 0) {
+    @if (!loading() && !error() && games().length > 0) {
     <div id="games-grid-anchor" class="games-grid">
-      @for (game of filteredGames(); track game.id; let i = $index) {
+      @for (game of games(); track game.id; let i = $index) {
       <app-enigma-card [game]="game" [index]="i"></app-enigma-card>
       }
     </div>
@@ -182,7 +182,7 @@
     }
 
   </div>
-</main>
+</div>
 
 
 @if (showModal()) {

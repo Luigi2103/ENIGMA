@@ -86,8 +86,15 @@ export class GestorePartita {
         ]);
 
 
-        const numeroTentativi = await GestorePartita._controllaStatoTentativi(utente.id, partita.id);
 
+
+        if (!req.body.risposta || req.body.risposta.trim() === "") {
+            const err = new Error("Il campo 'risposta' non può essere vuoto");
+            err.status = 400;
+            throw err;
+        }
+
+        await GestorePartita._controllaStatoTentativi(utente.id, partita.id);
 
         const corretto = req.body.risposta.toLowerCase() === partita.parola.toLowerCase();
 
@@ -108,28 +115,23 @@ export class GestorePartita {
     }
 
     /**
-     * Disabilita (abbandona) una partita attiva.
+     * Disabilita una partita attiva quando l'utente ha perso (tentativi esauriti).
      *
-     * Solo il creatore della partita può disabilitarla.
+     * Chiamato automaticamente dal frontend dopo che l'utente ha esaurito
+     * tutti i tentativi senza indovinare la parola. La partita viene chiusa
+     * per tutti gli utenti.
      *
      * @param {import('express').Request} req - Legge `req.params.id` e `req.username`.
      * @returns {Promise<Partita>} La partita aggiornata con `attiva = false`.
      * @throws {Error} 404 se la partita non esiste.
      * @throws {Error} 400 se la partita è già non attiva.
-     * @throws {Error} 403 se l'utente non è il creatore della partita.
      */
     static async DisabilitaPartita(req) {
 
-        const [partita, utente] = await Promise.all([
+        const [partita] = await Promise.all([
             GestorePartita._verificaPartita(req.params.id),
             GestorePartita._verificaUtente(req.username)
         ]);
-
-        if (partita.utenteId !== utente.id) {
-            const err = new Error("Non sei il creatore di questa partita");
-            err.status = 403;
-            throw err;
-        };
 
         partita.set('attiva', false);
 

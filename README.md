@@ -112,6 +112,8 @@ ENIGMA/
 2. **Avvia il server di sviluppo Angular:**
 
    ```bash
+   ng serve
+   # oppure
    npm start
    ```
 
@@ -161,7 +163,7 @@ http://localhost:3000/api-docs
 | `POST`   | `/games/:id/attempts`   | Invia un tentativo di risposta                        |
 | `GET`    | `/games/:id/attempts`   | Recupera i propri tentativi per una partita           |
 | `GET`    | `/games/:id/solution`   | Rivela la soluzione (solo dopo aver perso)            |
-| `PATCH`  | `/games/:id`            | Abbandona/disabilita una partita in corso             |
+| `PATCH`  | `/games/:id`            | Chiude la partita dopo la sconfitta del giocatore     |
 
 ---
 
@@ -189,19 +191,31 @@ backend/
 ### Frontend
 
 ```
-frontend/src/app/
-├── _guards/           # Route guards (protezione pagine autenticate)
-├── _interceptors/     # HTTP interceptors (aggiunta token JWT alle richieste)
-├── _services/         # Servizi Angular (chiamate API)
-├── home/              # Pagina home
-├── login/             # Pagina di accesso
-├── signup/            # Pagina di registrazione
-├── games-component/   # Lista degli enigmi disponibili
-├── game-play/         # Schermata di gioco
-├── leaderboard/       # Classifica globale
-├── navbar/            # Barra di navigazione
-├── footer/            # Footer
-└── enigma-card/       # Card riutilizzabile per un enigma
+frontend/src/
+├── app/
+│   ├── _interceptors/       # HTTP interceptors (aggiunta token JWT alle richieste)
+│   ├── _services/
+│   │   ├── auth/            # AuthService (login, logout, token, segnali reattivi)
+│   │   └── rest-backend/    # PublicService (games, leaderboard), GameService (tentativi, soluzione)
+│   ├── _utils/              # Utility condivise (formatDate, getAvatarColor, getGameImage)
+│   ├── home/                # Pagina home con enigmi recenti e classifica
+│   ├── login/               # Pagina di accesso
+│   ├── signup/              # Pagina di registrazione
+│   ├── games-component/     # Lista paginata degli enigmi disponibili
+│   ├── game-play/           # Schermata di gioco (tentativi, lightbox immagini, win/lose)
+│   ├── leaderboard/         # Classifica globale
+│   ├── navbar/              # Barra di navigazione
+│   ├── footer/              # Footer
+│   ├── enigma-card/         # Card riutilizzabile per un enigma nella lista
+│   ├── user-stat-card/      # Card con le statistiche dell'utente loggato
+│   ├── create-game-modal/   # Modal per la creazione di un nuovo enigma (con AI)
+│   ├── app.routes.ts        # Definizione delle rotte Angular
+│   └── app.config.ts        # Configurazione dell'applicazione (HTTP, interceptors)
+├── environments/
+│   ├── environment.ts       # Configurazione sviluppo (localhost:3000)
+│   └── environment.prod.ts  # Configurazione produzione (Render)
+├── styles.scss              # Stili globali e design system
+└── index.html               # Entry point HTML
 ```
 
 ---
@@ -255,6 +269,8 @@ npm test
 
 Progetto sviluppato da **Differente Luigi** per il corso di Tecnologie Web — Università degli Studi di Napoli Federico II.
 
-## Hosting
+Il deploy del backend è stato effettuato su **Render**. Il sito è disponibile al seguente indirizzo:
 
-Il deploy è stato effettuato su **Render**. il sito è disponibile al seguente indirizzo : 
+```
+https://enigma-y1fz.onrender.com
+```

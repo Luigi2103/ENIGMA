@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly getAvatarColor = getAvatarColor;
 
   constructor() {
+    // re-inizializza le animazioni ogni volta che cambia lo stato login
     effect(() => {
       this.auth.isLoggedIn();
       setTimeout(() => this.initScrollAnimations(), 100);
@@ -60,6 +61,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     document.body.style.overflow = '';
+    this.scrollObserver?.disconnect();
   }
 
   private loadGames(): void {
@@ -96,15 +98,22 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     section.querySelectorAll('.fade-in-up, .fade-in').forEach(el => el.classList.add('visible'));
   }
 
+  private scrollObserver: IntersectionObserver | null = null;
+
   private initScrollAnimations(): void {
-    const observer = new IntersectionObserver(
+    this.scrollObserver?.disconnect();
+    this.scrollObserver = new IntersectionObserver(
       (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
       { threshold: 0.12 }
     );
-    document.querySelectorAll('.fade-in-up, .fade-in').forEach(el => observer.observe(el));
+    document.querySelectorAll('.fade-in-up, .fade-in').forEach(el => this.scrollObserver!.observe(el));
   }
 
   openModal(): void {
+    if (!this.auth.isLoggedIn()) {
+      this.router.navigate(['/login'], { queryParams: { returnUrl: '/' } });
+      return;
+    }
     this.showModal.set(true);
     document.body.style.overflow = 'hidden';
   }

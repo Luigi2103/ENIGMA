@@ -208,7 +208,12 @@ gameRouter.get("/games/:id/attempts", async (req, res, next) => {
  * @swagger
  * /games/{id}:
  *   patch:
- *     summary: Disabilita/abbandona una partita in corso
+ *     summary: Disabilita una partita attiva
+ *     description: >
+ *       Disabilita una partita attiva quando l'utente ha perso (tentativi esauriti).
+ *       Chiamato automaticamente dal frontend dopo che l'utente ha esaurito
+ *       tutti i tentativi senza indovinare la parola. La partita viene chiusa
+ *       per tutti gli utenti.
  *     tags: [Games]
  *     security:
  *       - bearerAuth: []
@@ -230,12 +235,6 @@ gameRouter.get("/games/:id/attempts", async (req, res, next) => {
  *               $ref: '#/components/schemas/ErrorResponse'
  *       401:
  *         description: Token mancante o non valido
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       403:
- *         description: Accesso negato (non sei il creatore della partita)
  *         content:
  *           application/json:
  *             schema:

@@ -40,12 +40,12 @@
             <i class="bi bi-award-fill"></i>
           </div>
           <div class="podium-card__avatar" [style.background]="getAvatarColor(1)">
-            {{ leaderboard()[1].Utente.username.charAt(0).toUpperCase() }}
+            {{ leaderboard()[1]?.Utente?.username?.charAt(0)?.toUpperCase() ?? '?' }}
           </div>
-          <span class="podium-card__username">{{ leaderboard()[1].Utente.username }}</span>
+          <span class="podium-card__username">{{ leaderboard()[1]?.Utente?.username ?? '-' }}</span>
           <span class="podium-card__label">Vicecampione</span>
           <div class="podium-card__score">
-            <strong>{{ leaderboard()[1].enigmi_risolti }}</strong>
+            <strong>{{ leaderboard()[1]?.enigmi_risolti ?? '0' }}</strong>
             <span>risolti</span>
           </div>
           <div class="podium-card__bar podium-card__bar--2"></div>
@@ -57,12 +57,12 @@
             <i class="bi bi-trophy-fill"></i>
           </div>
           <div class="podium-card__avatar" [style.background]="getAvatarColor(0)">
-            {{ leaderboard()[0].Utente.username.charAt(0).toUpperCase() }}
+            {{ leaderboard()[0]?.Utente?.username?.charAt(0)?.toUpperCase() ?? '?' }}
           </div>
-          <span class="podium-card__username">{{ leaderboard()[0].Utente.username }}</span>
+          <span class="podium-card__username">{{ leaderboard()[0]?.Utente?.username ?? '-' }}</span>
           <span class="podium-card__label">Campione</span>
           <div class="podium-card__score">
-            <strong>{{ leaderboard()[0].enigmi_risolti }}</strong>
+            <strong>{{ leaderboard()[0]?.enigmi_risolti ?? '0' }}</strong>
             <span>risolti</span>
           </div>
           <div class="podium-card__bar podium-card__bar--1"></div>
@@ -73,12 +73,12 @@
             <i class="bi bi-star-fill"></i>
           </div>
           <div class="podium-card__avatar" [style.background]="getAvatarColor(2)">
-            {{ leaderboard()[2].Utente.username.charAt(0).toUpperCase() }}
+            {{ leaderboard()[2]?.Utente?.username?.charAt(0)?.toUpperCase() ?? '?' }}
           </div>
-          <span class="podium-card__username">{{ leaderboard()[2].Utente.username }}</span>
+          <span class="podium-card__username">{{ leaderboard()[2]?.Utente?.username ?? '-' }}</span>
           <span class="podium-card__label">Terzo posto</span>
           <div class="podium-card__score">
-            <strong>{{ leaderboard()[2].enigmi_risolti }}</strong>
+            <strong>{{ leaderboard()[2]?.enigmi_risolti ?? '0' }}</strong>
             <span>risolti</span>
           </div>
           <div class="podium-card__bar podium-card__bar--3"></div>
@@ -132,8 +132,12 @@
           <li
             class="rankings-row fade-in-up"
             [class.rankings-row--podium]="isPodium(i)"
-            [class]="'delay-' + ((i % 5) + 1)"
-            [attr.aria-label]="getRankLabel(i) + ': ' + entry.Utente.username"
+            [class.delay-1]="(i % 5) === 0"
+            [class.delay-2]="(i % 5) === 1"
+            [class.delay-3]="(i % 5) === 2"
+            [class.delay-4]="(i % 5) === 3"
+            [class.delay-5]="(i % 5) === 4"
+            [attr.aria-label]="getRankLabel(i) + ': ' + (entry.Utente?.username ?? '')"
           >
             <div class="rk-rank" [class.rk-rank--podium]="isPodium(i)">
               @if (isPodium(i)) {
@@ -144,11 +148,11 @@
             </div>
 
             <div class="rk-avatar" [style.background]="getAvatarColor(i)" aria-hidden="true">
-              {{ entry.Utente.username.charAt(0).toUpperCase() }}
+              {{ entry.Utente?.username?.charAt(0)?.toUpperCase() ?? '?' }}
             </div>
 
             <div class="rk-info">
-              <span class="rk-username">{{ entry.Utente.username }}</span>
+              <span class="rk-username">{{ entry.Utente?.username ?? '-' }}</span>
               @if (isPodium(i)) {
                 <span class="rk-label">{{ getRankLabel(i) }}</span>
               }

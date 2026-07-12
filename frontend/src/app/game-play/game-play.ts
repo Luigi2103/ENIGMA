@@ -46,10 +46,12 @@ export class GamePlayComponent implements OnInit {
   inGioco = computed(() => !this.haVinto() && !this.haPerso());
   activeModalImage = signal<string | null>(null);
   parolaSegreta = signal<string | null>(null);
+  private solutionLoaded = false;
 
   constructor() {
     effect(() => {
-      if (this.haPerso()) {
+      if (this.haPerso() && !this.solutionLoaded) {
+        this.solutionLoaded = true;
         const gameId = this.game()?.id;
         if (gameId) {
           this.gameSvc.getSolution(gameId).subscribe({

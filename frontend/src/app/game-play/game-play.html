@@ -68,7 +68,7 @@
     </aside>
 
 
-    <main class="gp-game" aria-label="Area di gioco">
+    <section class="gp-game" aria-label="Area di gioco">
 
       @if (!auth.isLoggedIn()) {
       <div class="gp-state-card gp-state-card--locked">
@@ -185,7 +185,7 @@
     <h3 class="gp-attempts__title">I tuoi tentativi</h3>
     <ul class="gp-attempts__list">
       @for (t of tentativi(); track t.id; let i = $index) {
-      <li class="gp-attempt" [class]="tentativoClass(t)" aria-label="Tentativo {{ i + 1 }}: {{ t.risposta }}">
+      <li class="gp-attempt" [class]="tentativoClass(t)" [attr.aria-label]="'Tentativo ' + (i + 1) + ': ' + t.risposta">
         <span class="gp-attempt__num">{{ i + 1 }}</span>
         <span class="gp-attempt__text">{{ t.risposta }}</span>
       </li>
@@ -196,7 +196,7 @@
 
   }
 
-  </main>
+  </section>
 </div>
 </div>
 

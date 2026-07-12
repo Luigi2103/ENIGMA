@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, inject, signal } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { PublicService, LeaderboardEntry } from '../_services/rest-backend/rest-backend.service';
@@ -10,7 +10,7 @@ import { getAvatarColor } from '../_utils/format.utils';
   templateUrl: './leaderboard.component.html',
   styleUrl: './leaderboard.component.scss'
 })
-export class LeaderboardComponent implements OnInit, AfterViewInit {
+export class LeaderboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private publicService = inject(PublicService);
 
@@ -46,21 +46,19 @@ export class LeaderboardComponent implements OnInit, AfterViewInit {
     this.loadLeaderboard();
   }
 
+  private scrollObserver: IntersectionObserver | null = null;
+
   private initScrollAnimations(): void {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
+    this.scrollObserver?.disconnect();
+    this.scrollObserver = new IntersectionObserver(
+      (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
       { threshold: 0.1 }
     );
+    document.querySelectorAll('.fade-in-up, .fade-in').forEach(el => this.scrollObserver!.observe(el));
+  }
 
-    document.querySelectorAll('.fade-in-up, .fade-in').forEach((el) => {
-      observer.observe(el);
-    });
+  ngOnDestroy(): void {
+    this.scrollObserver?.disconnect();
   }
 
   getRankIcon(index: number): string {

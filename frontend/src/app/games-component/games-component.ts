@@ -37,9 +37,8 @@ export class GamesComponent implements OnInit, OnDestroy {
   });
 
   showModal = signal(false);
-  searchQuery = '';
 
-  // Paginazione
+  // paginazione
   readonly PAGE_SIZE = 9;
   currentPage = signal(1);
   totalPages = signal(1);
@@ -62,7 +61,6 @@ export class GamesComponent implements OnInit, OnDestroy {
     
     return [1, '...', current - 1, current, current + 1, '...', total];
   });
-  filteredGames = this.games;
 
   ngOnInit(): void {
     this.loadGames(1);
@@ -74,6 +72,7 @@ export class GamesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     document.body.style.overflow = '';
+    this.scrollObserver?.disconnect();
   }
 
   private loadGames(page: number = 1): void {
@@ -102,9 +101,6 @@ export class GamesComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSearch(): void {
-    this.loadGames(1);
-  }
 
   goToPage(page: number): void {
     const clamped = Math.max(1, Math.min(page, this.totalPages()));
@@ -137,12 +133,15 @@ export class GamesComponent implements OnInit, OnDestroy {
     this.loadGames(this.currentPage());
   }
 
+  private scrollObserver: IntersectionObserver | null = null;
+
   private initScrollAnimations(): void {
-    const observer = new IntersectionObserver(
+    this.scrollObserver?.disconnect();
+    this.scrollObserver = new IntersectionObserver(
       (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
       { threshold: 0.1 }
     );
-    document.querySelectorAll('.fade-in-up, .fade-in').forEach(el => observer.observe(el));
+    document.querySelectorAll('.fade-in-up, .fade-in').forEach(el => this.scrollObserver!.observe(el));
   }
 }
 

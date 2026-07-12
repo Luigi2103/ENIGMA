@@ -1,8 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
-const TEST_USER = 'admin';
-const TEST_PASSWORD = 'admin';
-const MOCK_TOKEN = 'mock-token-e2e';
+
+const BACKEND_URL = 'http://localhost:3000';
 
 /** Credenziali dell'utente creato appositamente per i test E2E nel DB reale. */
 const E2E_USER = {
@@ -11,10 +10,12 @@ const E2E_USER = {
   nome: 'E2E',
   cognome: 'Testuser',
   email: `e2e_test_${Date.now()}@playwright.local`,
+  token: ""
 };
 
-const BACKEND_URL = 'http://localhost:3000';
 
+
+//prima dell'inizio dei WF viene creato un utente fittizio per i wf che necessitano di un login reale
 test.beforeAll(async ({ request }) => {
   const res = await request.post(`${BACKEND_URL}/signup`, {
     data: {
@@ -24,28 +25,29 @@ test.beforeAll(async ({ request }) => {
       cognome: E2E_USER.cognome,
       email: E2E_USER.email,
     },
+
   });
   if (!res.ok()) {
     throw new Error(
       `[E2E setup] Impossibile creare l'utente di prova: ${res.status()} ${await res.text()}`
     );
   }
+
+  const authRes = await request.post(`${BACKEND_URL}/auth`, {
+    data: { username: E2E_USER.username, password: E2E_USER.password },
+  });
+
+  if (authRes.ok()) {
+    E2E_USER.token = (await authRes.json()).token;
+  }
+
   console.log(`[E2E setup] Utente '${E2E_USER.username}' creato nel DB.`);
 });
 
 
 test.afterAll(async ({ request }) => {
-  const authRes = await request.post(`${BACKEND_URL}/auth`, {
-    data: { username: E2E_USER.username, password: E2E_USER.password },
-  });
-  if (!authRes.ok()) {
-    console.warn(`[E2E teardown] Login fallito, impossibile eliminare l'utente.`);
-    return;
-  }
-  const { token } = await authRes.json();
-
   const deleteRes = await request.delete(`${BACKEND_URL}/users/${E2E_USER.username}`, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${E2E_USER.token}` },
   });
   if (deleteRes.ok()) {
     console.log(`[E2E teardown] Utente '${E2E_USER.username}' eliminato dal DB.`);
@@ -73,11 +75,13 @@ function uniqueUsername(prefix: string): string {
 async function mockAuth(page: Page): Promise<void> {
   await page.route('**/auth', async (route) => {
     if (route.request().method() === 'POST') {
+      //intercetta la richiesta col metodo POST
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ token: MOCK_TOKEN, username: TEST_USER })
+        body: JSON.stringify({ token: E2E_USER.token, username: E2E_USER.username })
       });
+      //le altre richieste passano
     } else {
       await route.continue();
     }
@@ -91,8 +95,8 @@ async function mockAuth(page: Page): Promise<void> {
 async function loginAs(page: Page): Promise<void> {
   await mockAuth(page);
   await page.goto('/login');
-  await page.getByRole('textbox', { name: 'Username' }).fill(TEST_USER);
-  await page.getByRole('textbox', { name: 'Password' }).fill(TEST_PASSWORD);
+  await page.getByRole('textbox', { name: 'Username' }).fill(E2E_USER.username);
+  await page.getByRole('textbox', { name: 'Password' }).fill(E2E_USER.password);
   await page.getByRole('button', { name: ' Accedi' }).click();
   await expect(page).not.toHaveURL(/login/);
 }
@@ -119,7 +123,11 @@ async function loginAsReal(page: Page): Promise<void> {
 async function mockPostGames(page: Page, status: number, body: object): Promise<void> {
   await page.route('**/games', async (route) => {
     if (route.request().method() === 'POST') {
-      await route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
+      await route.fulfill({
+        status,
+        contentType: 'application/json',
+        body: JSON.stringify(body)
+      });
     } else {
       await route.continue();
     }
@@ -134,21 +142,17 @@ async function mockPostGames(page: Page, status: number, body: object): Promise<
 async function mockGamePlay(page: Page, gameId: number, winAtAttempt?: number): Promise<void> {
   let attemptCounter = 0;
 
-  await page.route(`**/games/${gameId}**`, async (route) => {
+  await page.route(`http://localhost:3000/games/${gameId}**`, async (route) => {
     const url = route.request().url();
-
-    // Lascia passare le richieste verso il frontend Angular (porta 4200);
-    // il mock deve intercettare solo le chiamate al backend REST (porta 3000)
-    if (!url.includes('localhost:3000')) {
-      await route.continue();
-      return;
-    }
-
     const method = route.request().method();
 
     if (url.endsWith('/attempts')) {
       if (method === 'GET') {
-        await route.fulfill({ status: 200, contentType: 'application/json', body: '[]' });
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: '[]'
+        });
       } else {
         attemptCounter++;
         const vincente = winAtAttempt !== undefined && attemptCounter === winAtAttempt;
@@ -175,7 +179,7 @@ async function mockGamePlay(page: Page, gameId: number, winAtAttempt?: number): 
           foto: [],
           utenteId: 1,
           createdAt: new Date().toISOString(),
-          Utente: { username: TEST_USER }
+          Utente: { username: E2E_USER.username }
         })
       });
     }
@@ -215,6 +219,8 @@ test('Workflow 1 – Registrazione e accesso con il nuovo account', async ({ pag
     password,
     confermaPassword: password
   });
+
+  //testiamo l'invio da tastiera
   await page.getByRole('textbox', { name: 'Conferma Password *' }).press('Enter');
 
   await expect(page).toHaveURL(/login/);
@@ -237,13 +243,14 @@ test('Workflow 1 – Registrazione e accesso con il nuovo account', async ({ pag
 
 test('Workflow 2 – Login fallito poi riuscito dopo correzione', async ({ page }) => {
   let authCallCount = 0;
+
   await page.route('**/auth', async (route) => {
     if (route.request().method() === 'POST') {
       authCallCount++;
       if (authCallCount === 1) {
         await route.fulfill({ status: 401, contentType: 'application/json', body: JSON.stringify({ code: 401, description: 'Credenziali non valide' }) });
       } else {
-        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ token: MOCK_TOKEN, username: TEST_USER }) });
+        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ token: E2E_USER.token, username: E2E_USER.username }) });
       }
     } else {
       await route.continue();
@@ -254,15 +261,15 @@ test('Workflow 2 – Login fallito poi riuscito dopo correzione', async ({ page 
   await page.locator('app-navbar').getByRole('link', { name: 'Accedi' }).click();
   await expect(page).toHaveURL(/login/);
 
-  await page.getByRole('textbox', { name: 'Username' }).fill(TEST_USER);
-  await page.getByRole('textbox', { name: 'Password' }).fill('passwordSbagliata!');
+  await page.getByRole('textbox', { name: 'Username' }).fill(E2E_USER.username);
+  await page.getByRole('textbox', { name: 'Password' }).fill('passwordSbagliata');
   await page.getByRole('button', { name: ' Accedi' }).click();
 
   await expect(page).toHaveURL(/login/);
   await expect(page.locator('[role="alert"].alert-box--error')).toBeVisible();
 
   await page.getByRole('textbox', { name: 'Password' }).clear();
-  await page.getByRole('textbox', { name: 'Password' }).fill(TEST_PASSWORD);
+  await page.getByRole('textbox', { name: 'Password' }).fill(E2E_USER.password);
   await page.getByRole('button', { name: ' Accedi' }).click();
 
   await expect(page).not.toHaveURL(/login/);
@@ -307,8 +314,6 @@ test('Workflow 4 – Login e creazione di un enigma', async ({ page }) => {
   await page.locator('button.chip', { hasText: 'Spazio' }).click();
   await page.locator('#btn-submit-create').click();
 
-  // Il mock risponde istantaneamente → Angular può saltare il frame "waiting";
-  // aspettiamo direttamente la fase "success" come fa il Workflow 5 per quella "error"
   await expect(page.locator('.modal-success-title')).toBeVisible({ timeout: 10000 });
   await expect(page.locator('.modal-success-title')).toHaveText('Enigma Creato!');
 
@@ -328,12 +333,11 @@ test('Workflow 5 – Login e creazione enigma fallita', async ({ page }) => {
 
   await page.locator('#btn-create-topbar').click();
   await expect(page.locator('[role="dialog"]')).toBeVisible();
+  await expect(page.locator('#modal-title')).toHaveText('Genera un nuovo Enigma');
 
-  await page.locator('button.chip', { hasText: 'Natura' }).click();
+  await page.locator('button.chip', { hasText: 'Spazio' }).click();
   await page.locator('#btn-submit-create').click();
 
-  // Il mock risponde istantaneamente → Angular può saltare il frame "waiting";
-  // aspettiamo direttamente la fase "error" con timeout esteso
   await expect(page.locator('.modal-title', { hasText: 'Generazione Fallita' })).toBeVisible({ timeout: 10000 });
   await expect(page.locator('.modal-error-box')).toContainText(ERROR_MESSAGE);
 
@@ -349,7 +353,7 @@ test('Workflow 5 – Login e creazione enigma fallita', async ({ page }) => {
 });
 
 
-test('Workflow 6 – Login e esaurimento tentativi', async ({ page }) => {
+test('Workflow 6 – Esaurimento tentativi', async ({ page }) => {
   const MOCK_GAME_ID = 9999;
 
   await mockGamePlay(page, MOCK_GAME_ID);
