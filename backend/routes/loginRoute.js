@@ -52,7 +52,7 @@ const loginRouter = express.Router();
  */
 loginRouter.post("/auth", async (req, res, next) => {
     try {
-        const risultatoLogin = await LoginController.verificaLogin(req, res);
+        const risultatoLogin = await LoginController.verificaLogin(req);
         if (risultatoLogin) {
             res.json({
                 token: LoginController.creaToken(req.body.username),
@@ -119,7 +119,7 @@ loginRouter.post("/auth", async (req, res, next) => {
  *               $ref: '#/components/schemas/ErrorResponse'
  */
 loginRouter.post("/signup", async (req, res, next) => {
-    LoginController.InserisciUtente(req, res).then((user) => {
+    LoginController.InserisciUtente(req).then((user) => {
         res.status(201).json({
             username: user.username,
             nome: user.nome,

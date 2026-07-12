@@ -204,48 +204,7 @@ gameRouter.get("/games/:id/attempts", async (req, res, next) => {
 });
 
 
-/**
- * @swagger
- * /games/{id}:
- *   patch:
- *     summary: Disabilita una partita attiva
- *     description: >
- *       Disabilita una partita attiva quando l'utente ha perso (tentativi esauriti).
- *       Chiamato automaticamente dal frontend dopo che l'utente ha esaurito
- *       tutti i tentativi senza indovinare la parola. La partita viene chiusa
- *       per tutti gli utenti.
- *     tags: [Games]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID della partita da disabilitare
- *     responses:
- *       204:
- *         description: Partita disabilitata con successo
- *       400:
- *         description: Partita già non attiva
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       401:
- *         description: Token mancante o non valido
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       404:
- *         description: Partita non trovata
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- */
+
 /**
  * @swagger
  * /games/{id}/solution:
@@ -300,13 +259,56 @@ gameRouter.get("/games/:id/solution", async (req, res, next) => {
     }
 });
 
-gameRouter.patch("/games/:id", async (req,res,next) => {
+/**
+ * @swagger
+ * /games/{id}:
+ *   patch:
+ *     summary: Disabilita una partita attiva
+ *     description: >
+ *       Disabilita una partita attiva quando l'utente ha perso (tentativi esauriti).
+ *       Chiamato automaticamente dal frontend dopo che l'utente ha esaurito
+ *       tutti i tentativi senza indovinare la parola. La partita viene chiusa
+ *       per tutti gli utenti.
+ *     tags: [Games]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID della partita da disabilitare
+ *     responses:
+ *       204:
+ *         description: Partita disabilitata con successo
+ *       400:
+ *         description: Partita già non attiva
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         description: Token mancante o non valido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       404:
+ *         description: Partita non trovata
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+gameRouter.patch("/games/:id", async (req, res, next) => {
     GestorePartita.DisabilitaPartita(req).then((partita) => {
         res.status(204).send();
     }).catch((error) => {
         next({ status: error.status, message: error.message });
-    })
+    });
 })
+
 
 /**
  * @swagger

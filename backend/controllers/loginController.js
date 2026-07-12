@@ -44,7 +44,7 @@ export class LoginController {
      * @param {import('express').Request} req - Legge `req.body.username` e `req.body.password`.
      * @returns {Promise<boolean>} `true` se le credenziali sono corrette, `false` altrimenti.
      */
-    static async verificaLogin(req, res) {
+    static async verificaLogin(req) {
         const utente = await Utente.findOne({
             where: { username: req.body.username }
         });
@@ -63,7 +63,7 @@ export class LoginController {
      * @returns {Promise<Utente>} L'utente appena creato e salvato.
      * @throws {Error} Se username e/o email sono già in uso.
      */
-    static async InserisciUtente(req, res) {
+    static async InserisciUtente(req) {
         let isUniqueUsername = await this.verificaUsernameUnico(req.body.username);
         let isUniqueEmail = await this.verificaMailUnica(req.body.email);
 

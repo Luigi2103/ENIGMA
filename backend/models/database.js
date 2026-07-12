@@ -1,7 +1,7 @@
 "use strict";
 
-import { Sequelize } from "sequelize";
 import 'dotenv/config';
+import { Sequelize } from "sequelize";
 import { CreaUtente } from "./utente.js";
 import { CreaPartita } from "./partita.js"
 import { CreaTentativo } from "./tentativo.js";;
@@ -31,12 +31,12 @@ export const Tentativo = CreaTentativo(database);
 // CREAZIONE ASSOCIAZIONI
 // ==========================================
 
-Utente.hasMany(Partita, { foreignKey: "utenteId" });
-Partita.belongsTo(Utente, { foreignKey: "utenteId" });
-Utente.hasMany(Tentativo, { foreignKey: "utenteId" });
-Tentativo.belongsTo(Utente, { foreignKey: "utenteId" });
-Partita.hasMany(Tentativo, { foreignKey: "partitaId" });
-Tentativo.belongsTo(Partita, { foreignKey: "partitaId" });
+Utente.hasMany(Partita, { foreignKey: "utenteId" }); //Un utente può avere molte partite
+Partita.belongsTo(Utente, { foreignKey: "utenteId" }); //Una partita appartiene ad un utente
+Utente.hasMany(Tentativo, { foreignKey: "utenteId" }); //Un utente può avere molti tentativi
+Tentativo.belongsTo(Utente, { foreignKey: "utenteId" }); //Un tentativo appartiene ad un utente
+Partita.hasMany(Tentativo, { foreignKey: "partitaId" }); //Una partita può avere molti tentativi
+Tentativo.belongsTo(Partita, { foreignKey: "partitaId" }); //Un tentativo appartiene ad una partita
 
 // ==========================================
 // SYNC DATABASE

@@ -16,7 +16,7 @@ import swaggerUi from 'swagger-ui-express';
 // INIT
 // ==========================================
 const app = express();
-const port = process.env.PORT || 3000 ;
+const port = process.env.PORT || 3000;
 
 // ==========================================
 // SWAGGER CONFIG
@@ -72,10 +72,10 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // MIDDLEWARE
 // ==========================================
 
-app.disable('x-powered-by');
+app.disable('x-powered-by'); // disabilita x-powered-by per sicurezza
 
-const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:4200,http://localhost:3000')
-  .split(',').map(o => o.trim());
+//array di origini consentite
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:4200,http://localhost:3000').split(',').map(o => o.trim());
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -85,9 +85,10 @@ app.use(cors({
       callback(new Error(`CORS bloccato: origine non consentita: ${origin}`));
     }
   },
-  credentials: true,
+  credentials: true, //consente l'invio di dati sensibili
 }));
 
+//abilita nosniff per sicurezza
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   next();
@@ -112,13 +113,13 @@ app.use(gameRouter);
 // ==========================================
 
 app.use((err, req, res, next) => {
-  console.error(err.stack); 
-  
+  console.error(err.stack);
+
   res.status(err.status || 500).json({
     code: err.status || 500,
     description: err.message || "An error occurred"
   });
-  
+
 });
 
 

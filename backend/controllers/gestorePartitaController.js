@@ -85,9 +85,6 @@ export class GestorePartita {
             GestorePartita._verificaUtente(req.username)
         ]);
 
-
-
-
         if (!req.body.risposta || req.body.risposta.trim() === "") {
             const err = new Error("Il campo 'risposta' non può essere vuoto");
             err.status = 400;
