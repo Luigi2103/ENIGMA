@@ -68,11 +68,11 @@ export class LoginController {
         let isUniqueEmail = await this.verificaMailUnica(req.body.email);
 
         if (!isUniqueUsername || !isUniqueEmail) {
-            if(!isUniqueUsername && !isUniqueEmail){
+            if (!isUniqueUsername && !isUniqueEmail) {
                 return Promise.reject(new Error("Username e mail già in uso"));
-            }else if(!isUniqueUsername) {
+            } else if (!isUniqueUsername) {
                 return Promise.reject(new Error("Username già in uso"))
-            }else {
+            } else {
                 return Promise.reject(new Error("Mail già in uso"))
             }
         }
@@ -82,7 +82,6 @@ export class LoginController {
             nome: req.body.nome,
             cognome: req.body.cognome,
             email: req.body.email,
-            fotoProfilo: req.body.fotoProfilo ?? null,
             password: req.body.password
         });
 
