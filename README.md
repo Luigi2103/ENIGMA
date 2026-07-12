@@ -269,8 +269,8 @@ npm test
 
 Progetto sviluppato da **Differente Luigi** per il corso di Tecnologie Web — Università degli Studi di Napoli Federico II.
 
-Il deploy del backend è stato effettuato su **Render**. Il sito è disponibile al seguente indirizzo:
+Il deploy del sito è stato effettuato su **Render** ed è disponibile al seguente indirizzo:
 
 ```
-https://enigma-y1fz.onrender.com
+https://enigma-frontend-ssiz.onrender.com/
 ```

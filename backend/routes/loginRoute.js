@@ -93,8 +93,6 @@ loginRouter.post("/auth", async (req, res, next) => {
  *                 type: string
  *               cognome:
  *                 type: string
- *               fotoProfilo:
- *                 type: string
  *     responses:
  *       201:
  *         description: Utente registrato con successo

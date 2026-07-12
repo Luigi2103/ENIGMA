@@ -41,23 +41,6 @@ export function CreaUtente(database) {
                 isEmail: true
             }
         },
-        fotoProfilo: {
-            type: DataTypes.BLOB('long'),
-            allowNull: true,
-            get() {
-                const data = this.getDataValue('fotoProfilo');
-                return data ? data.toString('base64') : null;
-            },
-            set(value) {
-                if (!value) {
-                    this.setDataValue('fotoProfilo', null);
-                } else if (typeof value === 'string') {
-                    this.setDataValue('fotoProfilo', Buffer.from(value, 'base64'));
-                } else {
-                    this.setDataValue('fotoProfilo', value);
-                }
-            }
-        }
     }, {
         tableName: 'utenti',
         timestamps: true,

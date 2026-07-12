@@ -65,5 +65,14 @@ Dopo la scansione trovi i report in `reports/`:
 | File | Descrizione |
 |------|-------------|
 | `zap.yaml` | Piano di scansione ZAP (contesti, autenticazione, job) |
-| `run-zap.bat` | Script di avvio (verifica Docker e backend, poi lancia ZAP) |
-| `1-crea-utente-zap.bat` | Crea l'utente di test nel DB via API |
+| `run-zap.bat` / `.sh` | Script di avvio per Windows / Mac (verifica Docker e backend, poi lancia ZAP) |
+| `1-crea-utente-zap.bat` / `.sh` | Crea l'utente di test nel DB via API per Windows / Mac |
+| `2-elimina-utente-zap.bat` / `.sh`| Elimina l'utente di test "zaptest" a fine scansione (tramite API, Windows / Mac) |
+
+**Nota per utenti Mac/Linux:**
+Per eseguire questi script su sistemi Unix-like, assicurati di dare i permessi di esecuzione:
+```bash
+chmod +x run-zap.sh
+chmod +x 1-crea-utente-zap.sh
+chmod +x 2-elimina-utente-zap.sh
+```

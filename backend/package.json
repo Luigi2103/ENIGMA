@@ -27,7 +27,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "",
-    "security": "cd \"../test/test Sicurezza\" && run-zap.bat"
+    "security": "cd \"../test/test Sicurezza\" && run-zap.bat",
+    "security:mac": "cd \"../test/test Sicurezza\" && bash run-zap.sh"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

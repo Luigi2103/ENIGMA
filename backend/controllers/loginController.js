@@ -59,7 +59,7 @@ export class LoginController {
      * La password viene hashata automaticamente tramite un hook Sequelize (bcrypt).
      *
      * @param {import('express').Request} req - Legge i campi `username`, `nome`, `cognome`,
-     *   `email`, `password` e opzionalmente `fotoProfilo` da `req.body`.
+     *   `email` e `password` da `req.body`.
      * @returns {Promise<Utente>} L'utente appena creato e salvato.
      * @throws {Error} Se username e/o email sono già in uso.
      */
