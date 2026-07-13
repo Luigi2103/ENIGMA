@@ -8,7 +8,7 @@ Progetto universitario per l'esame di **Tecnologie Web** — Prof. Starace, Univ
 
 ## 📖 Descrizione
 
-**ENIGMA** è una web application full-stack che permette agli utenti di sfidarsi con enigmi generati dinamicamente tramite **Google Gemini AI**. Ogni partita propone un suggerimento testuale e immagini generate dall'IA come indizi: l'obiettivo è indovinare la parola segreta entro 10 tentativi.
+**ENIGMA** è una **Single Page Application (SPA)** full-stack che permette agli utenti di sfidarsi con enigmi generati dinamicamente tramite **Google Gemini AI**. Ogni partita propone un suggerimento testuale e immagini generate dall'IA come indizi: l'obiettivo è indovinare la parola segreta entro 10 tentativi.
 
 ### Funzionalità principali
 
