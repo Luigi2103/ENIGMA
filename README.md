@@ -46,63 +46,66 @@ ENIGMA/
 
 ---
 
-## 🚀 Avvio rapido
+## 🚀 Avvio in locale (Sviluppo)
+
+Per avviare l'applicazione in locale, è necessario eseguire **sia il backend che il frontend in due terminali separati**. 
 
 ### Prerequisiti
 
 - [Node.js](https://nodejs.org/) >= 14.0.0
 - [npm](https://www.npmjs.com/) >= 6.0.0
-- [PostgreSQL](https://www.postgresql.org/) >= 13 (oppure Docker)
+- [PostgreSQL](https://www.postgresql.org/) >= 13 in esecuzione sulla tua macchina
 - Una **Gemini API Key** da [Google AI Studio](https://aistudio.google.com/)
+- Una **Unsplash API Key** da [Unsplash Developers](https://unsplash.com/developers) (per la generazione delle immagini)
 
 ---
 
-### ⚙️ Configurazione Backend
+### ⚙️ Terminale 1: Avvio del Backend
 
-1. **Entra nella cartella backend e installa le dipendenze:**
+1. **Apri un terminale ed entra nella cartella del backend, poi installa le dipendenze:**
 
    ```bash
    cd backend
    npm install
    ```
 
-2. **Crea il file `.env`** copiando il template:
+2. **Crea il file di configurazione:**
+   Copia il file `.env.example` e rinominalo in `.env`.
+   - Su Windows: `copy .env.example .env`
+   - Su Mac/Linux: `cp .env.example .env`
 
-   ```bash
-   cp .env.example .env
-   ```
-
-3. **Compila il file `.env`** con i tuoi valori:
+3. **Compila il file `.env`** con i tuoi valori (in particolare l'URI del database):
 
    ```env
    GEMINI_API_KEY=la_tua_api_key_gemini
-   IMAGE_API_KEY=la_tua_api_key_unsplash   # da https://unsplash.com/developers
+   IMAGE_API_KEY=la_tua_api_key_unsplash
    PORT=3000
-   DB_CONNECTION_URI=postgres://user:password@localhost:5432/enigma  # SSL abilitato
+   DB_CONNECTION_URI=postgres://user:password@localhost:5432/enigma
    DIALECT=postgres
    TOKEN_SECRET=una_stringa_segreta_lunga_e_casuale
-   # Origini CORS consentite, separate da virgola
    CORS_ORIGINS=http://localhost:4200,http://localhost:3000
    ```
 
-4. **Avvia il server:**
+4. **Avvia il server backend:**
+   
+   Puoi scegliere tra la modalità sviluppo (che riavvia in automatico il server se modifichi il codice) o quella standard:
 
    ```bash
-   # Modalità sviluppo (con nodemon)
+   # Modalità sviluppo (consigliata se devi modificare il codice)
    npm run dev
 
-   # Modalità produzione
+   # Modalità standard / produzione
    npm start
    ```
 
-   Il backend sarà disponibile su `http://localhost:3000`.  
+   Il backend sarà in ascolto su `http://localhost:3000`.  
    La documentazione Swagger è raggiungibile su `http://localhost:3000/api-docs`.
 
 ---
 
-### 🖥️ Configurazione Frontend
+### 🖥️ Terminale 2: Avvio del Frontend
 
-1. **Entra nella cartella frontend e installa le dipendenze:**
+1. **Apri un nuovo terminale separato, entra nella cartella del frontend e installa le dipendenze:**
 
    ```bash
    cd frontend
@@ -112,12 +115,10 @@ ENIGMA/
 2. **Avvia il server di sviluppo Angular:**
 
    ```bash
-   ng serve
-   # oppure
    npm start
    ```
 
-   L'applicazione sarà disponibile su `http://localhost:4200`.
+   L'applicazione web sarà accessibile direttamente dal browser all'indirizzo `http://localhost:4200`.
 
 ---
 
