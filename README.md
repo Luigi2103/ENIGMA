@@ -57,7 +57,6 @@ Per avviare l'applicazione in locale, è necessario eseguire **sia il backend ch
 
 - [Node.js](https://nodejs.org/) >= 14.0.0
 - [npm](https://www.npmjs.com/) >= 6.0.0
-- [PostgreSQL](https://www.postgresql.org/) >= 13 in esecuzione sulla tua macchina
 - Una **Gemini API Key** da [Google AI Studio](https://aistudio.google.com/)
 - Una **Unsplash API Key** da [Unsplash Developers](https://unsplash.com/developers) (per la generazione delle immagini)
 
