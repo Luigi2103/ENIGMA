@@ -60,12 +60,18 @@ const gameRouter = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 401
+ *               description: Token mancante o non valido
  *       500:
  *         description: Errore interno del server
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 500
+ *               description: Errore interno del server
  */
 gameRouter.post("/games", async (req, res, next) => {
     GestorePartita.GeneraECreaPartita(req).then((partita) => {
@@ -132,18 +138,27 @@ gameRouter.post("/games", async (req, res, next) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 400
+ *               description: Tentativo non valido (tentativi esauriti, enigma già risolto, partita non attiva)
  *       401:
  *         description: Token mancante o non valido
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 401
+ *               description: Token mancante o non valido
  *       404:
  *         description: Partita non trovata
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 404
+ *               description: Partita non trovata
  */
 gameRouter.post("/games/:id/attempts", async (req, res, next) => {
     GestorePartita.RegistraTentativo(req).then((tentativo) => {
@@ -194,6 +209,33 @@ gameRouter.post("/games/:id/attempts", async (req, res, next) => {
  *                     type: integer
  *                   utenteId:
  *                     type: integer
+ *       400:
+ *         description: Errore generico (es. Utente non trovato)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 400
+ *               description: Errore generico (es. Utente non trovato)
+ *       401:
+ *         description: Token mancante o non valido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 401
+ *               description: Token mancante o non valido
+ *       404:
+ *         description: Partita non trovata
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 404
+ *               description: Partita non trovata
  */
 gameRouter.get("/games/:id/attempts", async (req, res, next) => {
     GestorePartita.OttieniTentativi(req).then((tentativi) => {
@@ -288,18 +330,27 @@ gameRouter.get("/games/:id/solution", async (req, res, next) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 400
+ *               description: Partita già non attiva
  *       401:
  *         description: Token mancante o non valido
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 401
+ *               description: Token mancante o non valido
  *       404:
  *         description: Partita non trovata
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 404
+ *               description: Partita non trovata
  */
 gameRouter.patch("/games/:id", async (req, res, next) => {
     GestorePartita.DisabilitaPartita(req).then((partita) => {

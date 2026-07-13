@@ -58,6 +58,9 @@ publicrouter.get("/", (req, res) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 500
+ *               description: Errore del server
  */
 publicrouter.get("/games", async (req, res, next) => {
     try {
@@ -135,12 +138,18 @@ publicrouter.get("/games", async (req, res, next) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 404
+ *               description: Enigma non trovato
  *       500:
  *         description: Errore del server
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 500
+ *               description: Errore del server
  */
 publicrouter.get("/games/:id", async (req, res, next) => {
     try {
@@ -193,6 +202,9 @@ publicrouter.get("/games/:id", async (req, res, next) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 500
+ *               description: Errore del server
  */
 publicrouter.get("/leaderboard", async (req, res, next) => {
     try {

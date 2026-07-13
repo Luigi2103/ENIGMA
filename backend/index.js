@@ -55,7 +55,7 @@ const swaggerOptions = {
             description: {
               type: 'string',
               description: 'Messaggio descrittivo dell\'errore',
-              example: 'Partita non trovata'
+              example: 'Descrizione specifica dell\'errore riscontrato'
             }
           }
         }

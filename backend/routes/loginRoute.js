@@ -51,6 +51,9 @@ const loginRouter = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 401
+ *               description: Credenziali non valide
  */
 loginRouter.post("/auth", async (req, res, next) => {
     try {
@@ -117,6 +120,9 @@ loginRouter.post("/auth", async (req, res, next) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               code: 409
+ *               description: Conflitto (username o email già in uso)
  */
 loginRouter.post("/signup", async (req, res, next) => {
     LoginController.InserisciUtente(req).then((user) => {
