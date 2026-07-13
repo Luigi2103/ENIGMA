@@ -4,6 +4,9 @@
 
 Progetto universitario per l'esame di **Tecnologie Web** — Prof. Starace, Università degli Studi di Napoli Federico II.
 
+🚀 **Prova l'applicazione dal vivo:** Il sito è interamente hostato su **Render** e può essere testato fin da subito a questo indirizzo:
+👉 [**https://enigma-frontend-ssiz.onrender.com/**](https://enigma-frontend-ssiz.onrender.com/)
+
 ---
 
 ## 📖 Descrizione
@@ -269,9 +272,3 @@ npm test
 ## 👤 Autore
 
 Progetto sviluppato da **Differente Luigi** per il corso di Tecnologie Web — Università degli Studi di Napoli Federico II.
-
-Il deploy del sito è stato effettuato su **Render** ed è disponibile al seguente indirizzo:
-
-```
-https://enigma-frontend-ssiz.onrender.com/
-```
